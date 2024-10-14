@@ -1,47 +1,50 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+	<Provider>
+		<div class="app-wrapper">
+			<Header></Header>
+			<main class="main-wrapper">
+				<router-view v-slot="{ Component, route }">
+					<keep-alive>
+						<component :is="Component" :key="route.path" />
+					</keep-alive>
+				</router-view>
+			</main>
+			<Footer></Footer>
+			<Tool></Tool>
+			<Search></Search>
+			<Login></Login>
+			<Register></Register>
+			<Forget></Forget>
+			<Email></Email>
+			<Drawer></Drawer>
+			<MusicPlayer></MusicPlayer>
+			<ChatRoom></ChatRoom>
+		</div>
+	</Provider>
 </template>
 
+<script setup lang="ts">
+onMounted(() => {
+	console.log(
+		"%c Hello World %c By 阿冬 %c",
+		"background:#e9546b ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff; padding:5px 0;",
+		"background:#ec8c69 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #000; padding:5px 0;",
+		"background:transparent"
+	);
+})
+</script>
+
 <style scoped>
-header {
-  line-height: 1.5;
+.app-wrapper {
+	position: relative;
+	min-height: 100vh;
+
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.main-wrapper {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	padding: 0 0 8rem;
 }
 </style>
