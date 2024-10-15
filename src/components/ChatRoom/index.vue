@@ -1,67 +1,81 @@
 <template>
-  <div v-if="blog.blogInfo.siteConfig.isChat">
-    <div class="chat-container" v-show="show">
+  <div v-if="blogStore.blogInfo.website_config.is_chat_room">
+    <div v-show="show" class="chat-container">
       <div class="chat-header">
         <img width="32" height="32" src="https://static.ttkwsd.top/config/room.png" />
-        <div style="margin-left:12px">
+        <div style="margin-left: 12px">
           <div>聊天室</div>
-          <div style="font-size:12px">当前{{ onlineCount }}人在线</div>
+          <div style="font-size: 12px">当前{{ onlineCount }}人在线</div>
         </div>
         <svg-icon class="close" icon-class="close" size="1.2rem" @click="show = false"></svg-icon>
       </div>
-      <div class="chat-content" id="chat-content">
-        <div class="chat-item" v-for="(chat, index) of recordList  " :class="isMy(chat) ? 'my-chat' : ''">
-          <img class="user-avatar" :src="chat.avatar" alt="">
+      <div id="chat-content" class="chat-content">
+        <div
+          v-for="(chat, index) of recordList"
+          class="chat-item"
+          :class="isMy(chat) ? 'my-chat' : ''"
+        >
+          <img class="user-avatar" :src="chat.avatar" alt="" />
           <div :class="isMy(chat) ? 'right-info' : 'left-info'">
             <div class="user-info" :class="isMy(chat) ? 'my-chat' : ''">
-              <span style="color: var(--color-red);">{{ chat.nickname }}</span>
-              <span style="color :var(--color-blue);" :class="isMy(chat) ? 'right-info' : 'left-info'">
-                {{ formatDateTime(chat.createTime) }}
+              <span style="color: var(--color-red)">{{ chat.nickname }}</span>
+              <span
+                style="color: var(--color-blue)"
+                :class="isMy(chat) ? 'right-info' : 'left-info'"
+              >
+                {{ formatDateTime(chat.created_at) }}
               </span>
             </div>
-            <div class="user-content" :class="isMy(chat) ? 'my-content' : ''"
-              @contextmenu.prevent.stop="showBack(chat, index, $event)">
+            <div
+              class="user-content"
+              :class="isMy(chat) ? 'my-content' : ''"
+              @contextmenu.prevent.stop="showBack(chat, index, $event)"
+            >
               <div v-html="chat.content"></div>
-              <div class="back-menu" ref="backBtn" @click="back(chat, index)">
-                撤回
-              </div>
+              <div ref="backBtn" class="back-menu" @click="back(chat, index)">撤回</div>
             </div>
           </div>
         </div>
       </div>
       <div class="chat-footer">
-        <textarea class="chat-input" v-model="chatContent" placeholder="开始聊天吧"
-          @keydown="handleKeyCode($event)"></textarea>
+        <textarea
+          v-model="chatContent"
+          class="chat-input"
+          placeholder="开始聊天吧"
+          @keydown="handleKeyCode($event)"
+        ></textarea>
         <Emoji @add-emoji="handleEmoji" @choose-type="handleType"></Emoji>
         <svg-icon class="send-btn" icon-class="plane" size="1.5rem" @click="handleSend"></svg-icon>
       </div>
     </div>
     <div class="chat-btn" @click="handleOpen">
-      <span class="unread" v-if="unreadCount > 0">{{ unreadCount }}</span>
-      <img src="https://static.ttkwsd.top/config/chat.png" alt="">
+      <span v-if="unreadCount > 0" class="unread">{{ unreadCount }}</span>
+      <img src="https://static.ttkwsd.top/config/chat.png" alt="" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Record } from "@/model";
 import { useBlogStore, useUserStore } from "@/store";
-import { formatDateTime } from '@/utils/date';
+import { formatDateTime } from "@/utils/date";
 import { emojiList } from "@/utils/emoji";
 import { tvList } from "@/utils/tv";
-const user = useUserStore();
-const blog = useBlogStore();
+import { ChatRecord } from "@/api/types";
+
+const userStore = useUserStore();
+const blogStore = useBlogStore();
 const data = reactive({
   show: false,
   ipAddress: "",
   ipSource: "",
-  recordList: [] as Record[],
+  recordList: [] as ChatRecord[],
   chatContent: "",
   emojiType: 0,
   unreadCount: 0,
   webSocketState: false,
   onlineCount: 0,
 });
+
 enum Type {
   ONLINE_COUNT = 1,
   HISTORY_RECORD = 2,
@@ -69,49 +83,70 @@ enum Type {
   RECALL_MESSAGE = 4,
   HEART_BEAT = 5,
 }
-const { show, recordList, ipAddress, ipSource, chatContent, emojiType, unreadCount, webSocketState, onlineCount } = toRefs(data);
+
+const {
+  show,
+  recordList,
+  ipAddress,
+  ipSource,
+  chatContent,
+  emojiType,
+  unreadCount,
+  webSocketState,
+  onlineCount,
+} = toRefs(data);
 const websocketMessage = reactive<{
-  type: number,
-  data: any,
+  type: number;
+  data: any;
 }>({
   type: 0,
-  data: {}
+  data: {},
 });
 const backBtn = ref<any>([]);
 const websocket = ref<WebSocket>();
 const timeout = ref<NodeJS.Timeout>();
 const serverTimeout = ref<NodeJS.Timeout>();
-const isMy = computed(() => (chat: Record) => chat.ipAddress == ipAddress.value || (chat.userId !== undefined && chat.userId === user.id));
-const userNickname = computed(() => user.nickname ? user.nickname : ipAddress.value);
-const userAvatar = computed(() => user.avatar ? user.avatar : blog.blogInfo.siteConfig.touristAvatar);
+const isMy = computed(
+  () => (chat: ChatRecord) =>
+    chat.ip_address == ipAddress.value ||
+    (chat.user_id !== undefined && chat.user_id === userStore.userInfo.user_id)
+);
+const userNickname = computed(() =>
+  userStore.userInfo.nickname ? userStore.userInfo.nickname : ipAddress.value
+);
+const userAvatar = computed(() =>
+  userStore.userInfo.avatar
+    ? userStore.userInfo.avatar
+    : blogStore.blogInfo.website_config.tourist_avatar
+);
 const handleOpen = () => {
   if (websocket.value === undefined) {
-    websocket.value = new WebSocket(blog.blogInfo.siteConfig.websocketUrl);
+    websocket.value = new WebSocket(blogStore.blogInfo.website_config.websocket_url);
     websocket.value.onopen = () => {
       webSocketState.value = true;
       startHeart();
-    }
+    };
     websocket.value.onmessage = (event: MessageEvent) => {
-      const data = JSON.parse(event.data);
-      switch (data.type) {
+      const res = JSON.parse(event.data);
+      switch (res.type) {
         case Type.ONLINE_COUNT:
           // 在线人数
-          onlineCount.value = data.data;
+          onlineCount.value = res.data;
           break;
         case Type.HISTORY_RECORD:
-          recordList.value = data.data.chatRecordList;
-          ipAddress.value = data.data.ipAddress;
-          ipSource.value = data.data.ipSource;
+          recordList.value = res.data.chatRecordList;
+          ipAddress.value = res.data.ipAddress;
+          ipSource.value = res.data.ipSource;
           break;
         case Type.SEND_MESSAGE:
-          recordList.value.push(data.data);
+          recordList.value.push(res.data);
           if (!show.value) {
             unreadCount.value++;
           }
           break;
         case Type.RECALL_MESSAGE:
           for (let i = 0; i < recordList.value.length; i++) {
-            if (recordList.value[i].id === data.data) {
+            if (recordList.value[i].id === res.data) {
               recordList.value.splice(i, 1);
               i--;
             }
@@ -121,24 +156,24 @@ const handleOpen = () => {
           webSocketState.value = true;
           break;
       }
-    }
+    };
     websocket.value.onclose = () => {
       alert("关闭连接");
       webSocketState.value = false;
       clear();
-    }
+    };
   }
   unreadCount.value = 0;
   show.value = !show.value;
 };
 // 展示菜单
-const showBack = (chat: Record, index: number, e: any) => {
+const showBack = (chat: ChatRecord, index: number, e: any) => {
   backBtn.value.forEach((item: any) => {
     item.style.display = "none";
   });
   if (
-    chat.ipAddress === ipAddress.value ||
-    (chat.userId != null && chat.userId == user.id)
+    chat.ip_address === ipAddress.value ||
+    (chat.user_id != null && chat.user_id == userStore.userInfo.user_id)
   ) {
     backBtn.value[index].style.left = e.offsetX + "px";
     backBtn.value[index].style.bottom = e.offsetY + "px";
@@ -146,7 +181,7 @@ const showBack = (chat: Record, index: number, e: any) => {
   }
 };
 // 撤回消息
-const back = (item: Record, index: number) => {
+const back = (item: ChatRecord, index: number) => {
   websocketMessage.type = Type.RECALL_MESSAGE;
   websocketMessage.data = item.id;
   websocket.value?.send(JSON.stringify(websocketMessage));
@@ -154,12 +189,12 @@ const back = (item: Record, index: number) => {
 };
 const handleKeyCode = (e: any) => {
   if (e.ctrlKey && e.keyCode === 13) {
-    chatContent.value = chatContent.value + '\n';
+    chatContent.value = chatContent.value + "\n";
   } else if (e.keyCode === 13) {
     e.preventDefault();
     handleSend();
   }
-}
+};
 const handleSend = () => {
   if (chatContent.value.trim() == "") {
     window.$message?.error("内容不能为空");
@@ -193,7 +228,7 @@ const handleSend = () => {
     nickname: userNickname.value,
     avatar: userAvatar.value,
     content: chatContent.value,
-    userId: user.id,
+    userId: userStore.userInfo.user_id,
     ipAddress: ipAddress.value,
     ipSource: ipSource.value,
   };
@@ -225,7 +260,7 @@ const waitServer = () => {
 const clear = () => {
   timeout.value && clearTimeout(timeout.value);
   serverTimeout.value && clearTimeout(serverTimeout.value);
-}
+};
 const handleEmoji = (key: string) => {
   chatContent.value += key;
 };
@@ -316,7 +351,6 @@ onUpdated(() => {
 .my-chat {
   flex-direction: row-reverse;
 }
-
 
 .chat-item {
   display: flex;

@@ -5,23 +5,22 @@
 </template>
 
 <script setup lang="ts">
-
 const props = defineProps({
   prefix: {
     type: String,
-    default: 'icon'
+    default: "icon",
   },
   iconClass: {
     type: String,
-    required: false
+    required: false,
   },
   color: {
     type: String,
   },
   size: {
     type: String,
-    default: '1rem'
-  }
+    default: "1rem",
+  },
 });
 
 const symbolId = computed(() => `#${props.prefix}-${props.iconClass}`);

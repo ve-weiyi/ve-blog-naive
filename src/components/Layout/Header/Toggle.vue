@@ -1,5 +1,5 @@
 <template>
-  <div :class="drawerVisible(app.isCollapse)" @click="app.isCollapse = true">
+  <div :class="drawerVisible(appStore.isCollapse)" @click="appStore.isCollapse = true">
     <div class="lines">
       <span class="line"></span>
       <span class="line"></span>
@@ -10,9 +10,10 @@
 
 <script setup lang="ts">
 import { useAppStore } from "@/store";
-const app = useAppStore();
 
-const drawerVisible = computed(() => (value: boolean) => value ? "toggle close" : "toggle");
+const appStore = useAppStore();
+
+const drawerVisible = computed(() => (value: boolean) => (value ? "toggle close" : "toggle"));
 </script>
 
 <style lang="scss" scoped>

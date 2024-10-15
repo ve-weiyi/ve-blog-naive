@@ -2,6 +2,7 @@ import { router } from "@/router";
 import { useUserStore } from "@/store";
 import { getToken } from "@/utils/token";
 import NProgress from "nprogress";
+import { getUserInfoApi } from "@/api/user";
 
 NProgress.configure({
   easing: "ease",
@@ -13,17 +14,19 @@ NProgress.configure({
 
 router.beforeEach((to, from, next) => {
   NProgress.start();
-  const user = useUserStore();
+  const userStore = useUserStore();
   if (to.meta.title) {
     document.title = to.meta.title as string;
   }
   if (getToken()) {
-    if (user.id === undefined) {
-      user
-        .GetUserInfo()
-        .then(() => next())
+    if (userStore.userInfo.user_id === undefined) {
+      getUserInfoApi()
+        .then((res) => {
+          userStore.updateUserInfo(res.data);
+          next();
+        })
         .catch(() => {
-          user.LogOut().then(() => {
+          userStore.LogOut().then(() => {
             window.$message?.warning("凭证失效，请重新登录");
             next();
           });

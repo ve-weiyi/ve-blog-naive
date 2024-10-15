@@ -15,12 +15,24 @@ export function getToken() {
 // 本地运行记得删除domain
 export function setToken(token: string) {
   // 项目线上部署可以取消注释
-  return Cookies.set(TokenKey, token, { domain: domain });
+  return Cookies.set(TokenKey, token);
   // return Cookies.set(TokenKey, token);
 }
 
-export function removeToken() {
+export function clearCookies() {
   // 项目线上部署可以取消注释
-  return Cookies.remove(TokenKey, { domain: domain });
-  // return Cookies.remove(TokenKey);
+  const keys = Object.keys(Cookies.get());
+  keys.forEach((key) => {
+    Cookies.remove(key);
+  });
+}
+
+const UidKey: string = "Uid";
+
+export function getUid() {
+  return Cookies.get(UidKey);
+}
+
+export function setUid(uid: string) {
+  return Cookies.set(UidKey, uid);
 }

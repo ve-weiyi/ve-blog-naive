@@ -1,22 +1,27 @@
 <template>
   <div class="imgs">
     <ul>
-      <li class="item" v-for="carousel of carouselList" :key="carousel.id" :style="{
-        'background-image': 'url(' + carousel.imgUrl + ')'
-      }">
-      </li>
+      <li
+        v-for="carousel of carouselList"
+        :key="carousel.id"
+        class="item"
+        :style="{
+          'background-image': 'url(' + carousel.banner_cover + ')',
+        }"
+      ></li>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-import { getCarouselList } from "@/api/carousel";
-import { Carousel } from "@/api/carousel/types";
-const carouselList = ref<Carousel[]>([]);
+import { Banner } from "@/api/types";
+import { findBannerListApi } from "@/api/banner";
+
+const carouselList = ref<Banner[]>([]);
 onMounted(() => {
-  getCarouselList().then(({ data }) => {
-    carouselList.value = data.data;
-  })
+  findBannerListApi().then((res) => {
+    carouselList.value = res.data.list;
+  });
 });
 </script>
 
@@ -28,7 +33,7 @@ onMounted(() => {
   top: 0;
   left: 0;
   width: 100%;
-  height: 70vh;
+  height: 100vh;
   z-index: -9;
   background-color: #363636;
   overflow: hidden;
@@ -37,7 +42,7 @@ onMounted(() => {
     @include absolute;
     width: 100%;
     height: 100%;
-    background: no-repeat 50% 50% / cover;
+    background: no-repeat center center / cover;
     opacity: 0;
     animation: imageAnimation 36s linear infinite 0s;
     backface-visibility: hidden;
@@ -65,15 +70,15 @@ onMounted(() => {
   }
 
   &::before {
-    content: '';
+    content: "";
     display: block;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, .2);
-    transition: all .2s ease-in-out 0s;
+    background-color: rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease-in-out 0s;
   }
 }
 

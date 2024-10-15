@@ -5,13 +5,13 @@ import VMdPreview from "@kangc/v-md-editor/lib/preview";
 import "@kangc/v-md-editor/lib/theme/style/vuepress.css";
 import vuepressTheme from "@kangc/v-md-editor/lib/theme/vuepress.js";
 import Prism from "prismjs";
-import { App } from "vue";
+import type { App } from "vue";
 
 export default function setupMdPreview(app: App) {
-	VMdPreview.use(vuepressTheme, {
-		Prism,
-	})
-		.use(createTodoListPlugin())
-		.use(createKatexPlugin());
-	app.use(VMdPreview);
+  VMdPreview.use(vuepressTheme, {
+    Prism,
+  })
+    .use(createTodoListPlugin())
+    .use(createKatexPlugin());
+  app.use(VMdPreview);
 }
