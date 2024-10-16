@@ -379,7 +379,7 @@ const listComments = () => {
 };
 
 onMounted(() => {
-  userStore.GetUserLike();
+  userStore.getUserLike();
   listComments();
 });
 </script>

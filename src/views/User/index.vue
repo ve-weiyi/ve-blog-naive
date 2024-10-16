@@ -92,7 +92,7 @@ const handleUpdate = () => {
   formInstRef.value?.validate((errors) => {
     if (!errors) {
       updateUserInfoApi(userForm.value).then((res) => {
-        userStore.updateUserInfo(userForm.value);
+        userStore.getUserInfo();
         window.$message?.success("修改成功");
       });
     }
@@ -103,7 +103,7 @@ const handleAvatarUpload = (data: UploadFileResp) => {
   console.log("handleAvatarUpload", data);
   userForm.value.avatar = data.file_url;
   updateUserInfoApi(userForm.value).then((res) => {
-    userStore.updateUserInfo(userForm.value);
+    userStore.getUserInfo();
     window.$message?.success("修改成功");
     showCropper.value = false;
   });

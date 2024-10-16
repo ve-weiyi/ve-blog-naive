@@ -26,7 +26,15 @@
 <script setup lang="ts">
 import Header from "@/components/Layout/Header/index.vue";
 import Footer from "@/components/Layout/Footer/index.vue";
+import Drawer from "@/components/Layout/Drawer/index.vue";
+import Search from "@/components/Dialog/Search.vue";
+import Login from "@/components/Dialog/Login.vue";
+import Register from "@/components/Dialog/Register.vue";
+import Forget from "@/components/Dialog/Forget.vue";
+import Email from "@/components/Dialog/Email.vue";
+import Tool from "@/components/Tool/index.vue";
 import MusicPlayer from "@/components/MusicPlayer/index.vue";
+import ChatRoom from "@/components/ChatRoom/index.vue";
 import { useBlogStore, useUserStore } from "@/store";
 import { getBlogHomeInfoApi } from "@/api/website";
 import { pingApi } from "@/api/blog";

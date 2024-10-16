@@ -159,7 +159,7 @@ const logout = () => {
   if (route.path == "/user") {
     router.go(-1);
   }
-  userStore.LogOut();
+  userStore.logout();
   window.$message?.success("退出成功");
 };
 </script>
