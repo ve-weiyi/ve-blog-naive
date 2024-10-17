@@ -50,7 +50,7 @@
     </div>
     <div class="chat-btn" @click="handleOpen">
       <span v-if="unreadCount > 0" class="unread">{{ unreadCount }}</span>
-      <img src="https://static.ttkwsd.top/config/chat.png" alt="" />
+      <img width="64" height="64" :src="chatroom" alt="" />
     </div>
   </div>
 </template>
@@ -61,6 +61,7 @@ import { formatDateTime } from "@/utils/date";
 import { emojiList } from "@/utils/emoji";
 import { tvList } from "@/utils/tv";
 import { ChatRecord } from "@/api/types";
+import chatroom from "@/assets/images/chatroom.png";
 
 const userStore = useUserStore();
 const blogStore = useBlogStore();
@@ -109,7 +110,7 @@ const serverTimeout = ref<NodeJS.Timeout>();
 const isMy = computed(
   () => (chat: ChatRecord) =>
     chat.ip_address == ipAddress.value ||
-    (chat.user_id !== undefined && chat.user_id === userStore.userInfo.user_id)
+    (chat.user_id !== 0 && chat.user_id === userStore.userInfo.user_id)
 );
 const userNickname = computed(() =>
   userStore.userInfo.nickname ? userStore.userInfo.nickname : ipAddress.value
@@ -173,7 +174,7 @@ const showBack = (chat: ChatRecord, index: number, e: any) => {
   });
   if (
     chat.ip_address === ipAddress.value ||
-    (chat.user_id != null && chat.user_id == userStore.userInfo.user_id)
+    (chat.user_id != 0 && chat.user_id == userStore.userInfo.user_id)
   ) {
     backBtn.value[index].style.left = e.offsetX + "px";
     backBtn.value[index].style.bottom = e.offsetY + "px";

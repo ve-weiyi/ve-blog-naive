@@ -1,14 +1,7 @@
 import { clearCookies, getToken, setToken, setUid } from "@/utils/token";
 import { getUserInfoApi, getUserLikeApi } from "@/api/user";
 import { loginApi, logoutApi, oauthLoginApi } from "@/api/auth";
-import type {
-  EmptyResp,
-  LoginReq,
-  LoginResp,
-  OauthLoginReq,
-  UserInfoResp,
-  UserLikeResp,
-} from "@/api/types";
+import type { EmptyResp, LoginReq, LoginResp, OauthLoginReq, UserInfoResp, UserLikeResp } from "@/api/types";
 
 /**
  * 用户
@@ -19,9 +12,9 @@ interface UserState {
 }
 
 export const useUserStore = defineStore("useUserStore", {
-  state: (): UserState => ({
+  state: (): UserState => <UserState>({
     userInfo: {
-      user_id: undefined,
+      user_id: 0,
       username: "",
       nickname: "",
       avatar: "",

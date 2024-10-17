@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { findArticleArchivesApi } from "@/api/article";
-import { ArticlePreview } from "@/api/types";
+import { ArticleArchivesQueryReq, ArticlePreview } from "@/api/types";
 import Pagination from "@/components/Pagination/index.vue";
 
 import { formatDate } from "@/utils/date";
@@ -46,7 +46,7 @@ const data = reactive({
   queryParams: {
     page: 1,
     page_size: 5,
-  } as PageQuery,
+  } as ArticleArchivesQueryReq,
   archivesList: [] as ArticlePreview[],
 });
 const { count, queryParams, archivesList } = toRefs(data);

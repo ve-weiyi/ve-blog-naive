@@ -59,7 +59,7 @@
 
 <script setup lang="ts">
 import { findTalkListApi } from "@/api/talk";
-import { Talk } from "@/api/types";
+import { TagQueryReq, Talk } from "@/api/types";
 
 import { formatDateTime } from "@/utils/date";
 import { useBlogStore } from "@/store";
@@ -72,7 +72,7 @@ const data = reactive({
   queryParams: {
     page: 1,
     page_size: 5,
-  } as PageQuery,
+  } as TagQueryReq,
   talkList: [] as Talk[],
 });
 const { count, queryParams, talkList } = toRefs(data);

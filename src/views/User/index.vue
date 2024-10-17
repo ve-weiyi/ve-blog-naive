@@ -65,9 +65,10 @@
 
 <script setup lang="ts">
 import { updateUserInfoApi } from "@/api/user";
-import { UploadFileResp, UserInfoResp } from "@/api/types";
+import { UserInfoResp } from "@/api/types";
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
 import { FormInst } from "naive-ui";
+import UserAvatar from "@/components/UserAvatar/index.vue";
 
 const userStore = useUserStore();
 const appStore = useAppStore();
@@ -82,7 +83,7 @@ const rules = {
     message: "昵称不能为空",
   },
 };
-const userForm = ref<UserInfoResp>({
+const userForm = ref<UserInfoResp>(<UserInfoResp>{
   avatar: userStore.userInfo.avatar,
   nickname: userStore.userInfo.nickname,
   intro: userStore.userInfo.intro,
@@ -99,7 +100,7 @@ const handleUpdate = () => {
   });
 };
 
-const handleAvatarUpload = (data: UploadFileResp) => {
+const handleAvatarUpload = (data) => {
   console.log("handleAvatarUpload", data);
   userForm.value.avatar = data.file_url;
   updateUserInfoApi(userForm.value).then((res) => {

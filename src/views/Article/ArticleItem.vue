@@ -63,7 +63,7 @@
 
 <script setup lang="ts">
 import { findArticleHomeListApi } from "@/api/article";
-import { ArticleHome } from "@/api/types";
+import { ArticleHome, ArticleHomeQueryReq } from "@/api/types";
 
 import { formatDate } from "@/utils/date";
 
@@ -72,7 +72,7 @@ const data = reactive({
   queryParams: {
     page: 1,
     page_size: 5,
-  } as PageQuery,
+  } as ArticleHomeQueryReq,
   articleList: [] as ArticleHome[],
 });
 const { count, queryParams, articleList } = toRefs(data);

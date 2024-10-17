@@ -39,7 +39,7 @@ import { useUserStore } from "@/store";
 import { UploadCustomRequestOptions } from "naive-ui";
 import { VueCropper } from "vue-cropper";
 import "vue-cropper/dist/index.css";
-import { uploadFileApi } from "@/api/file";
+import { uploadFileApi } from "@/api/upload";
 
 // 父组件向子组件传输的数据
 const props = defineProps({
@@ -86,14 +86,14 @@ function confirm() {
   // 触发事件
   cropperRef.value.getCropBlob((blob: Blob) => {
     // 将 base64 格式的图像数据转换为 Blob 对象
-    const file = new File([blob], "cropped-image.jpg", { type: "image/jpeg" });
+    const file = new File([blob], `cropped-image-${userStore.userInfo.user_id}.jpg`, {
+      type: "image/jpeg",
+    });
     console.log("croppedData", file);
     // 创建一个新的 File 对象
     const data = {
-      label: "avatar",
+      file_path: "/avatar",
       file: file,
-      file_size: file.size,
-      file_md5: "",
     };
     uploadFileApi(data).then((res) => {
       console.log("res", res);

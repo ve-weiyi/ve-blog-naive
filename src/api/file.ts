@@ -1,32 +1,20 @@
 import request from "@/utils/request";
+import { FileBackDTO, MultiUploadFileReq, UploadFileReq } from "./types";
 
-export function uploadFileApi(
-  data?: any,
-): Promise<IApiResponse<any>> {
-  const formData = new FormData();
-  formData.append("label", data.label);
-  formData.append("file", data.file);
-  formData.append("file_size", data.file_size.toString());
-  formData.append("file_md5", data.file_md5);
-
+/** 上传文件列表 */
+export function multiUploadFileApi(data?: MultiUploadFileReq): Promise<IApiResponse<FileBackDTO[]>> {
   return request({
-    url: `/api/v1/upload/upload_file`,
-    method: "post",
-    data: formData,
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
+    url: "/api/v1/file/multi_upload_file",
+    method: "POST",
+    data: data,
   });
 }
 
-/** 上传语言 */
-export function uploadVoiceApi(label: string, formData: FormData): Promise<IApiResponse<any>> {
+/** 上传文件 */
+export function uploadFileApi(data?: UploadFileReq): Promise<IApiResponse<FileBackDTO>> {
   return request({
-    url: `/api/v1/voice`,
-    method: "post",
-    data: formData,
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
+    url: "/api/v1/file/upload_file",
+    method: "POST",
+    data: data,
   });
 }

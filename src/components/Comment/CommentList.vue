@@ -115,7 +115,7 @@ import {
 } from "@/api/comment";
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
 import { formatDateTime } from "@/utils/date";
-import { Comment, CommentReply, CommentQueryReq, CommentNewReq } from "@/api/types";
+import { Comment, CommentNewReq, CommentQueryReq, CommentReply } from "@/api/types";
 import { replaceEmoji } from "@/utils/emojis";
 
 const props = defineProps({
@@ -211,7 +211,7 @@ function clearComment() {
 }
 
 // 回复评论
-function handleReply(index: number, comment: Comment) {
+function handleReply(index: number, comment: Comment | CommentReply) {
   console.log("handleReply", index, comment.user_id, userStore.userInfo.user_id);
   if (replyCommentIndex.value == index) {
     replyCommentIndex.value = -1;
@@ -227,7 +227,7 @@ function handleReply(index: number, comment: Comment) {
 }
 
 // 确认回复
-function confirmReply(index: number, comment: Comment) {
+function confirmReply(index: number, comment: Comment | CommentReply) {
   // 判断登录
   if (!userStore.isLogin()) {
     appStore.loginFlag = true;
@@ -298,7 +298,7 @@ function readMoreComment(index: number, comment: Comment) {
     parent_id: comment.id,
     // session_id: -1,
     type: props.commentType,
-    order_by: "created_at",
+    sorts: ["created_at desc"],
   };
 
   findCommentReplyListApi(data).then((res) => {
@@ -323,7 +323,7 @@ function changeReplyCurrent(index: number, comment: Comment, page: number) {
     parent_id: comment.id,
     // session_id: -1,
     type: props.commentType,
-    order_by: "created_at",
+    sorts: ["created_at desc"],
   };
 
   findCommentReplyListApi(data).then((res) => {
@@ -331,7 +331,7 @@ function changeReplyCurrent(index: number, comment: Comment, page: number) {
   });
 }
 
-function likeComment(comment: Comment) {
+function likeComment(comment: Comment | CommentReply) {
   // 判断登录
   if (!userStore.isLogin()) {
     appStore.loginFlag = true;
@@ -362,7 +362,7 @@ const listComments = () => {
     topic_id: parseInt(arr[2]) | 0,
     parent_id: 0,
     type: props.commentType,
-    order_by: "created_at",
+    sorts: ["created_at desc"],
   };
 
   findCommentListApi(data).then((res) => {
