@@ -1,10 +1,10 @@
 import request from "@/utils/request";
-import { ChatQueryReq, PageResp } from "./types";
+import { ChatMessageQueryReq, PageResp } from "./types";
 
 /** 查询聊天记录 */
-export function getChatRecordsApi(data?: ChatQueryReq): Promise<IApiResponse<PageResp>> {
+export function getChatMessagesApi(data?: ChatMessageQueryReq): Promise<IApiResponse<PageResp>> {
   return request({
-    url: "/api/v1/chat/records",
+    url: "/api/v1/chat/messages",
     method: "POST",
     data: data,
   });

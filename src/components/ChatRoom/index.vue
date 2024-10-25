@@ -2,7 +2,7 @@
   <div v-if="blogStore.blogInfo.website_config.is_chat_room">
     <div v-show="show" class="chat-container">
       <div class="chat-header">
-        <img width="32" height="32" src="https://static.ttkwsd.top/config/room.png" />
+        <img width="32" height="32" :src="chatroom" />
         <div style="margin-left: 12px">
           <div>聊天室</div>
           <div style="font-size: 12px">当前{{ onlineCount }}人在线</div>
@@ -15,10 +15,14 @@
           class="chat-item"
           :class="isMy(chat) ? 'my-chat' : ''"
         >
-          <img class="user-avatar" :src="chat.avatar" alt="" />
+          <img
+            class="user-avatar"
+            :src="chat.avatar || blogStore.blogInfo.website_config.tourist_avatar"
+            alt=""
+          />
           <div :class="isMy(chat) ? 'right-info' : 'left-info'">
             <div class="user-info" :class="isMy(chat) ? 'my-chat' : ''">
-              <span style="color: var(--color-red)">{{ chat.nickname }}</span>
+              <span style="color: var(--color-red)">{{ chat.nickname || chat.ip_address }}</span>
               <span
                 style="color: var(--color-blue)"
                 :class="isMy(chat) ? 'right-info' : 'left-info'"
@@ -31,7 +35,7 @@
               :class="isMy(chat) ? 'my-content' : ''"
               @contextmenu.prevent.stop="showBack(chat, index, $event)"
             >
-              <div v-html="chat.content"></div>
+              <div v-html="chat.chat_content"></div>
               <div ref="backBtn" class="back-menu" @click="back(chat, index)">撤回</div>
             </div>
           </div>
@@ -60,7 +64,7 @@ import { useBlogStore, useUserStore } from "@/store";
 import { formatDateTime } from "@/utils/date";
 import { emojiList } from "@/utils/emoji";
 import { tvList } from "@/utils/tv";
-import { ChatRecord } from "@/api/types";
+import { ChatMessage, ChatMsgResp, WebSocketMsg } from "@/api/types";
 import chatroom from "@/assets/images/chatroom.png";
 
 const userStore = useUserStore();
@@ -68,8 +72,7 @@ const blogStore = useBlogStore();
 const data = reactive({
   show: false,
   ipAddress: "",
-  ipSource: "",
-  recordList: [] as ChatRecord[],
+  recordList: [] as ChatMsgResp[],
   chatContent: "",
   emojiType: 0,
   unreadCount: 0,
@@ -78,39 +81,35 @@ const data = reactive({
 });
 
 enum Type {
-  ONLINE_COUNT = 1,
-  HISTORY_RECORD = 2,
-  SEND_MESSAGE = 3,
-  RECALL_MESSAGE = 4,
-  HEART_BEAT = 5,
+  ONLINE_COUNT = 1, // 在线人数
+  HISTORY_RECORD = 2, // 历史记录
+  SEND_MESSAGE = 3, // 发送消息
+  RECALL_MESSAGE = 4, // 撤回消息
+  HEART_BEAT = 5, // 心跳
 }
 
 const {
   show,
   recordList,
   ipAddress,
-  ipSource,
   chatContent,
   emojiType,
   unreadCount,
   webSocketState,
   onlineCount,
 } = toRefs(data);
-const websocketMessage = reactive<{
-  type: number;
-  data: any;
-}>({
-  type: 0,
-  data: {},
+const websocketMessage = reactive<WebSocketMsg>({
+  cmd: 0,
+  data: "",
 });
 const backBtn = ref<any>([]);
 const websocket = ref<WebSocket>();
 const timeout = ref<NodeJS.Timeout>();
 const serverTimeout = ref<NodeJS.Timeout>();
 const isMy = computed(
-  () => (chat: ChatRecord) =>
+  () => (chat: ChatMessage) =>
     chat.ip_address == ipAddress.value ||
-    (chat.user_id !== 0 && chat.user_id === userStore.userInfo.user_id)
+    (chat.user_id !== "" && chat.user_id === userStore.userInfo.user_id)
 );
 const userNickname = computed(() =>
   userStore.userInfo.nickname ? userStore.userInfo.nickname : ipAddress.value
@@ -122,25 +121,30 @@ const userAvatar = computed(() =>
 );
 const handleOpen = () => {
   if (websocket.value === undefined) {
-    websocket.value = new WebSocket(blogStore.blogInfo.website_config.websocket_url);
+    let url =
+      import.meta.env.VITE_WEBSOCKET_PROXY_URL || blogStore.blogInfo.website_config.websocket_url;
+    console.log(url);
+    websocket.value = new WebSocket(url);
     websocket.value.onopen = () => {
       webSocketState.value = true;
       startHeart();
     };
     websocket.value.onmessage = (event: MessageEvent) => {
       const res = JSON.parse(event.data);
-      switch (res.type) {
+      console.log("websocket msg", ipAddress.value, res.client_ip);
+      switch (res.cmd) {
         case Type.ONLINE_COUNT:
           // 在线人数
           onlineCount.value = res.data;
           break;
         case Type.HISTORY_RECORD:
-          recordList.value = res.data.chatRecordList;
-          ipAddress.value = res.data.ipAddress;
-          ipSource.value = res.data.ipSource;
+          recordList.value = JSON.parse(res.data);
+          ipAddress.value = res.client_ip;
+          console.log("recordList msg", recordList.value);
           break;
         case Type.SEND_MESSAGE:
-          recordList.value.push(res.data);
+          let record = JSON.parse(res.data);
+          recordList.value.push(record);
           if (!show.value) {
             unreadCount.value++;
           }
@@ -168,13 +172,13 @@ const handleOpen = () => {
   show.value = !show.value;
 };
 // 展示菜单
-const showBack = (chat: ChatRecord, index: number, e: any) => {
+const showBack = (chat: ChatMessage, index: number, e: any) => {
   backBtn.value.forEach((item: any) => {
     item.style.display = "none";
   });
   if (
     chat.ip_address === ipAddress.value ||
-    (chat.user_id != 0 && chat.user_id == userStore.userInfo.user_id)
+    (chat.user_id != "" && chat.user_id == userStore.userInfo.user_id)
   ) {
     backBtn.value[index].style.left = e.offsetX + "px";
     backBtn.value[index].style.bottom = e.offsetY + "px";
@@ -182,9 +186,13 @@ const showBack = (chat: ChatRecord, index: number, e: any) => {
   }
 };
 // 撤回消息
-const back = (item: ChatRecord, index: number) => {
-  websocketMessage.type = Type.RECALL_MESSAGE;
-  websocketMessage.data = item.id;
+const back = (item: ChatMessage, index: number) => {
+  let data = {
+    id: item.id,
+  };
+
+  websocketMessage.cmd = Type.RECALL_MESSAGE;
+  websocketMessage.data = JSON.stringify(data);
   websocket.value?.send(JSON.stringify(websocketMessage));
   backBtn.value[index].style.display = "none";
 };
@@ -226,15 +234,10 @@ const handleSend = () => {
     return str;
   });
   let chat = {
-    nickname: userNickname.value,
-    avatar: userAvatar.value,
-    content: chatContent.value,
-    userId: userStore.userInfo.user_id,
-    ipAddress: ipAddress.value,
-    ipSource: ipSource.value,
+    chat_content: chatContent.value,
   };
-  websocketMessage.type = Type.SEND_MESSAGE;
-  websocketMessage.data = chat;
+  websocketMessage.cmd = Type.SEND_MESSAGE;
+  websocketMessage.data = JSON.stringify(chat);
   websocket.value?.send(JSON.stringify(websocketMessage));
   chatContent.value = "";
 };

@@ -84,34 +84,55 @@ export interface CategoryQueryReq extends PageQuery {
   category_name?: string; // 分类名
 }
 
-export interface ChatQueryReq extends PageQuery {
-}
-
-export interface ChatRecord {
+export interface ChatMessage {
   id: number; // 主键
-  user_id: number; // 用户id
+  user_id: string; // 用户id
   nickname: string; // 昵称
   avatar: string; // 头像
-  content: string; // 聊天内容
+  chat_content: string; // 消息内容
   ip_address: string; // ip地址
   ip_source: string; // ip来源
-  type: number; // 类型
+  type: string; // 类型
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
 }
 
-export interface ChatSocketMsg {
-  type: number; // 消息类型 1: 文本消息 2: 图片消息 3: 文件消息 4: 语音消息 5: 视频消息
-  content: string; // 消息内容
+export interface ChatMessageQueryReq {
+  after?: number; // 起始时间
+  before?: number; // 结束时间
+  limit?: number; // 限制数量
+  user_id?: string; // 用户id
+  topic_id?: string; // 聊天室id
+  keyword?: string; // 关键字
+  type?: string; // 类型
+}
+
+export interface ChatMsgReq {
+  type: string; // 消息类型 1: 文本消息 2: 图片消息 3: 文件消息 4: 语音消息 5: 视频消息
+  chat_content: string; // 消息内容
+}
+
+export interface ChatMsgResp {
+  id: number; // 主键
+  user_id: string; // 用户id
+  device_id: string; // 设备id
+  nickname: string; // 昵称
+  avatar: string; // 头像
+  chat_content: string; // 消息内容
+  ip_address: string; // ip地址
+  ip_source: string; // ip来源
+  type: string; // 类型
+  created_at: number; // 创建时间
+  updated_at: number; // 更新时间
 }
 
 export interface Comment {
   id: number; // 评论id
   topic_id: number; // 主题id
   parent_id: number; // 父评论id
-  session_id: number; // 会话id
-  user_id: number; // 用户id
-  reply_user_id: number; // 被回复用户id
+  reply_msg_id: number; // 会话id
+  user_id: string; // 用户id
+  reply_user_id: string; // 被回复用户id
   comment_content: string; // 评论内容
   type: number; // 评论类型 1.文章 2.友链 3.说说
   created_at: number; // 评论时间
@@ -125,8 +146,8 @@ export interface Comment {
 export interface CommentNewReq {
   topic_id?: number; // 主题id
   parent_id?: number; // 父评论id
-  session_id?: number; // 会话id
-  reply_user_id?: number; // 回复用户id
+  reply_msg_id?: number; // 会话id
+  reply_user_id?: string; // 回复用户id
   comment_content?: string; // 评论内容
   type?: number; // 评论类型 1.文章 2.友链 3.说说
 }
@@ -141,9 +162,9 @@ export interface CommentReply {
   id: number; // 评论id
   topic_id: number; // 主题id
   parent_id: number; // 父评论id
-  session_id: number; // 会话id
-  user_id: number; // 用户id
-  reply_user_id: number; // 被回复用户id
+  reply_msg_id: number; // 会话id
+  user_id: string; // 用户id
+  reply_user_id: string; // 被回复用户id
   comment_content: string; // 评论内容
   type: number; // 评论类型 1.文章 2.友链 3.说说
   created_at: number; // 评论时间
@@ -153,7 +174,7 @@ export interface CommentReply {
 }
 
 export interface CommentUserInfo {
-  id: number;
+  user_id: string;
   nickname: string;
   avatar: string;
   website: string;
@@ -167,7 +188,7 @@ export interface EmptyResp {
 
 export interface FileBackDTO {
   id?: number; // 文件目录ID
-  user_id: number; // 用户id
+  user_id: string; // 用户id
   file_path: string; // 文件路径
   file_name: string; // 文件名称
   file_type: string; // 文件类型
@@ -348,7 +369,7 @@ export interface TagQueryReq extends PageQuery {
 
 export interface Talk {
   id: number; // 说说ID
-  user_id: number; // 用户ID
+  user_id: string; // 用户ID
   nickname: string; // 用户昵称
   avatar: string; // 用户头像
   content: string; // 评论内容
@@ -365,7 +386,7 @@ export interface TalkQueryReq extends PageQuery {
 }
 
 export interface Token {
-  user_id: number; // 用户id
+  user_id: string; // 用户id
   token_type: string; // token类型,Bearer
   access_token: string; // 访问token,过期时间较短。2h
   expires_in: number; // 访问token过期时间
@@ -398,7 +419,7 @@ export interface UserInfoExt {
 }
 
 export interface UserInfoResp extends UserInfoExt {
-  user_id: number; // 用户id
+  user_id: string; // 用户id
   username: string; // 用户名
   nickname: string; // 用户昵称
   avatar: string; // 用户头像
@@ -410,6 +431,14 @@ export interface UserLikeResp {
   article_like_set: number[];
   comment_like_set: number[];
   talk_like_set: number[];
+}
+
+export interface WebSocketMsg {
+  client_id?: string; // 客户端id
+  client_ip?: string; // 客户端ip
+  timestamp?: number; // 时间戳
+  cmd: number; // 消息命令
+  data: string; // 消息内容
 }
 
 export interface WebsiteConfigDTO {

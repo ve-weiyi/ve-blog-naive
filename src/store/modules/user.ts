@@ -14,7 +14,7 @@ interface UserState {
 export const useUserStore = defineStore("useUserStore", {
   state: (): UserState => <UserState>({
     userInfo: {
-      user_id: 0,
+      user_id: "",
       username: "",
       nickname: "",
       avatar: "",

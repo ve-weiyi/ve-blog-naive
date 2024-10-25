@@ -19,7 +19,7 @@
         <div class="content-warp">
           <div class="user-info">
             <div class="user-name">{{ comment.user?.nickname }}</div>
-            <svg-icon v-if="comment.user?.id == 1" icon-class="badge"></svg-icon>
+            <svg-icon v-if="comment.user?.user_id == '1'" icon-class="badge"></svg-icon>
           </div>
           <div class="reply-content" v-html="comment.comment_content"></div>
           <div class="reply-info">
