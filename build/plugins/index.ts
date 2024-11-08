@@ -2,9 +2,11 @@ import type { PluginOption } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import unocss from "@unocss/vite";
-import compress from "./compress";
 import vitePlugin from "./viteplugin";
 import unPlugin from "./unplugin";
+import { visualizer } from "rollup-plugin-visualizer";
+
+// import viteCompression from "vite-plugin-compression";
 
 /**
  * vite插件
@@ -26,9 +28,23 @@ export function setupVitePlugins(env: Env.ImportMeta): (PluginOption | PluginOpt
     unocss(),
   ];
 
-  if (env.VITE_COMPRESS === "Y") {
-    plugins.push(compress(env));
-  }
+  plugins.push(
+    visualizer({
+      gzipSize: true,
+      brotliSize: true,
+      open: false,
+    }) as PluginOption
+  );
+
+  // | "gzip"
+  // | "brotliCompress"
+  // | "deflate"
+  // | "deflateRaw";
+  // plugins.push(
+  //   viteCompression({
+  //     algorithm: "gzip",
+  //   })
+  // );
 
   return plugins;
 }

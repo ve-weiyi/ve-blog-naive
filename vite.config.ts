@@ -51,7 +51,7 @@ export default defineConfig((configEnv) => {
       /** 设置 host: true 才可以使用 Network 的形式，以 IP 访问项目 */
       host: true, // host: "0.0.0.0"
       /** 端口号 */
-      port: 8888,
+      port: Number(env.VITE_APP_PORT),
       /** 是否自动打开浏览器 */
       open: false,
       /** 跨域设置允许 */
@@ -118,9 +118,26 @@ export default defineConfig((configEnv) => {
            *  2. 导入本文件 `import md5 from '@withtypes/md5'`
            *  3. 将函数里的 `${name}` 修改为 `${md5(name)}`
            */
-          chunkFileNames: "static/js/[name]-[hash].js",
-          entryFileNames: "static/js/[name]-[hash].js",
-          assetFileNames: "static/[ext]/[name]-[hash].[ext]",
+          // 用于从入口点创建的块的打包输出格式[name]表示文件名,[hash]表示该文件内容hash值
+          entryFileNames: "js/[name].[hash].js",
+          // 用于命名代码拆分时创建的共享块的输出命名
+          chunkFileNames: "js/[name].[hash].js",
+          // 用于输出静态资源的命名，[ext]表示文件扩展名
+          assetFileNames: (assetInfo: any) => {
+            const info = assetInfo.name.split(".");
+            let extType = info[info.length - 1];
+            // console.log('文件信息', assetInfo.name)
+            if (
+              /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/i.test(assetInfo.name)
+            ) {
+              extType = "media";
+            } else if (/\.(png|jpe?g|gif|svg)(\?.*)?$/.test(assetInfo.name)) {
+              extType = "img";
+            } else if (/\.(woff2?|eot|ttf|otf)(\?.*)?$/i.test(assetInfo.name)) {
+              extType = "fonts";
+            }
+            return `${extType}/[name].[hash].[ext]`;
+          },
           /**
            * 分块策略
            * 1. 注意这些包名必须存在，否则打包会报错

@@ -45,7 +45,7 @@
               <img class="sub-reply-avatar" :src="reply.user?.avatar" />
               <div class="sub-user-name">{{ reply.user?.nickname }}</div>
               <svg-icon
-                v-if="reply.user?.id == 1"
+                v-if="reply.user?.user_id == '1'"
                 icon-class="badge"
                 style="margin-left: 5px"
               ></svg-icon>
@@ -179,9 +179,8 @@ function insertComment() {
   const arr = path.split("/");
   const comment: CommentNewReq = {
     topic_id: parseInt(arr[2]) | 0,
-    reply_user_id: 0,
+    reply_user_id: "",
     parent_id: 0,
-    session_id: 0,
     comment_content: content,
     type: props.commentType,
   };
@@ -246,8 +245,7 @@ function confirmReply(index: number, comment: Comment | CommentReply) {
   const newComment: CommentNewReq = {
     topic_id: 0,
     parent_id: comment.parent_id != 0 ? comment.parent_id : comment.id,
-    reply_user_id: comment.user_id != userStore.userInfo.user_id ? comment.user_id : 0,
-    session_id: comment.session_id | comment.id,
+    reply_user_id: comment.user_id != userStore.userInfo.user_id ? comment.user_id : "",
     comment_content: replaceEmoji(content),
     type: props.commentType,
   };
