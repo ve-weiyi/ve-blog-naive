@@ -43,6 +43,7 @@
     "dayjs": "^1.11.13",
     "easy-typer-js": "^2.1.0",
     "echarts": "^5.5.1",
+    "jquery": "^3.7.1",
     "js-cookie": "^3.0.5",
     "lodash-es": "^4.17.21",
     "nprogress": "^0.2.0",

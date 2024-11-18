@@ -1,0 +1,76 @@
+.control_box {
+  width: 90%;
+  height: 60px;
+  position: relative;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.control_button {
+  width: 14px;
+  height: 14px;
+  position: absolute;
+  left: 10px; /* 放置在progress的左侧 */
+  transform: translateX(50%); /* 水平居中 */
+
+  display: flex; /* 使按钮成为flex容器 */
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+}
+
+.control_icon {
+  height: 100%;
+  cursor: pointer;
+}
+
+.progress {
+  width: 150px;
+  height: 4px;
+  border-radius: 10px;
+  background-color: rgb(194, 194, 196);
+  cursor: pointer;
+  position: relative;
+}
+
+.progress_c {
+  width: 50%;
+  height: 100%;
+  background-color: rgb(232, 60, 60);
+  transition: all 0.2s;
+  position: relative;
+  border-radius: 10px;
+  max-width: 100%;
+}
+
+.progress_circle {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  right: -7.5px;
+  top: -5.5px;
+  background-color: white;
+  border: 1px solid rgb(220, 220, 220);
+  border-radius: 100%;
+}
+
+.progress_circle_c {
+  width: 5px;
+  height: 5px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  margin: auto;
+  background-color: rgb(232, 60, 60);
+  border-radius: 100%;
+}
+
+.duration-time {
+  font-size: 11px;
+  position: absolute;
+  right: 20px;
+  transform: translateX(50%); /* 水平居中 */
+}

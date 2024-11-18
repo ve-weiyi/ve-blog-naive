@@ -17,8 +17,9 @@
       <Forget></Forget>
       <Email></Email>
       <Drawer></Drawer>
-      <MusicPlayer></MusicPlayer>
-      <ChatRoom></ChatRoom>
+      <!--      <MusicPlayer></MusicPlayer>-->
+      <Player></Player>
+      <!--      <ChatRoom></ChatRoom>-->
     </div>
   </Provider>
 </template>
@@ -33,8 +34,8 @@ import Register from "@/components/Dialog/Register.vue";
 import Forget from "@/components/Dialog/Forget.vue";
 import Email from "@/components/Dialog/Email.vue";
 import Tool from "@/components/Tool/index.vue";
-import MusicPlayer from "@/components/MusicPlayer/index.vue";
-import ChatRoom from "@/components/ChatRoom/index.vue";
+import Player from "./components/zw-player/player.vue";
+
 import { useBlogStore, useUserStore } from "@/store";
 import { getBlogHomeInfoApi } from "@/api/website";
 import { pingApi } from "@/api/blog";
@@ -67,6 +68,7 @@ onMounted(() => {
 .main-wrapper {
   display: flex;
   flex-direction: column;
+  height: 100%;
   width: 100%;
   padding: 0 0 8rem;
 }
