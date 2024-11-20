@@ -234,7 +234,7 @@ const musicTypeList = [
   { name: "嘻哈榜", id: 991319590 },
   { name: "My Songs", id: -1 },
 ];
-const thisMusicType = ref(-1);
+const thisMusicType = ref(0);
 const notPlay = ref<any[]>([]); // 用于存储不能播放的歌曲列表
 const musicState = ref(0); // 0 列表循环，1 单曲循环
 const musicStateButton = ref(state1);
@@ -275,21 +275,27 @@ watch(musicSearchVal, () => {
   }
 });
 
+let player: HTMLAudioElement;
+let controlIcon: HTMLElement;
+let progressBar: HTMLElement;
 // 页面挂载时初始化播放器
 onMounted(() => {
+  player = document.querySelector("#music") as HTMLAudioElement;
+  controlIcon = document.querySelector(".control_icon") as HTMLElement;
+  progressBar = document.querySelector(".progress") as HTMLElement;
+
   Player();
 });
 
 // 页面创建时初始化数据
 onBeforeMount(() => {
-  // ListAdd({ id: 2124731026 })
   // if (myMusicList.value.length !== 0) {
   //   _getMusicType(-1);
   // } else {
   //   _getMusicType(3779629);
   // }
-
-  _getMusicType(3779629);
+  ListAdd({ id: 2124731026 });
+  // _getMusicType(-1);
   DisAuthorInfo(); // 禁删~感谢配合
 });
 
@@ -359,17 +365,15 @@ function ListChange(isLast: boolean) {
 
 // 切换播放的歌曲
 function ListPlay(id: number) {
-  if (thisMusicIndex.value !== id) {
-    thisMusicIndex.value = id > musicList.value.length - 1 ? 0 : id;
-    _getInfo();
-    top.value = 0;
-    o.value = 0;
-    wordIndex.value = 0;
-    wordsTop.value = 0;
-    currentProgress.value = "0%";
-    if (!playState.value) {
-      document.querySelector(".control_icon")?.click();
-    }
+  thisMusicIndex.value = id > musicList.value.length - 1 ? 0 : id;
+  _getInfo();
+  top.value = 0;
+  o.value = 0;
+  wordIndex.value = 0;
+  wordsTop.value = 0;
+  currentProgress.value = "0%";
+  if (!playState.value) {
+    controlIcon.click();
   }
 }
 
@@ -389,21 +393,12 @@ function _getMusicType(id: number) {
   if (thisMusicType.value !== id) {
     notPlay.value = [];
     if (id === -1) {
-      console.log("myMusicList", myMusicList.value);
       if (myMusicList.value.length !== 0) {
         musicList.value = myMusicList.value;
         thisMusicType.value = id;
         thisMusicIndex.value = 0;
         thisListPage.value = 1;
-        _getInfo();
-        top.value = 0;
-        o.value = 0;
-        wordIndex.value = 0;
-        wordsTop.value = 0;
-        currentProgress.value = "0%";
-        if (!playState.value) {
-          document.querySelector(".control_icon")?.click();
-        }
+        ListPlay(0);
       } else {
         // 自定义库没有歌曲，提示需要搜索才能添加
         MusicAlert("没有歌曲,需要自己添加");
@@ -414,15 +409,7 @@ function _getMusicType(id: number) {
         thisMusicType.value = id;
         thisMusicIndex.value = 0;
         thisListPage.value = 1;
-        _getInfo();
-        top.value = 0;
-        o.value = 0;
-        wordIndex.value = 0;
-        wordsTop.value = 0;
-        currentProgress.value = "0%";
-        if (!playState.value) {
-          document.querySelector(".control_icon")?.click();
-        }
+        ListPlay(0);
       });
     }
   }
@@ -430,7 +417,6 @@ function _getMusicType(id: number) {
 
 // 获取歌曲信息
 function _getInfo() {
-  console.log("_getInfo res", thisMusicIndex.value, musicList.value[thisMusicIndex.value]);
   getMusicUrl(musicList.value[thisMusicIndex.value].id).then((res) => {
     console.log("getMusicUrl res", res);
 
@@ -493,14 +479,13 @@ function Cut(str: string) {
 }
 
 function Player() {
-  const player = document.getElementById("music") as HTMLAudioElement;
-  let playerTimer = setInterval(timer, 1000);
+  let playerTimer = setInterval(timer, 500);
 
   // 自动播放控制
-  document.body.addEventListener("click", () => {
-    player.play();
-    document.body.removeEventListener("click", () => {});
-  });
+  // document.body.addEventListener("click", () => {
+  //   player.play();
+  //   document.body.removeEventListener("click", () => {});
+  // });
 
   function timer() {
     durationTime.value = player.duration;
@@ -547,19 +532,16 @@ function Player() {
   }
 
   // 进度条控制
-  const progressBar = document.querySelector(".progress") as HTMLElement;
   if (progressBar) {
     progressBar.addEventListener("mousedown", (ev: MouseEvent) => {
       const pro = (ev.clientX - progressBar.getBoundingClientRect().left) / progressBar.offsetWidth;
       clearInterval(playerTimer);
       currentProgress.value = `${pro * 100}%`;
-
+      console.log("mousedown", currentProgress.value);
       const mouseMoveHandler = (ev: MouseEvent) => {
         const newPro =
           (ev.clientX - progressBar.getBoundingClientRect().left) / progressBar.offsetWidth;
         currentProgress.value = `${newPro * 100}%`;
-
-        console.log("mouseMoveHandler", currentProgress.value);
       };
 
       const mouseUpHandler = () => {
@@ -590,8 +572,6 @@ function Player() {
           }
         }
 
-        console.log("diff_h", diff_h, now_o);
-
         wordsTop.value += diff_h;
         wordIndex.value = o.value = now_o;
 
@@ -609,20 +589,18 @@ function Player() {
         player.play();
 
         // Clean up
-        document.removeEventListener("mousemove", mouseMoveHandler);
-        document.removeEventListener("mouseup", mouseUpHandler);
+        progressBar.removeEventListener("mousemove", mouseMoveHandler);
+        progressBar.removeEventListener("mouseup", mouseUpHandler);
       };
 
-      document.addEventListener("mousemove", mouseMoveHandler);
-      document.addEventListener("mouseup", mouseUpHandler);
+      progressBar.addEventListener("mousemove", mouseMoveHandler);
+      progressBar.addEventListener("mouseup", mouseUpHandler);
     });
   }
 
   // 播放/暂停控制
-  const controlIcon = document.querySelector(".control_icon");
   if (controlIcon) {
     controlIcon.addEventListener("click", () => {
-      console.log("playState", playState.value);
       if (playState.value) {
         player.pause();
         playState.value = false;

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="blogStore.blogInfo.website_config.is_chat_room">
+  <div>
     <div v-show="show" class="chat-container">
       <div class="chat-header">
         <img width="32" height="32" :src="chatroom" />
@@ -414,7 +414,7 @@ onUpdated(() => {
 
 .chat-btn {
   position: fixed;
-  bottom: 15px;
+  bottom: 24px;
   right: 5px;
   width: 60px;
   height: 60px;

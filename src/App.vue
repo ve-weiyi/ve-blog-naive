@@ -18,8 +18,10 @@
       <Email></Email>
       <Drawer></Drawer>
       <!--      <MusicPlayer></MusicPlayer>-->
-      <Player></Player>
-      <!--      <ChatRoom></ChatRoom>-->
+      <!-- 音乐播放器 -->
+      <Player v-if="blogStore.blogInfo.website_config.is_music_player === 1 && !isMobile" />
+      <!-- 聊天室 -->
+      <ChatRoom v-if="blogStore.blogInfo.website_config.is_chat_room === 1"></ChatRoom>
     </div>
   </Provider>
 </template>
@@ -34,6 +36,7 @@ import Register from "@/components/Dialog/Register.vue";
 import Forget from "@/components/Dialog/Forget.vue";
 import Email from "@/components/Dialog/Email.vue";
 import Tool from "@/components/Tool/index.vue";
+import ChatRoom from "@/components/ChatRoom/index.vue";
 import Player from "./components/zw-player/player.vue";
 
 import { useBlogStore, useUserStore } from "@/store";
@@ -43,6 +46,13 @@ import { pingApi } from "@/api/blog";
 const blogStore = useBlogStore();
 const userStore = useUserStore();
 
+const isMobile = computed(() => {
+  const flag = navigator.userAgent.match(
+    /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
+  );
+  return flag;
+});
+
 onBeforeMount(() => {
   pingApi();
   getBlogHomeInfoApi().then((res) => {
@@ -51,7 +61,7 @@ onBeforeMount(() => {
 });
 onMounted(() => {
   console.log(
-    "%c Hello World %c By 阿冬 %c",
+    "%c Hello World %c By 与梦 %c",
     "background:#e9546b ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff; padding:5px 0;",
     "background:#ec8c69 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #000; padding:5px 0;",
     "background:transparent"
