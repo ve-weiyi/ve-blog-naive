@@ -1,4 +1,4 @@
-@import "./mixin.scss";
+@use "./mixin.scss" as *;
 
 /* 背景色 */
 .bg {

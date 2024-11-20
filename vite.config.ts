@@ -127,9 +127,7 @@ export default defineConfig((configEnv) => {
             const info = assetInfo.name.split(".");
             let extType = info[info.length - 1];
             // console.log('文件信息', assetInfo.name)
-            if (
-              /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/i.test(assetInfo.name)
-            ) {
+            if (/\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/i.test(assetInfo.name)) {
               extType = "media";
             } else if (/\.(png|jpe?g|gif|svg)(\?.*)?$/.test(assetInfo.name)) {
               extType = "img";
@@ -191,5 +189,15 @@ export default defineConfig((configEnv) => {
     //   include: ["tests/**/*.test.ts"],
     //   environment: "jsdom",
     // },
+    css: {
+      // CSS 预处理器
+      preprocessorOptions: {
+        // 定义全局 SCSS 变量
+        scss: {
+          javascriptEnabled: true,
+          api: "modern-compiler",
+        },
+      },
+    },
   };
 });
