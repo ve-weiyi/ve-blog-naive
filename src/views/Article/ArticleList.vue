@@ -53,7 +53,7 @@ import { useBlogStore } from "@/store";
 
 const blogStore = useBlogStore();
 
-const cover = blogStore.getCover("tag");
+const cover = blogStore.getCover("article");
 const data = reactive({
   queryParams: {
     page: 1,

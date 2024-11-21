@@ -73,7 +73,7 @@ import { useBlogStore } from "@/store";
 // import { biliUpload } from "@/api/user";
 const blogStore = useBlogStore();
 
-const cover = blogStore.getCover("tag");
+const cover = blogStore.getCover("picture");
 const form = reactive({
   csrf: "",
   data: "",

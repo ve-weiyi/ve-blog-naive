@@ -74,7 +74,7 @@ const userStore = useUserStore();
 const appStore = useAppStore();
 const blogStore = useBlogStore();
 
-const cover = blogStore.getCover("tag");
+const cover = blogStore.getCover("user");
 const formInstRef = ref<FormInst | null>(null);
 const router = useRouter();
 const rules = {

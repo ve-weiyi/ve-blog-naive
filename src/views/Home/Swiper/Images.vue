@@ -6,7 +6,7 @@
         :key="carousel.id"
         class="item"
         :style="{
-          'background-image': 'url(' + carousel.banner_cover + ')',
+          'background-image': 'url(' + carousel.page_cover + ')',
         }"
       ></li>
     </ul>
@@ -14,14 +14,13 @@
 </template>
 
 <script setup lang="ts">
-import { Banner } from "@/api/types";
-import { findBannerListApi } from "@/api/banner";
+import { Page } from "@/api/types";
+import { useBlogStore } from "@/store";
 
-const carouselList = ref<Banner[]>([]);
+const blogStore = useBlogStore();
+const carouselList = ref<Page[]>([]);
 onMounted(() => {
-  findBannerListApi().then((res) => {
-    carouselList.value = res.data.list;
-  });
+  carouselList.value = blogStore.getCarouselList();
 });
 </script>
 

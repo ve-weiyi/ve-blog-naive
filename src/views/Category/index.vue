@@ -28,7 +28,7 @@ import { useBlogStore } from "@/store";
 
 const blogStore = useBlogStore();
 
-const cover = blogStore.getCover("tag");
+const cover = blogStore.getCover("category");
 let categoryOption = reactive({
   tooltip: {
     trigger: "item",

@@ -51,18 +51,6 @@ export interface ArticlePreview {
   created_at: number; // 创建时间
 }
 
-export interface Banner {
-  id: number; // 页面id
-  banner_name: string; // 页面名
-  banner_label: string; // 页面标签
-  banner_cover: string; // 页面封面
-  created_at: number; // 创建时间
-  updated_at: number; // 更新时间
-}
-
-export interface BannerQueryReq extends PageQuery {
-}
-
 export interface BatchResp {
   success_count: number;
 }
@@ -264,6 +252,15 @@ export interface OauthLoginUrlResp {
   url: string; // 授权地址
 }
 
+export interface Page {
+  id: number; // 页面id
+  page_name: string; // 页面名
+  page_label: string; // 页面标签
+  page_cover: string; // 页面封面
+  created_at: number; // 创建时间
+  updated_at: number; // 更新时间
+}
+
 export interface PageDTO {
   id: number; // 页面ID
   page_name: string; // 页面名称
@@ -275,6 +272,9 @@ export interface PageQuery {
   page?: number;
   page_size?: number;
   sorts?: string[];
+}
+
+export interface PageQueryReq extends PageQuery {
 }
 
 export interface PageResp {

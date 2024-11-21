@@ -17,10 +17,10 @@
           <!-- 用户头像 -->
           <img class="user-avatar" :src="talk.avatar" />
           <div class="talk-info">
-            <span class="talk-user-name"
-              >{{ talk.nickname
-              }}<svg-icon icon-class="badge" style="margin-left: 0.4rem"></svg-icon
-            ></span>
+            <span class="talk-user-name">
+              {{ talk.nickname }}
+              <svg-icon icon-class="badge" style="margin-left: 0.4rem"></svg-icon>
+            </span>
             <span class="talk-time">{{ formatDateTime(talk.created_at) }}</span>
           </div>
         </div>
@@ -66,7 +66,7 @@ import { useBlogStore } from "@/store";
 
 const blogStore = useBlogStore();
 
-const cover = blogStore.getCover("tag");
+const cover = blogStore.getCover("talk");
 const data = reactive({
   count: 0,
   queryParams: {

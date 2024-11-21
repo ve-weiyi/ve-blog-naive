@@ -40,8 +40,6 @@ import ChatRoom from "@/components/ChatRoom/index.vue";
 import Player from "./components/zw-player/player.vue";
 
 import { useBlogStore, useUserStore } from "@/store";
-import { getBlogHomeInfoApi } from "@/api/website";
-import { pingApi } from "@/api/blog";
 
 const blogStore = useBlogStore();
 const userStore = useUserStore();
@@ -54,10 +52,8 @@ const isMobile = computed(() => {
 });
 
 onBeforeMount(() => {
-  pingApi();
-  getBlogHomeInfoApi().then((res) => {
-    blogStore.setBlogInfo(res.data);
-  });
+  // pingApi();
+  blogStore.getBlogInfo();
 });
 onMounted(() => {
   console.log(

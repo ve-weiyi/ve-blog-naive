@@ -60,7 +60,7 @@ const userStore = useUserStore();
 const appStore = useAppStore();
 const blogStore = useBlogStore();
 
-const cover = blogStore.getCover("tag");
+const cover = blogStore.getCover("talk");
 const route = useRoute();
 const isLike = computed(() => (id: number) => (userStore.isTalkLike(id) ? "like-flag" : ""));
 const data = reactive({

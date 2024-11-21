@@ -40,7 +40,7 @@ import { useBlogStore } from "@/store";
 
 const blogStore = useBlogStore();
 
-const cover = blogStore.getCover("tag");
+const cover = blogStore.getCover("archive");
 const data = reactive({
   count: 0,
   queryParams: {

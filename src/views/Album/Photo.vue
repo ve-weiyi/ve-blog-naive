@@ -22,7 +22,7 @@ import { useBlogStore } from "@/store";
 
 const blogStore = useBlogStore();
 
-const cover = blogStore.getCover("about");
+const cover = blogStore.getCover("photo");
 
 const route = useRoute();
 const albumInfo = ref<Album>({

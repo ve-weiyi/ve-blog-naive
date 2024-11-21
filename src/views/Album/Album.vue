@@ -27,7 +27,7 @@ import { useBlogStore } from "@/store";
 
 const blogStore = useBlogStore();
 
-const cover = blogStore.getCover("about");
+const cover = blogStore.getCover("album");
 const albumList = ref<Album[]>([]);
 onMounted(() => {
   findAlbumListApi().then((res) => {
