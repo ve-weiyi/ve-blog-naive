@@ -18,10 +18,10 @@ import { Page } from "@/api/types";
 import { useBlogStore } from "@/store";
 
 const blogStore = useBlogStore();
-const carouselList = ref<Page[]>([]);
-onMounted(() => {
-  carouselList.value = blogStore.getCarouselList();
-});
+const carouselList = computed(() => blogStore.getCarouselList());
+// onMounted(() => {
+//   carouselList.value = blogStore.getCarouselList();
+// });
 </script>
 
 <style lang="scss" scoped>

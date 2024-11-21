@@ -54,9 +54,9 @@
                   class="this_music_shlter"
                   v-if="(thisListPage - 1) * 10 + index == thisMusicIndex"
                 ></div>
-                <span>{{ item.name }}</span
-                ><span>{{ item.ar[0].name }}</span
-                ><span>{{ item.al.name }}</span>
+                <span>{{ item.name }}</span>
+                <span>{{ item.ar[0].name }}</span>
+                <span>{{ item.al.name }}</span>
                 <transition name="list_button">
                   <div class="music_button" v-if="listButtonActiveIndex == index">
                     <div
@@ -171,7 +171,7 @@
           </div>
         </div>
       </div>
-      <video id="music" autoplay :src="musicUrl" name="media"></video>
+      <video id="music" :src="musicUrl" name="media"></video>
     </div>
   </div>
 </template>
@@ -280,7 +280,7 @@ let controlIcon: HTMLElement;
 let progressBar: HTMLElement;
 // 页面挂载时初始化播放器
 onMounted(() => {
-  player = document.querySelector("#music") as HTMLAudioElement;
+  player = document.getElementById("music") as HTMLAudioElement;
   controlIcon = document.querySelector(".control_icon") as HTMLElement;
   progressBar = document.querySelector(".progress") as HTMLElement;
 
@@ -302,7 +302,7 @@ onBeforeMount(() => {
 // 禁删~感谢配合
 function DisAuthorInfo() {
   console.log(
-    "%c音乐播放器作者----仲威，博客地址：https://blogme.top",
+    "%c音乐播放器作者----与梦，博客地址：https://veweiyi.cn",
     "background-color:rgb(30,30,30);border-radius:4px;font-size:12px;padding:4px;color:rgb(220,208,129);"
   );
 }
@@ -321,7 +321,6 @@ function MusicAlert(val: string) {
 // 将歌曲添加到我的歌单
 function ListAdd(obj: { id: number }) {
   getMusicInfo(obj.id).then((res) => {
-    console.log("ListAdd res", res);
     musicSearchVal.value = "";
     if (myMusicList.value.length === 0) {
       myMusicList.value = [res.data.songs[0]];
@@ -350,7 +349,6 @@ function MusicStateChange() {
 
 // 控制播放列表显示
 function DisList() {
-  console.log("listIsDis", listIsDis.value);
   listIsDis.value = !listIsDis.value;
 }
 
@@ -389,7 +387,6 @@ function DisActive() {
 
 // 获取音乐类型
 function _getMusicType(id: number) {
-  console.log("_getMusicType", id, thisMusicType.value);
   if (thisMusicType.value !== id) {
     notPlay.value = [];
     if (id === -1) {
@@ -418,8 +415,6 @@ function _getMusicType(id: number) {
 // 获取歌曲信息
 function _getInfo() {
   getMusicUrl(musicList.value[thisMusicIndex.value].id).then((res) => {
-    console.log("getMusicUrl res", res);
-
     if (!res.data.data[0].url) {
       if (notPlay.value.length !== musicList.value.length) {
         let nextIndex = thisMusicIndex.value + 1;
@@ -482,10 +477,11 @@ function Player() {
   let playerTimer = setInterval(timer, 500);
 
   // 自动播放控制
-  // document.body.addEventListener("click", () => {
-  //   player.play();
-  //   document.body.removeEventListener("click", () => {});
-  // });
+  document.body.addEventListener("click", function playMusicOnce() {
+    player.play();
+    // 移除点击事件监听器，确保只执行一次
+    document.body.removeEventListener("click", playMusicOnce);
+  });
 
   function timer() {
     durationTime.value = player.duration;
@@ -510,8 +506,6 @@ function Player() {
 
       wordIndex.value = o.value + 1;
       o.value++;
-
-      console.log("wordsTop", wordIndex.value, o.value, wh, wt, wsh, top.value, wordsTop.value);
     }
     if (player.currentTime >= player.duration) {
       // 切换歌曲
@@ -537,7 +531,7 @@ function Player() {
       const pro = (ev.clientX - progressBar.getBoundingClientRect().left) / progressBar.offsetWidth;
       clearInterval(playerTimer);
       currentProgress.value = `${pro * 100}%`;
-      console.log("mousedown", currentProgress.value);
+
       const mouseMoveHandler = (ev: MouseEvent) => {
         const newPro =
           (ev.clientX - progressBar.getBoundingClientRect().left) / progressBar.offsetWidth;
@@ -545,8 +539,6 @@ function Player() {
       };
 
       const mouseUpHandler = () => {
-        console.log("mouseUpHandler", currentProgress.value);
-
         player.currentTime = player.duration * pro;
         const c_arr = [...wordsTime.value];
         c_arr.push(player.currentTime);

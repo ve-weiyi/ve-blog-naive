@@ -19,7 +19,7 @@
       <Drawer></Drawer>
       <!--      <MusicPlayer></MusicPlayer>-->
       <!-- 音乐播放器 -->
-      <Player v-if="blogStore.blogInfo.website_config.is_music_player === 1 && !isMobile" />
+      <Player v-if="blogStore.blogInfo.website_config.is_music_player === 1" />
       <!-- 聊天室 -->
       <ChatRoom v-if="blogStore.blogInfo.website_config.is_chat_room === 1"></ChatRoom>
     </div>
