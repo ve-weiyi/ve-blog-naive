@@ -1,11 +1,11 @@
 import request from "@/utils/request";
-import type { PageResp, TagQueryReq } from "./types";
+import { PageResp, TagQueryReq } from "./types";
 
-/** "分页获取标签列表" */
+/** 分页获取标签列表 */
 export function findTagListApi(data?: TagQueryReq): Promise<IApiResponse<PageResp>> {
   return request({
     url: "/api/v1/tag/find_tag_list",
-    method: "post",
+    method: "POST",
     data: data,
   });
 }

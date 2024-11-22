@@ -19,7 +19,7 @@
         <div class="content-warp">
           <div class="user-info">
             <div class="user-name">{{ comment.user?.nickname }}</div>
-            <svg-icon v-if="comment.user?.id == 1" icon-class="badge"></svg-icon>
+            <svg-icon v-if="comment.user?.user_id == '1'" icon-class="badge"></svg-icon>
           </div>
           <div class="reply-content" v-html="comment.comment_content"></div>
           <div class="reply-info">
@@ -45,7 +45,7 @@
               <img class="sub-reply-avatar" :src="reply.user?.avatar" />
               <div class="sub-user-name">{{ reply.user?.nickname }}</div>
               <svg-icon
-                v-if="reply.user?.id == 1"
+                v-if="reply.user?.user_id == '1'"
                 icon-class="badge"
                 style="margin-left: 5px"
               ></svg-icon>
@@ -115,7 +115,7 @@ import {
 } from "@/api/comment";
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
 import { formatDateTime } from "@/utils/date";
-import { Comment, CommentReply, CommentQueryReq, CommentNewReq } from "@/api/types";
+import { Comment, CommentNewReq, CommentQueryReq, CommentReply } from "@/api/types";
 import { replaceEmoji } from "@/utils/emojis";
 
 const props = defineProps({
@@ -179,9 +179,8 @@ function insertComment() {
   const arr = path.split("/");
   const comment: CommentNewReq = {
     topic_id: parseInt(arr[2]) | 0,
-    reply_user_id: 0,
+    reply_user_id: "",
     parent_id: 0,
-    session_id: 0,
     comment_content: content,
     type: props.commentType,
   };
@@ -211,7 +210,7 @@ function clearComment() {
 }
 
 // 回复评论
-function handleReply(index: number, comment: Comment) {
+function handleReply(index: number, comment: Comment | CommentReply) {
   console.log("handleReply", index, comment.user_id, userStore.userInfo.user_id);
   if (replyCommentIndex.value == index) {
     replyCommentIndex.value = -1;
@@ -227,7 +226,7 @@ function handleReply(index: number, comment: Comment) {
 }
 
 // 确认回复
-function confirmReply(index: number, comment: Comment) {
+function confirmReply(index: number, comment: Comment | CommentReply) {
   // 判断登录
   if (!userStore.isLogin()) {
     appStore.loginFlag = true;
@@ -246,8 +245,7 @@ function confirmReply(index: number, comment: Comment) {
   const newComment: CommentNewReq = {
     topic_id: 0,
     parent_id: comment.parent_id != 0 ? comment.parent_id : comment.id,
-    reply_user_id: comment.user_id != userStore.userInfo.user_id ? comment.user_id : 0,
-    session_id: comment.session_id | comment.id,
+    reply_user_id: comment.user_id != userStore.userInfo.user_id ? comment.user_id : "",
     comment_content: replaceEmoji(content),
     type: props.commentType,
   };
@@ -298,7 +296,7 @@ function readMoreComment(index: number, comment: Comment) {
     parent_id: comment.id,
     // session_id: -1,
     type: props.commentType,
-    order_by: "created_at",
+    sorts: ["created_at desc"],
   };
 
   findCommentReplyListApi(data).then((res) => {
@@ -323,7 +321,7 @@ function changeReplyCurrent(index: number, comment: Comment, page: number) {
     parent_id: comment.id,
     // session_id: -1,
     type: props.commentType,
-    order_by: "created_at",
+    sorts: ["created_at desc"],
   };
 
   findCommentReplyListApi(data).then((res) => {
@@ -331,7 +329,7 @@ function changeReplyCurrent(index: number, comment: Comment, page: number) {
   });
 }
 
-function likeComment(comment: Comment) {
+function likeComment(comment: Comment | CommentReply) {
   // 判断登录
   if (!userStore.isLogin()) {
     appStore.loginFlag = true;
@@ -362,7 +360,7 @@ const listComments = () => {
     topic_id: parseInt(arr[2]) | 0,
     parent_id: 0,
     type: props.commentType,
-    order_by: "created_at",
+    sorts: ["created_at desc"],
   };
 
   findCommentListApi(data).then((res) => {
@@ -379,13 +377,13 @@ const listComments = () => {
 };
 
 onMounted(() => {
-  userStore.GetUserLike();
+  userStore.getUserLike();
   listComments();
 });
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/styles/mixin.scss";
+@use "@/assets/styles/mixin.scss" as *;
 
 .reply-title {
   display: flex;

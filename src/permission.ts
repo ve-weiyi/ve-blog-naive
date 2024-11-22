@@ -20,13 +20,12 @@ router.beforeEach((to, from, next) => {
   }
   if (getToken()) {
     if (userStore.userInfo.user_id === undefined) {
-      getUserInfoApi()
+      userStore.getUserInfo()
         .then((res) => {
-          userStore.updateUserInfo(res.data);
           next();
         })
         .catch(() => {
-          userStore.LogOut().then(() => {
+          userStore.logout().then(() => {
             window.$message?.warning("凭证失效，请重新登录");
             next();
           });

@@ -1,20 +1,20 @@
 import { clearCookies, getToken, setToken, setUid } from "@/utils/token";
 import { getUserInfoApi, getUserLikeApi } from "@/api/user";
-import { logoutApi } from "@/api/auth";
-import type { Token, UserInfoResp } from "@/api/types";
+import { loginApi, logoutApi, oauthLoginApi } from "@/api/auth";
+import type { EmptyResp, LoginReq, LoginResp, OauthLoginReq, UserInfoResp, UserLikeResp } from "@/api/types";
 
 /**
  * 用户
  */
 interface UserState {
   userInfo: UserInfoResp;
-  userLike: any;
+  userLike: UserLikeResp;
 }
 
 export const useUserStore = defineStore("useUserStore", {
-  state: (): UserState => ({
+  state: (): UserState => <UserState>({
     userInfo: {
-      user_id: undefined,
+      user_id: "",
       username: "",
       nickname: "",
       avatar: "",
@@ -29,15 +29,15 @@ export const useUserStore = defineStore("useUserStore", {
     },
   }),
   actions: {
-    GetUserInfo() {
-      if (!this.isLogin()) {
-        return;
-      }
+    oauthLogin(oauth: OauthLoginReq): Promise<IApiResponse<LoginResp>> {
       return new Promise((resolve, reject) => {
-        getUserInfoApi()
+        oauthLoginApi(oauth)
           .then((res) => {
-            this.userInfo = res.data;
-
+            const token = res.data.token;
+            console.log("token", token);
+            setUid(String(token.user_id));
+            setToken(token.access_token);
+            console.log("getToken", getToken());
             resolve(res);
           })
           .catch((error) => {
@@ -45,7 +45,51 @@ export const useUserStore = defineStore("useUserStore", {
           });
       });
     },
-    GetUserLike() {
+    login(user: LoginReq): Promise<IApiResponse<LoginResp>> {
+      return new Promise((resolve, reject) => {
+        loginApi(user)
+          .then((res) => {
+            const token = res.data.token;
+            console.log("token", token);
+            setUid(String(token.user_id));
+            setToken(token.access_token);
+            console.log("getToken", getToken());
+            resolve(res);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    logout(): Promise<IApiResponse<EmptyResp>> {
+      return new Promise((resolve, reject) => {
+        logoutApi()
+          .then((res) => {
+            this.$reset();
+            clearCookies();
+            resolve(res);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    getUserInfo(): Promise<IApiResponse<UserInfoResp>> {
+      if (!this.isLogin()) {
+        return;
+      }
+      return new Promise((resolve, reject) => {
+        getUserInfoApi()
+          .then((res) => {
+            this.userInfo = res.data;
+            resolve(res);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    getUserLike(): Promise<IApiResponse<UserLikeResp>> {
       if (!this.isLogin()) {
         return;
       }
@@ -60,32 +104,11 @@ export const useUserStore = defineStore("useUserStore", {
           });
       });
     },
-    LogOut() {
-      return new Promise((resolve, reject) => {
-        logoutApi()
-          .then(() => {
-            this.$reset();
-            clearCookies();
-            resolve(null);
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
-    },
     forceLogOut() {
       this.$reset();
       clearCookies();
     },
-    setLogin(token: Token) {
-      console.log("token", token);
-      setUid(String(token.user_id));
-      setToken(token.access_token);
-      console.log("getToken", getToken());
-    },
-    updateUserInfo(user: UserInfoResp) {
-      this.userInfo = user;
-    },
+
     isLogin() {
       const tk = getToken();
       console.log("isLogin", tk != undefined);

@@ -7,7 +7,7 @@ import { resetSetupStore } from "./plugins";
 export function setupStore(app: App) {
   const store = createPinia();
   store.use(resetSetupStore);
-  // store.use(piniaPluginPersistedState);
+  store.use(piniaPluginPersistedState);
   app.use(store);
 }
 

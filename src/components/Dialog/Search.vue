@@ -42,7 +42,7 @@
 import { findArticleHomeListApi } from "@/api/article";
 import { useAppStore } from "@/store";
 import { debouncedWatch } from "@vueuse/core";
-import { ArticleHome } from "@/api/types";
+import { ArticleHome, ArticleHomeQueryReq } from "@/api/types";
 
 const appStore = useAppStore();
 const dialogVisible = computed({
@@ -55,14 +55,8 @@ debouncedWatch(keyword, () => (keyword.value ? handleSearch() : (articleList.val
   debounce: 300,
 });
 const handleSearch = () => {
-  const data: PageQuery = {
-    conditions: [
-      {
-        field: "article_title",
-        value: keyword.value,
-        operator: "like",
-      },
-    ],
+  const data: ArticleHomeQueryReq = {
+    article_title: keyword.value,
   };
 
   findArticleHomeListApi(data).then((res) => {

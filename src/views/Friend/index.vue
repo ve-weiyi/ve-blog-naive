@@ -63,7 +63,7 @@ import { useBlogStore } from "@/store";
 
 const blogStore = useBlogStore();
 
-const cover = blogStore.getCover("tag");
+const cover = blogStore.getCover("friend");
 
 const commentType = ref(2);
 const friendList = ref<Friend[]>([]);

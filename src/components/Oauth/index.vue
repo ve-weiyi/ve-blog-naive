@@ -10,9 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { oauthLoginApi } from "@/api/auth";
 import { useUserStore } from "@/store";
-import { getUserInfoApi } from "@/api/user";
 import { OauthLoginReq } from "@/api/types";
 
 const userStore = useUserStore();
@@ -25,12 +23,11 @@ onMounted(() => {
     code: route.query.code as string,
     state: route.query.state as string,
   } as OauthLoginReq;
-  oauthLoginApi(data).then((res) => {
-    // 设置Token
-    userStore.setLogin(res.data.token);
+
+  userStore.oauthLogin(data).then((res) => {
     window.$message?.success("登录成功");
-    getUserInfoApi().then((res) => {
-      userStore.updateUserInfo(res.data);
+
+    userStore.getUserInfo().then((res) => {
       if (userStore.userInfo.email === "") {
         window.$message?.warning("请绑定邮箱以便及时收到回复");
       }

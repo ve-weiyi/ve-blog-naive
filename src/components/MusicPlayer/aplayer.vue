@@ -8,7 +8,7 @@ import type { PropType } from "vue";
 import "aplayer/dist/APlayer.min.css";
 import APlayer from "aplayer";
 import { AxiosPromise } from "axios";
-
+// https://github.com/DIYgod/APlayer
 const playerRef = ref();
 let instance: any;
 

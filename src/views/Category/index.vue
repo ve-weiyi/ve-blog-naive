@@ -28,7 +28,7 @@ import { useBlogStore } from "@/store";
 
 const blogStore = useBlogStore();
 
-const cover = blogStore.getCover("tag");
+const cover = blogStore.getCover("category");
 let categoryOption = reactive({
   tooltip: {
     trigger: "item",
@@ -75,7 +75,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/styles/mixin.scss";
+@use "@/assets/styles/mixin.scss" as *;
 
 .category-list {
   @include flex;

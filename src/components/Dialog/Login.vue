@@ -67,9 +67,8 @@
 
 <script setup lang="ts">
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
-import { loginApi, oauthAuthorizeUrlApi } from "@/api/auth";
-import { getUserInfoApi } from "@/api/user";
-import { LoginReq } from "@/api/types";
+import { oauthAuthorizeUrlApi } from "@/api/auth";
+import { LoginReq, OauthLoginReq } from "@/api/types";
 
 const appStore = useAppStore();
 const userStore = useUserStore();
@@ -97,10 +96,11 @@ const handleForget = () => {
 };
 
 const oauthLogin = (platform: string) => {
-  oauthAuthorizeUrlApi({
+  const oauth: OauthLoginReq = {
     platform: platform,
     state: route.path,
-  }).then((res) => {
+  };
+  oauthAuthorizeUrlApi(oauth).then((res) => {
     appStore.setLoginFlag(false);
     console.log(res.data.url);
     // 新启页面跳转
@@ -121,18 +121,21 @@ const handleLogin = () => {
     return;
   }
   loading.value = true;
-  loginApi(loginForm.value).then((res) => {
-    userStore.setLogin(res.data.token);
+  userStore.login(loginForm.value).then((res) => {
     window.$message?.success("登录成功");
+
+    userStore.getUserInfo().then((res) => {
+      if (userStore.userInfo.email === "") {
+        window.$message?.warning("请绑定邮箱以便及时收到回复");
+      }
+    });
+
     loginForm.value = {
       username: "",
       password: "",
     };
     appStore.setLoginFlag(false);
     loading.value = false;
-    getUserInfoApi().then((res) => {
-      userStore.updateUserInfo(res.data);
-    });
   });
 };
 </script>

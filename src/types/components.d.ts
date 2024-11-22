@@ -43,6 +43,7 @@ declare module '@vue/runtime-core' {
     Oauth: typeof import('./../components/Oauth/index.vue')['default']
     Pagination: typeof import('./../components/Pagination/index.vue')['default']
     Paging: typeof import('./../components/Pagination/Paging.vue')['default']
+    Player: typeof import('./../components/zw-player/player.vue')['default']
     Provider: typeof import('./../components/Provider/index.vue')['default']
     RecentComment: typeof import('./../components/Layout/SideBar/RecentComment.vue')['default']
     Register: typeof import('./../components/Dialog/Register.vue')['default']

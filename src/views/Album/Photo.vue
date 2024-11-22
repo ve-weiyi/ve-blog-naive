@@ -22,10 +22,15 @@ import { useBlogStore } from "@/store";
 
 const blogStore = useBlogStore();
 
-const cover = blogStore.getCover("about");
+const cover = blogStore.getCover("photo");
 
 const route = useRoute();
-const albumInfo = ref<Album>({});
+const albumInfo = ref<Album>({
+  id: 0,
+  album_name: "",
+  album_desc: "",
+  album_cover: "",
+});
 const photoList = ref<Photo[]>([]);
 
 onMounted(() => {

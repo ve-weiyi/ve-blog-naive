@@ -60,7 +60,7 @@ const userStore = useUserStore();
 const appStore = useAppStore();
 const blogStore = useBlogStore();
 
-const cover = blogStore.getCover("tag");
+const cover = blogStore.getCover("talk");
 const route = useRoute();
 const isLike = computed(() => (id: number) => (userStore.isTalkLike(id) ? "like-flag" : ""));
 const data = reactive({
@@ -96,7 +96,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/styles/mixin.scss";
+@use "@/assets/styles/mixin.scss" as *;
 
 .talk-item {
   display: flex;
