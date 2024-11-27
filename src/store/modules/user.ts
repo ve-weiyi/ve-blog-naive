@@ -34,10 +34,8 @@ export const useUserStore = defineStore("useUserStore", {
         oauthLoginApi(oauth)
           .then((res) => {
             const token = res.data.token;
-            console.log("token", token);
             setUid(String(token.user_id));
             setToken(token.access_token);
-            console.log("getToken", getToken());
             resolve(res);
           })
           .catch((error) => {
@@ -50,10 +48,8 @@ export const useUserStore = defineStore("useUserStore", {
         loginApi(user)
           .then((res) => {
             const token = res.data.token;
-            console.log("token", token);
             setUid(String(token.user_id));
             setToken(token.access_token);
-            console.log("getToken", getToken());
             resolve(res);
           })
           .catch((error) => {
@@ -111,7 +107,7 @@ export const useUserStore = defineStore("useUserStore", {
 
     isLogin() {
       const tk = getToken();
-      console.log("isLogin", tk != undefined);
+      // console.log("isLogin", tk != undefined);
       return tk != undefined;
     },
     articleLike(articleId: number) {

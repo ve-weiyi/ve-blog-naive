@@ -340,10 +340,11 @@ function likeComment(comment: Comment | CommentReply) {
     id: comment.id,
   };
   likeCommentApi(data).then((res) => {
-    window.$message?.success("点赞成功");
     if (userStore.isCommentLike(comment.id)) {
+      window.$message?.error("取消点赞成功");
       comment.like_count--;
     } else {
+      window.$message?.success("点赞成功");
       comment.like_count++;
     }
     userStore.commentLike(comment.id);

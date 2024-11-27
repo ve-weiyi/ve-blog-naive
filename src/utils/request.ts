@@ -1,15 +1,35 @@
 import axios, { type AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from "axios";
 import MD5 from "crypto-js/md5";
 import { useUserStore } from "@/store";
-import { getToken, getUid } from "./token";
+import { getTerminalId, getToken, getUid } from "./token";
 
-function signWithSalt(message: string, salt: string): string {
-  const saltedMessage = salt + message;
-  return MD5(saltedMessage).toString();
+const HeaderUid = "Uid";
+const HeaderToken = "Token";
+const HeaderAuthorization = "Authorization";
+
+const HeaderXAuthToken = "X-Auth-Token";
+const HeaderTerminal = "Terminal";
+const HeaderTimestamp = "Timestamp";
+
+function addUserToken(config: InternalAxiosRequestConfig): InternalAxiosRequestConfig {
+  config.headers = Object.assign({}, config.headers, {
+    [HeaderUid]: getUid(),
+    [HeaderToken]: getToken(),
+  });
+
+  return config;
 }
 
-function getTimestampInSeconds(): number {
-  return Math.floor(Date.now() / 1000);
+function addTimeToken(config: InternalAxiosRequestConfig): InternalAxiosRequestConfig {
+  let dv = getTerminalId();
+  let ts = Math.floor(Date.now() / 1000).toString();
+  config.headers = Object.assign({}, config.headers, {
+    [HeaderTerminal]: dv,
+    [HeaderTimestamp]: ts,
+    [HeaderXAuthToken]: MD5(dv + ts).toString(),
+  });
+
+  return config;
 }
 
 const requests = axios.create({
@@ -21,35 +41,12 @@ const requests = axios.create({
   },
 });
 
-const HeaderAuthorization = "Authorization";
-const HeaderUid = "Uid";
-const HeaderToken = "Token";
-const HeaderTerminal = "Terminal";
-const HeaderTimestamp = "Timestamp";
-
 // 请求拦截器
 requests.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     // 请求带token
-    let dv = "device_id";
-    let ts = getTimestampInSeconds().toString();
-    const tk = getToken();
-    if (tk) {
-      config.headers = Object.assign({}, config.headers, {
-        [HeaderAuthorization]: tk,
-        [HeaderUid]: getUid(),
-        [HeaderToken]: signWithSalt(dv, ts),
-        [HeaderTerminal]: dv,
-        [HeaderTimestamp]: ts,
-      });
-    } else {
-      // 未登录时的加密方式
-      config.headers = Object.assign({}, config.headers, {
-        [HeaderToken]: signWithSalt(dv, ts),
-        [HeaderTerminal]: dv,
-        [HeaderTimestamp]: ts,
-      });
-    }
+    addUserToken(config);
+    addTimeToken(config);
 
     return config;
   },
@@ -61,20 +58,31 @@ requests.interceptors.request.use(
 // 配置响应拦截器
 requests.interceptors.response.use(
   (response: AxiosResponse) => {
-    switch (response.data.code) {
+    // 检查配置的响应类型是否为二进制类型（'blob' 或 'arraybuffer'）, 如果是，直接返回响应对象
+    if (response.config.responseType === "blob" || response.config.responseType === "arraybuffer") {
+      return response;
+    }
+
+    const { code, data, message } = response.data;
+
+    // 接口错误码
+    switch (code) {
       case 200:
         break;
       case 401:
         window.$message?.error("用户未登录");
-        return Promise.reject(response.data.message);
+        return Promise.reject(message);
       case 403:
         const userStore = useUserStore();
         userStore.forceLogOut();
-        window.$message?.error(response.data.message);
-        return Promise.reject(response.data.message);
+        window.$message?.error(message);
+        return Promise.reject(message);
       case 500:
-        window.$message?.error(response.data.message);
-        return Promise.reject(response.data.message);
+        window.$message?.error(message);
+        return Promise.reject(message);
+      default:
+        window.$message?.error(message || "系统出错");
+        return Promise.reject(new Error(message || "Error"));
     }
     return response.data;
   },

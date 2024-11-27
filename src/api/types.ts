@@ -48,6 +48,8 @@ export interface ArticlePreview {
   id: number; // 文章ID
   article_cover: string; // 文章缩略图
   article_title: string; // 标题
+  like_count: number; // 点赞量
+  views_count: number; // 浏览量
   created_at: number; // 创建时间
 }
 
@@ -257,6 +259,7 @@ export interface Page {
   page_name: string; // 页面名
   page_label: string; // 页面标签
   page_cover: string; // 页面封面
+  is_carousel?: number; // 是否轮播
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
 }
@@ -266,6 +269,7 @@ export interface PageDTO {
   page_name: string; // 页面名称
   page_label: string; // 页面标签
   page_cover: string; // 页面封面
+  is_carousel?: number; // 是否轮播
 }
 
 export interface PageQuery {
@@ -330,6 +334,13 @@ export interface RemarkNewReq {
 }
 
 export interface RemarkQueryReq extends PageQuery {
+}
+
+export interface ReportReq {
+}
+
+export interface ReportResp {
+  terminal_id: string;
 }
 
 export interface ResetPasswordReq {

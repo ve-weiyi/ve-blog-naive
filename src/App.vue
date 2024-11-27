@@ -53,6 +53,7 @@ const isMobile = computed(() => {
 
 onBeforeMount(() => {
   // pingApi();
+  blogStore.report();
   blogStore.getBlogInfo();
 });
 onMounted(() => {
