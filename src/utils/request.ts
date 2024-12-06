@@ -21,8 +21,8 @@ function addUserToken(config: InternalAxiosRequestConfig): InternalAxiosRequestC
 }
 
 function addTimeToken(config: InternalAxiosRequestConfig): InternalAxiosRequestConfig {
-  let dv = getTerminalId();
-  let ts = Math.floor(Date.now() / 1000).toString();
+  const dv = getTerminalId();
+  const ts = Math.floor(Date.now() / 1000).toString();
   config.headers = Object.assign({}, config.headers, {
     [HeaderTerminal]: dv,
     [HeaderTimestamp]: ts,
@@ -35,6 +35,7 @@ function addTimeToken(config: InternalAxiosRequestConfig): InternalAxiosRequestC
 const requests = axios.create({
   baseURL: "",
   timeout: 10000,
+  withCredentials: false, // 禁用 Cookie
   // 请求头
   headers: {
     "Content-Type": "application/json;charset=UTF-8",

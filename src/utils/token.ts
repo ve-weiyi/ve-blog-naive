@@ -1,11 +1,7 @@
 import Cookies from "js-cookie";
 
-export function clearCookies() {
-  // 项目线上部署可以取消注释
-  const keys = Object.keys(Cookies.get());
-  keys.forEach((key) => {
-    Cookies.remove(key);
-  });
+export function clearStorage() {
+  localStorage.clear();
 }
 
 const TokenKey: string = "Token";

@@ -1,4 +1,4 @@
-import { clearCookies, getToken, setToken, setUid } from "@/utils/token";
+import { clearStorage, getToken, setToken, setUid } from "@/utils/token";
 import { getUserInfoApi, getUserLikeApi } from "@/api/user";
 import { loginApi, logoutApi, oauthLoginApi } from "@/api/auth";
 import type { EmptyResp, LoginReq, LoginResp, OauthLoginReq, UserInfoResp, UserLikeResp } from "@/api/types";
@@ -61,8 +61,8 @@ export const useUserStore = defineStore("useUserStore", {
       return new Promise((resolve, reject) => {
         logoutApi()
           .then((res) => {
-            this.$reset();
-            clearCookies();
+            this.forceLogOut();
+            clearStorage();
             resolve(res);
           })
           .catch((error) => {
@@ -101,8 +101,11 @@ export const useUserStore = defineStore("useUserStore", {
       });
     },
     forceLogOut() {
-      this.$reset();
-      clearCookies();
+      return new Promise<void>((resolve) => {
+        this.$reset();
+        clearStorage();
+        resolve();
+      });
     },
 
     isLogin() {
