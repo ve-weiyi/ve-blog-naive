@@ -21,7 +21,7 @@ function addUserToken(config: InternalAxiosRequestConfig): InternalAxiosRequestC
 }
 
 function addTimeToken(config: InternalAxiosRequestConfig): InternalAxiosRequestConfig {
-  const dv = getTerminalId();
+  const dv = getTerminalId() || "";
   const ts = Math.floor(Date.now() / 1000).toString();
   config.headers = Object.assign({}, config.headers, {
     [HeaderTerminal]: dv,

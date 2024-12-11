@@ -64,7 +64,7 @@ import { useBlogStore, useUserStore } from "@/store";
 import { formatDateTime } from "@/utils/date";
 import { emojiList } from "@/utils/emoji";
 import { tvList } from "@/utils/tv";
-import { ChatMessage, ChatMsgResp, WebSocketMsg } from "@/api/types";
+import { ChatRecordResp, ReceiveMsg, ReplyMsg, SendMessageReq } from "@/api/types";
 import chatroom from "@/assets/images/chatroom.png";
 
 const userStore = useUserStore();
@@ -72,7 +72,7 @@ const blogStore = useBlogStore();
 const data = reactive({
   show: false,
   ipAddress: "",
-  recordList: [] as ChatMsgResp[],
+  recordList: [] as ChatRecordResp[],
   chatContent: "",
   emojiType: 0,
   unreadCount: 0,
@@ -86,6 +86,7 @@ enum Type {
   SEND_MESSAGE = 3, // 发送消息
   RECALL_MESSAGE = 4, // 撤回消息
   HEART_BEAT = 5, // 心跳
+  CLIENT_INFO = 6, // 客户端信息
 }
 
 const {
@@ -98,16 +99,17 @@ const {
   webSocketState,
   onlineCount,
 } = toRefs(data);
-const websocketMessage = reactive<WebSocketMsg>({
-  cmd: 0,
+const websocketMessage = reactive<ReceiveMsg>({
+  type: 0,
   data: "",
+  timestamp: 0,
 });
 const backBtn = ref<any>([]);
 const websocket = ref<WebSocket>();
 const timeout = ref<NodeJS.Timeout>();
 const serverTimeout = ref<NodeJS.Timeout>();
 const isMy = computed(
-  () => (chat: ChatMessage) =>
+  () => (chat: ChatRecordResp) =>
     chat.ip_address == ipAddress.value ||
     (chat.user_id !== "" && chat.user_id === userStore.userInfo.user_id)
 );
@@ -128,19 +130,23 @@ const handleOpen = () => {
     websocket.value.onopen = () => {
       webSocketState.value = true;
       startHeart();
+      getHistoryRecord();
     };
     websocket.value.onmessage = (event: MessageEvent) => {
-      const res = JSON.parse(event.data);
-      console.log("websocket msg", ipAddress.value, res.client_ip);
-      switch (res.cmd) {
+      const res: ReplyMsg = JSON.parse(event.data);
+      console.log("websocket msg", res);
+      switch (res.type) {
+        case Type.CLIENT_INFO:
+          const info = JSON.parse(res.data);
+          ipAddress.value = info.ip_address;
+          break;
         case Type.ONLINE_COUNT:
           // 在线人数
-          onlineCount.value = res.data;
+          const online = JSON.parse(res.data);
+          onlineCount.value = online.count;
           break;
         case Type.HISTORY_RECORD:
           recordList.value = JSON.parse(res.data);
-          ipAddress.value = res.client_ip;
-          console.log("recordList msg", recordList.value);
           break;
         case Type.SEND_MESSAGE:
           let record = JSON.parse(res.data);
@@ -151,7 +157,7 @@ const handleOpen = () => {
           break;
         case Type.RECALL_MESSAGE:
           for (let i = 0; i < recordList.value.length; i++) {
-            if (recordList.value[i].id === res.data) {
+            if (recordList.value[i].id === parseInt(res.data)) {
               recordList.value.splice(i, 1);
               i--;
             }
@@ -172,7 +178,7 @@ const handleOpen = () => {
   show.value = !show.value;
 };
 // 展示菜单
-const showBack = (chat: ChatMessage, index: number, e: any) => {
+const showBack = (chat: ChatRecordResp, index: number, e: any) => {
   backBtn.value.forEach((item: any) => {
     item.style.display = "none";
   });
@@ -185,17 +191,7 @@ const showBack = (chat: ChatMessage, index: number, e: any) => {
     backBtn.value[index].style.display = "block";
   }
 };
-// 撤回消息
-const back = (item: ChatMessage, index: number) => {
-  let data = {
-    id: item.id,
-  };
 
-  websocketMessage.cmd = Type.RECALL_MESSAGE;
-  websocketMessage.data = JSON.stringify(data);
-  websocket.value?.send(JSON.stringify(websocketMessage));
-  backBtn.value[index].style.display = "none";
-};
 const handleKeyCode = (e: any) => {
   if (e.ctrlKey && e.keyCode === 13) {
     chatContent.value = chatContent.value + "\n";
@@ -204,6 +200,8 @@ const handleKeyCode = (e: any) => {
     handleSend();
   }
 };
+
+// 发送消息
 const handleSend = () => {
   if (chatContent.value.trim() == "") {
     window.$message?.error("内容不能为空");
@@ -233,21 +231,50 @@ const handleSend = () => {
     }
     return str;
   });
-  let chat = {
-    chat_content: chatContent.value,
+  let chat: SendMessageReq = {
+    type: "text",
+    content: chatContent.value,
   };
-  websocketMessage.cmd = Type.SEND_MESSAGE;
+
+  websocketMessage.timestamp = new Date().getTime();
+  websocketMessage.type = Type.SEND_MESSAGE;
   websocketMessage.data = JSON.stringify(chat);
   websocket.value?.send(JSON.stringify(websocketMessage));
   chatContent.value = "";
 };
+
+// 撤回消息
+const back = (item: ChatRecordResp, index: number) => {
+  let data = {
+    id: item.id,
+  };
+
+  websocketMessage.timestamp = new Date().getTime();
+  websocketMessage.type = Type.RECALL_MESSAGE;
+  websocketMessage.data = JSON.stringify(data);
+  websocket.value?.send(JSON.stringify(websocketMessage));
+  backBtn.value[index].style.display = "none";
+};
+
+// 获取历史记录
+const getHistoryRecord = () => {
+  websocketMessage.timestamp = new Date().getTime();
+  websocketMessage.type = Type.HISTORY_RECORD;
+  websocketMessage.data = "";
+  websocket.value?.send(JSON.stringify(websocketMessage));
+};
+
+// 心跳
+const heartBeat = () => {
+  websocketMessage.timestamp = new Date().getTime();
+  websocketMessage.type = Type.HEART_BEAT;
+  websocketMessage.data = "ping";
+  websocket.value?.send(JSON.stringify(websocketMessage));
+};
+
 const startHeart = () => {
   timeout.value = setTimeout(() => {
-    const beatMessage = {
-      type: Type.HEART_BEAT,
-      data: "ping",
-    };
-    websocket.value?.send(JSON.stringify(beatMessage));
+    heartBeat();
     waitServer();
   }, 30 * 1000);
 };

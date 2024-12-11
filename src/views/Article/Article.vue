@@ -167,7 +167,7 @@
 
 <script setup lang="ts">
 import { getArticleDetailsApi, likeArticleApi } from "@/api/article";
-import { ArticleDeatils } from "@/api/types";
+import { ArticleDetails } from "@/api/types";
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
 import { formatDate } from "@/utils/date";
 import { Share } from "vue3-social-share";
@@ -184,7 +184,7 @@ const data = reactive({
   wordNum: 0,
   readTime: 0,
   commentType: 1,
-  article: {} as ArticleDeatils,
+  article: {} as ArticleDetails,
 });
 const { articleLoaded, wordNum, readTime, commentType, article } = toRefs(data);
 const articleCover = computed(() => (cover: string) => "background-image:url(" + cover + ")");
@@ -213,10 +213,10 @@ const like = () => {
     //判断是否点赞
     if (userStore.isArticleLike(id)) {
       window.$message?.error("取消点赞成功");
-      article.value.like_count --;
+      article.value.like_count--;
     } else {
       window.$message?.success("点赞成功");
-      article.value.like_count ++;
+      article.value.like_count++;
     }
     userStore.articleLike(id);
   });

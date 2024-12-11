@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { GetAboutMeReq, GetAboutMeResp, GetBlogHomeInfoReq, GetBlogHomeInfoResp, ReportReq, ReportResp } from "./types";
+import { EmptyReq, GetAboutMeReq, GetAboutMeResp, GetBlogHomeInfoReq, GetBlogHomeInfoResp, ReportResp } from "./types";
 
 /** 获取博客前台首页信息 */
 export function getBlogHomeInfoApi(data?: GetBlogHomeInfoReq): Promise<IApiResponse<GetBlogHomeInfoResp>> {
@@ -20,7 +20,7 @@ export function getAboutMeApi(data?: GetAboutMeReq): Promise<IApiResponse<GetAbo
 }
 
 /** 访客上报 */
-export function reportApi(data?: ReportReq): Promise<IApiResponse<ReportResp>> {
+export function reportApi(data?: EmptyReq): Promise<IApiResponse<ReportResp>> {
   return request({
     url: "/api/v1/report",
     method: "GET",
