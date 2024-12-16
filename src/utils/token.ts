@@ -1,5 +1,3 @@
-import Cookies from "js-cookie";
-
 export function clearStorage() {
   localStorage.clear();
 }
@@ -7,31 +5,31 @@ export function clearStorage() {
 const TokenKey: string = "Token";
 
 export function getToken() {
-  return Cookies.get(TokenKey);
+  return localStorage.getItem(TokenKey);
 }
 
 // 本地运行记得删除domain
 export function setToken(token: string) {
   // 项目线上部署可以取消注释
-  return Cookies.set(TokenKey, token);
+  return localStorage.setItem(TokenKey, token);
 }
 
 const UidKey: string = "Uid";
 
 export function getUid() {
-  return Cookies.get(UidKey);
+  return localStorage.getItem(UidKey);
 }
 
 export function setUid(uid: string) {
-  return Cookies.set(UidKey, uid);
+  return localStorage.setItem(UidKey, uid);
 }
 
 const TerminalIdKey: string = "TerminalId";
 
 export function getTerminalId() {
-  return Cookies.get(TerminalIdKey);
+  return localStorage.getItem(TerminalIdKey);
 }
 
 export function setTerminalId(tid: string) {
-  return Cookies.set(TerminalIdKey, tid);
+  return localStorage.setItem(TerminalIdKey, tid);
 }
