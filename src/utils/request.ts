@@ -73,9 +73,12 @@ requests.interceptors.response.use(
       case 401:
         window.$message?.error("用户未登录");
         return Promise.reject(message);
-      case 403:
+      case 402:
         const userStore = useUserStore();
         userStore.forceLogOut();
+        window.$message?.error(message);
+        return Promise.reject(message);
+      case 403:
         window.$message?.error(message);
         return Promise.reject(message);
       case 500:
