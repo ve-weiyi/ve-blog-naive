@@ -50,6 +50,7 @@ const emit = defineEmits([
 
 const content = defineModel({
   type: String,
+  default: "",
   required: false,
 });
 

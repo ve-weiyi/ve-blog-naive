@@ -16,7 +16,7 @@ export interface ArticleClassifyQueryReq extends PageQuery {
   classify_name?: string; // 分类名
 }
 
-export interface ArticleDeatils extends ArticleHome {
+export interface ArticleDetails extends ArticleHome {
   last_article?: ArticlePreview; // 上一篇文章
   next_article?: ArticlePreview; // 下一篇文章
   recommend_article_list: ArticlePreview[]; // 推荐文章列表
@@ -48,11 +48,13 @@ export interface ArticlePreview {
   id: number; // 文章ID
   article_cover: string; // 文章缩略图
   article_title: string; // 标题
+  like_count: number; // 点赞量
+  views_count: number; // 浏览量
   created_at: number; // 创建时间
 }
 
 export interface BatchResp {
-  success_count: number;
+  success_count: number; 
 }
 
 export interface BindUserEmailReq {
@@ -61,9 +63,9 @@ export interface BindUserEmailReq {
 }
 
 export interface Category {
-  id: number;
+  id: number; 
   category_name: string; // 分类名
-  article_count: number;
+  article_count: number; 
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
 }
@@ -72,35 +74,7 @@ export interface CategoryQueryReq extends PageQuery {
   category_name?: string; // 分类名
 }
 
-export interface ChatMessage {
-  id: number; // 主键
-  user_id: string; // 用户id
-  nickname: string; // 昵称
-  avatar: string; // 头像
-  chat_content: string; // 消息内容
-  ip_address: string; // ip地址
-  ip_source: string; // ip来源
-  type: string; // 类型
-  created_at: number; // 创建时间
-  updated_at: number; // 更新时间
-}
-
-export interface ChatMessageQueryReq {
-  after?: number; // 起始时间
-  before?: number; // 结束时间
-  limit?: number; // 限制数量
-  user_id?: string; // 用户id
-  topic_id?: string; // 聊天室id
-  keyword?: string; // 关键字
-  type?: string; // 类型
-}
-
-export interface ChatMsgReq {
-  type: string; // 消息类型 1: 文本消息 2: 图片消息 3: 文件消息 4: 语音消息 5: 视频消息
-  chat_content: string; // 消息内容
-}
-
-export interface ChatMsgResp {
+export interface ChatRecordResp {
   id: number; // 主键
   user_id: string; // 用户id
   device_id: string; // 设备id
@@ -112,6 +86,15 @@ export interface ChatMsgResp {
   type: string; // 类型
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
+}
+
+export interface ClientInfoResp {
+  client_id: string; // 客户端id
+  user_id: string; // 用户id
+  device_id: string; // 设备id
+  nickname: string; // 昵称
+  ip_address: string; // ip地址
+  ip_source: string; // ip来源
 }
 
 export interface Comment {
@@ -162,10 +145,10 @@ export interface CommentReply {
 }
 
 export interface CommentUserInfo {
-  user_id: string;
-  nickname: string;
-  avatar: string;
-  website: string;
+  user_id: string; 
+  nickname: string; 
+  avatar: string; 
+  website: string; 
 }
 
 export interface EmptyReq {
@@ -204,7 +187,7 @@ export interface GetAboutMeReq {
 }
 
 export interface GetAboutMeResp {
-  content: string;
+  content: string; 
 }
 
 export interface GetBlogHomeInfoReq {
@@ -220,21 +203,21 @@ export interface GetBlogHomeInfoResp {
 }
 
 export interface IdReq {
-  id: number;
+  id: number; 
 }
 
 export interface IdsReq {
-  ids: number[];
+  ids: number[]; 
 }
 
 export interface LoginReq {
-  username: string;
-  password: string;
+  username: string; 
+  password: string; 
   verify_code?: string; // 验证码
 }
 
 export interface LoginResp {
-  token?: Token;
+  token?: Token; 
 }
 
 export interface MultiUploadFileReq {
@@ -252,11 +235,17 @@ export interface OauthLoginUrlResp {
   url: string; // 授权地址
 }
 
+export interface OnlineCountResp {
+  msg: string; // 消息
+  count: number; // 在线人数
+}
+
 export interface Page {
   id: number; // 页面id
   page_name: string; // 页面名
   page_label: string; // 页面标签
   page_cover: string; // 页面封面
+  is_carousel?: number; // 是否轮播
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
 }
@@ -266,22 +255,23 @@ export interface PageDTO {
   page_name: string; // 页面名称
   page_label: string; // 页面标签
   page_cover: string; // 页面封面
+  is_carousel?: number; // 是否轮播
 }
 
 export interface PageQuery {
-  page?: number;
-  page_size?: number;
-  sorts?: string[];
+  page?: number; 
+  page_size?: number; 
+  sorts?: string[]; 
 }
 
 export interface PageQueryReq extends PageQuery {
 }
 
 export interface PageResp {
-  page: number;
-  page_size: number;
-  total: number;
-  list: any;
+  page: number; 
+  page_size: number; 
+  total: number; 
+  list: any; 
 }
 
 export interface Photo {
@@ -297,17 +287,31 @@ export interface PingReq {
 }
 
 export interface PingResp {
-  env: string;
-  name: string;
-  version: string;
-  runtime: string;
-  description: string;
-  rpc_status: string[];
+  env: string; 
+  name: string; 
+  version: string; 
+  runtime: string; 
+  description: string; 
+  rpc_status: string[]; 
+}
+
+export interface RecallMessageReq {
+  id: number; // 消息id
+}
+
+export interface RecallMessageResp {
+  id: number; // 消息id
+}
+
+export interface ReceiveMsg {
+  type: number; // 类型
+  data: string; // 数据
+  timestamp: number; //时间戳
 }
 
 export interface RegisterReq {
-  username: string;
-  password: string;
+  username: string; 
+  password: string; 
   verify_code: string; // 验证码
 }
 
@@ -332,27 +336,42 @@ export interface RemarkNewReq {
 export interface RemarkQueryReq extends PageQuery {
 }
 
+export interface ReplyMsg {
+  type: number; // 类型
+  data: string; // 数据
+  timestamp: number; //时间戳
+}
+
+export interface ReportResp {
+  terminal_id: string; 
+}
+
 export interface ResetPasswordReq {
-  username: string;
-  password: string;
+  username: string; 
+  password: string; 
   verify_code: string; // 验证码
 }
 
 export interface Response {
-  code: number;
-  message: string;
-  data: any;
-  trace_id: string;
+  code: number; 
+  message: string; 
+  data: any; 
+  trace_id: string; 
 }
 
 export interface RestHeader {
-  header_country?: string;
-  header_language?: string;
-  header_timezone?: string;
-  header_app_name?: string;
-  header_x_user_id?: string;
-  header_x_auth_token?: string;
-  header_terminal_id?: string;
+  header_country?: string; 
+  header_language?: string; 
+  header_timezone?: string; 
+  header_app_name?: string; 
+  header_x_user_id?: string; 
+  header_x_auth_token?: string; 
+  header_terminal_id?: string; 
+}
+
+export interface SendMessageReq {
+  type: string; // 消息类型 1: 文本消息 2: 图片消息 3: 文件消息 4: 语音消息 5: 视频消息
+  content: string; // 消息内容
 }
 
 export interface Tag {
@@ -410,7 +429,7 @@ export interface UploadFileReq {
 }
 
 export interface UserEmailReq {
-  username: string;
+  username: string; 
 }
 
 export interface UserInfoExt {
@@ -428,17 +447,9 @@ export interface UserInfoResp extends UserInfoExt {
 }
 
 export interface UserLikeResp {
-  article_like_set: number[];
-  comment_like_set: number[];
-  talk_like_set: number[];
-}
-
-export interface WebSocketMsg {
-  client_id?: string; // 客户端id
-  client_ip?: string; // 客户端ip
-  timestamp?: number; // 时间戳
-  cmd: number; // 消息命令
-  data: string; // 消息内容
+  article_like_set: number[]; 
+  comment_like_set: number[]; 
+  talk_like_set: number[]; 
 }
 
 export interface WebsiteConfigDTO {

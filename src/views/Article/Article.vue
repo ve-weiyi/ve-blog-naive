@@ -4,31 +4,31 @@
       <h1 class="article-title">{{ article.article_title }}</h1>
       <div class="article-meta">
         <div class="first-meta">
-          <span
-            ><svg-icon icon-class="calendar" style="margin-right: 0.15rem"></svg-icon>
+          <span>
+            <svg-icon icon-class="calendar" style="margin-right: 0.15rem"></svg-icon>
             <span class="text">发表于 </span>{{ formatDate(article.created_at) }}
           </span>
-          <span v-if="article.updated_at" class="item"
-            ><svg-icon icon-class="update" style="margin-right: 0.15rem"></svg-icon>
+          <span v-if="article.updated_at" class="item">
+            <svg-icon icon-class="update" style="margin-right: 0.15rem"></svg-icon>
             <span class="text">更新于 </span>{{ formatDate(article.updated_at) }}
           </span>
-          <span class="item"
-            ><svg-icon icon-class="eye" style="margin-right: 0.15rem"></svg-icon>
+          <span class="item">
+            <svg-icon icon-class="eye" style="margin-right: 0.15rem"></svg-icon>
             <span class="text">阅读量 </span>{{ article.views_count }}</span
           >
         </div>
         <div class="second-meta">
-          <span
-            ><svg-icon icon-class="edit" size="0.9rem" style="margin-right: 0.15rem"></svg-icon>
+          <span>
+            <svg-icon icon-class="edit" size="0.9rem" style="margin-right: 0.15rem"></svg-icon>
             <span class="text">字数统计 </span>{{ count(wordNum) }} 字
           </span>
-          <span class="item"
-            ><svg-icon icon-class="clock" style="margin-right: 0.15rem"></svg-icon>
+          <span class="item">
+            <svg-icon icon-class="clock" style="margin-right: 0.15rem"></svg-icon>
             <span class="text">阅读时长 </span>{{ readTime }} 分钟
           </span>
           <span class="item">
-            <svg-icon icon-class="category" style="margin-right: 0.15rem"></svg-icon
-            >{{ article.category_name }}
+            <svg-icon icon-class="category" style="margin-right: 0.15rem"></svg-icon>
+            {{ article.category_name }}
           </span>
         </div>
       </div>
@@ -167,7 +167,7 @@
 
 <script setup lang="ts">
 import { getArticleDetailsApi, likeArticleApi } from "@/api/article";
-import { ArticleDeatils } from "@/api/types";
+import { ArticleDetails } from "@/api/types";
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
 import { formatDate } from "@/utils/date";
 import { Share } from "vue3-social-share";
@@ -184,7 +184,7 @@ const data = reactive({
   wordNum: 0,
   readTime: 0,
   commentType: 1,
-  article: {} as ArticleDeatils,
+  article: {} as ArticleDetails,
 });
 const { articleLoaded, wordNum, readTime, commentType, article } = toRefs(data);
 const articleCover = computed(() => (cover: string) => "background-image:url(" + cover + ")");
@@ -212,9 +212,11 @@ const like = () => {
   likeArticleApi({ id }).then((res) => {
     //判断是否点赞
     if (userStore.isArticleLike(id)) {
-      article.value.like_count -= 1;
+      window.$message?.error("取消点赞成功");
+      article.value.like_count--;
     } else {
-      article.value.like_count += 1;
+      window.$message?.success("点赞成功");
+      article.value.like_count++;
     }
     userStore.articleLike(id);
   });

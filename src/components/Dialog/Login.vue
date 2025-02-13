@@ -121,22 +121,26 @@ const handleLogin = () => {
     return;
   }
   loading.value = true;
-  userStore.login(loginForm.value).then((res) => {
-    window.$message?.success("登录成功");
+  userStore
+    .login(loginForm.value)
+    .then((res) => {
+      window.$message?.success("登录成功");
 
-    userStore.getUserInfo().then((res) => {
-      if (userStore.userInfo.email === "") {
-        window.$message?.warning("请绑定邮箱以便及时收到回复");
-      }
+      userStore.getUserInfo().then((res) => {
+        if (userStore.userInfo.email === "") {
+          window.$message?.warning("请绑定邮箱以便及时收到回复");
+        }
+      });
+
+      loginForm.value = {
+        username: "",
+        password: "",
+      };
+      appStore.setLoginFlag(false);
+    })
+    .finally(() => {
+      loading.value = false;
     });
-
-    loginForm.value = {
-      username: "",
-      password: "",
-    };
-    appStore.setLoginFlag(false);
-    loading.value = false;
-  });
 };
 </script>
 

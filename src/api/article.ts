@@ -2,7 +2,7 @@ import request from "@/utils/request";
 import {
   ArticleArchivesQueryReq,
   ArticleClassifyQueryReq,
-  ArticleDeatils,
+  ArticleDetails,
   ArticleHomeQueryReq,
   EmptyReq,
   EmptyResp,
@@ -38,7 +38,7 @@ export function findArticleClassifyTagApi(data?: ArticleClassifyQueryReq): Promi
 }
 
 /** 获取文章详情 */
-export function getArticleDetailsApi(data?: IdReq): Promise<IApiResponse<ArticleDeatils>> {
+export function getArticleDetailsApi(data?: IdReq): Promise<IApiResponse<ArticleDetails>> {
   return request({
     url: "/api/v1/article/get_article_details",
     method: "POST",

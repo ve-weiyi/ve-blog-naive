@@ -476,12 +476,12 @@ function Cut(str: string) {
 function Player() {
   let playerTimer = setInterval(timer, 500);
 
-  // 自动播放控制
-  document.body.addEventListener("click", function playMusicOnce() {
-    player.play();
-    // 移除点击事件监听器，确保只执行一次
-    document.body.removeEventListener("click", playMusicOnce);
-  });
+  // // 自动播放控制
+  // document.body.addEventListener("click", function playMusicOnce() {
+  //   player.play();
+  //   // 移除点击事件监听器，确保只执行一次
+  //   document.body.removeEventListener("click", playMusicOnce);
+  // });
 
   function timer() {
     durationTime.value = player.duration;

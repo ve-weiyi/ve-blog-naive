@@ -1,5 +1,6 @@
-import type { GetBlogHomeInfoResp, WebsiteConfigDTO } from "@/api/types";
-import { getBlogHomeInfoApi } from "@/api/website.ts";
+import type { GetBlogHomeInfoResp, ReportResp, WebsiteConfigDTO } from "@/api/types";
+import { getBlogHomeInfoApi, reportApi } from "@/api/website.ts";
+import { getTerminalId, setTerminalId } from "@/utils/token.ts";
 
 /**
  * 博客
@@ -19,6 +20,20 @@ export const useBlogStore = defineStore("useBlogStore", {
     } as GetBlogHomeInfoResp,
   }),
   actions: {
+    report(): Promise<IApiResponse<ReportResp>> {
+      return new Promise((resolve, reject) => {
+        reportApi()
+          .then((res) => {
+            setTerminalId(res.data.terminal_id)
+            getTerminalId()
+            resolve(res);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+
     getBlogInfo(): Promise<IApiResponse<GetBlogHomeInfoResp>> {
       return new Promise((resolve, reject) => {
         getBlogHomeInfoApi()

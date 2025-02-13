@@ -81,9 +81,11 @@ const like = () => {
   likeTalkApi({ id }).then((res) => {
     //判断是否点赞
     if (userStore.isTalkLike(id)) {
-      talk.value.like_count -= 1;
+      window.$message?.error("取消点赞成功");
+      talk.value.like_count --;
     } else {
-      talk.value.like_count += 1;
+      window.$message?.success("点赞成功");
+      talk.value.like_count ++;
     }
     userStore.talkLike(id);
   });

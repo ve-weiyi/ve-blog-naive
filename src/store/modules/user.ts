@@ -1,4 +1,4 @@
-import { clearCookies, getToken, setToken, setUid } from "@/utils/token";
+import { clearStorage, getToken, setToken, setUid } from "@/utils/token";
 import { getUserInfoApi, getUserLikeApi } from "@/api/user";
 import { loginApi, logoutApi, oauthLoginApi } from "@/api/auth";
 import type { EmptyResp, LoginReq, LoginResp, OauthLoginReq, UserInfoResp, UserLikeResp } from "@/api/types";
@@ -34,10 +34,8 @@ export const useUserStore = defineStore("useUserStore", {
         oauthLoginApi(oauth)
           .then((res) => {
             const token = res.data.token;
-            console.log("token", token);
             setUid(String(token.user_id));
             setToken(token.access_token);
-            console.log("getToken", getToken());
             resolve(res);
           })
           .catch((error) => {
@@ -50,10 +48,8 @@ export const useUserStore = defineStore("useUserStore", {
         loginApi(user)
           .then((res) => {
             const token = res.data.token;
-            console.log("token", token);
             setUid(String(token.user_id));
             setToken(token.access_token);
-            console.log("getToken", getToken());
             resolve(res);
           })
           .catch((error) => {
@@ -65,8 +61,8 @@ export const useUserStore = defineStore("useUserStore", {
       return new Promise((resolve, reject) => {
         logoutApi()
           .then((res) => {
-            this.$reset();
-            clearCookies();
+            this.forceLogOut();
+            clearStorage();
             resolve(res);
           })
           .catch((error) => {
@@ -105,13 +101,16 @@ export const useUserStore = defineStore("useUserStore", {
       });
     },
     forceLogOut() {
-      this.$reset();
-      clearCookies();
+      return new Promise<void>((resolve) => {
+        this.$reset();
+        clearStorage();
+        resolve();
+      });
     },
 
     isLogin() {
       const tk = getToken();
-      console.log("isLogin", tk != undefined);
+      // console.log("isLogin", tk != undefined);
       return tk != undefined;
     },
     articleLike(articleId: number) {

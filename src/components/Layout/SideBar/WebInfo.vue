@@ -27,11 +27,13 @@ setInterval(() => {
   str += day.getSeconds() + "秒";
   runTime.value = str;
 }, 1000);
-const webInfo = ref([
-  { name: "文章数目", count: blogStore.blogInfo.article_count },
-  { name: "运行时长", count: runTime },
-  { name: "总访问量", count: blogStore.blogInfo.views_count },
-]);
+const webInfo = computed(() => {
+  return [
+    { name: "文章数目", count: blogStore.blogInfo.article_count },
+    { name: "运行时长", count: runTime },
+    { name: "总访问量", count: blogStore.blogInfo.views_count },
+  ];
+});
 </script>
 
 <style lang="scss" scoped>
