@@ -1,45 +1,62 @@
-# vue3-ts-vite-starter
+# VE Blog Naive
 
-This template should help you quickly create a Vue 3 project based on Vite, using TypeScript as the development language by default.
+一个基于 Vue 3 + TypeScript + Naive UI 的现代化博客系统，使用 Vite 作为构建工具。
 
-这个模板应该能帮你快速创建一个基于 Vite 的 Vue 3 项目，默认使用 TypeScript 作为开发语言。
+## ✨ 特性
 
-## Usage
+- 🚀 采用 Vue 3 + TypeScript + Vite 4 技术栈
+- 🎨 集成 Naive UI 组件库，提供美观的界面设计
+- 📱 响应式设计，支持移动端访问
+- 🖼️ 相册功能，支持图片展示和管理
+- 📝 Markdown 支持，轻松编写文章
+- 🌙 深色模式支持
+- 🔍 全文搜索功能
+- 📊 文章归档和分类管理
 
-You can use a tool like [create-preset](https://github.com/awesome-starter/create-preset) to scaffold your project with this template.
+## 项目结构
+ve-blog-naive
+├── build/              # 构建相关配置
+├── mock/               # 模拟数据
+├── public/             # 静态资源
+├── src/
+│   ├── api/           # API 接口
+│   ├── assets/        # 项目资源
+│   ├── components/    # 公共组件
+│   ├── composables/   # 组合式函数
+│   ├── layouts/       # 布局组件
+│   ├── router/        # 路由配置
+│   ├── store/         # 状态管理
+│   ├── styles/        # 全局样式
+│   ├── utils/         # 工具函数
+│   └── views/         # 页面组件
+└── types/             # 类型定义
 
-你可以使用 [create-preset](https://github.com/awesome-starter/create-preset) 之类的工具通过此模板来搭建你的项目。
+## 🚀 快速开始
+
+### 环境要求
+
+- Node.js >= 16
+- pnpm >= 8
+
+### 安装
 
 ```bash
-pnpm create preset
+# 克隆项目
+git clone https://github.com/ve-weiyi/ve-blog-naive.git
+
+# 进入项目目录
+cd ve-blog-naive
+
+# 安装依赖
+pnpm install
 ```
 
-## Why Use This Template
+## 🎯 功能清单
 
-Why not use [create-vite](https://github.com/vitejs/vite/tree/main/packages/create-vite) to generate the basic template of the project?
-
-Because the basic template only has the simplest basic configuration, and the actual production project requires a lot of additional tool dependencies to improve development efficiency.
-
-为什么不使用 [create-vite](https://github.com/vitejs/vite/tree/main/packages/create-vite) 来生成项目的基础模板？
-
-因为基础模板只有最简单的配置，而实际生产的项目里，需要很多额外的提高开发效率的工具依赖。
-
-## How to learn
-
-If you are not very familiar with Vue 3 and TypeScript, or even have no contact at all, don’t worry, I have compiled an introductory guide, suitable for developers who do not have Vue 3 development experience to read, a book written based on the development process of a project , It is recommended to read and coding at the same time.
-
-> Btw: Currently only Chinese version, it is recommended to read through Google Translate with Chrome.
-
-See: [Learning Vue3](https://vue3.chengpeiquan.com/)
-
-如果你对 Vue 3 和 TypeScript 不是很熟悉，甚至完全没有接触过，不用担心，我整理了一个入门指南，适合没有 Vue 3 开发经验的开发者阅读，以一个项目的开发过程来写的一本书，建议一边 Reading ，一边 Coding 。
-
-点击阅读：[Vue3入门指南与实战案例](https://vue3.chengpeiquan.com/)
-
-## done
+### 已完成
 1.相册页面
 2.相册详情页面
 
-## todo
+### 待完成
 1.相册详情页面 获取指定相册下的照片
 2.归档页面时间轴页面替换
