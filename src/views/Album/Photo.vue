@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import { findPhotoListApi, getAlbumApi } from "@/api/album";
-import { Album, Photo } from "@/api/types";
+import type { Album, Photo } from "@/api/types";
 import { useBlogStore } from "@/store";
 
 const blogStore = useBlogStore();

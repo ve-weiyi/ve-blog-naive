@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { Comment, CommentNewReq, CommentQueryReq, EmptyResp, IdReq, PageResp } from "./types";
+import type { Comment, CommentNewReq, CommentQueryReq, EmptyResp, IdReq, PageResp } from "./types";
 
 /** 查询评论列表 */
 export function findCommentListApi(data?: CommentQueryReq): Promise<IApiResponse<PageResp>> {

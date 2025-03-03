@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import { useUserStore } from "@/store";
-import { UploadCustomRequestOptions } from "naive-ui";
+import type { UploadCustomRequestOptions } from "naive-ui";
 import { VueCropper } from "vue-cropper";
 import "vue-cropper/dist/index.css";
 import { uploadFileApi } from "@/api/upload";

@@ -115,7 +115,7 @@ import {
 } from "@/api/comment";
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
 import { formatDateTime } from "@/utils/date";
-import { Comment, CommentNewReq, CommentQueryReq, CommentReply } from "@/api/types";
+import type { Comment, CommentNewReq, CommentQueryReq, CommentReply } from "@/api/types";
 import { replaceEmoji } from "@/utils/emojis";
 
 const props = defineProps({
@@ -163,13 +163,13 @@ function insertComment() {
   // 判断登录
   if (!userStore.isLogin()) {
     appStore.loginFlag = true;
-    return false;
+    return;
   }
   let content = replyRef.value.content;
   // 判空
   if (content.trim() === "") {
     window.$message?.error("评论不能为空");
-    return false;
+    return;
   }
   // 解析表情
   content = replaceEmoji(content);
@@ -230,14 +230,14 @@ function confirmReply(index: number, comment: Comment | CommentReply) {
   // 判断登录
   if (!userStore.isLogin()) {
     appStore.loginFlag = true;
-    return false;
+    return;
   }
   const replyComponent = replyCommentRef.value[index];
 
   let content = replyComponent.content;
   if (content.trim() == "") {
     window.$message?.error("回复不能为空");
-    return false;
+    return;
   }
 
   const path = route.path;
@@ -333,7 +333,7 @@ function likeComment(comment: Comment | CommentReply) {
   // 判断登录
   if (!userStore.isLogin()) {
     appStore.loginFlag = true;
-    return false;
+    return;
   }
 
   const data = {

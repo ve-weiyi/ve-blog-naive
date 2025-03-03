@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArticleHome } from "@/api/types";
+import type { ArticleHome } from "@/api/types";
 import { findArticleClassifyCategoryApi, findArticleClassifyTagApi } from "@/api/article";
 import { formatDate } from "@/utils/date";
 import { useBlogStore } from "@/store";

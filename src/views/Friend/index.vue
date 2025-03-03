@@ -58,7 +58,7 @@
 
 <script setup lang="ts">
 import { findFriendListApi } from "@/api/friend";
-import { Friend } from "@/api/types";
+import type { Friend } from "@/api/types";
 import { useBlogStore } from "@/store";
 
 const blogStore = useBlogStore();

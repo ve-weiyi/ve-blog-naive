@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { Album, AlbumQueryReq, IdReq, PageResp, PhotoQueryReq } from "./types";
+import type { Album, AlbumQueryReq, IdReq, PageResp, PhotoQueryReq } from "./types";
 
 /** 获取相册列表 */
 export function findAlbumListApi(data?: AlbumQueryReq): Promise<IApiResponse<PageResp>> {

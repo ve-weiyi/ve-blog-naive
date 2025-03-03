@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { findCategoryListApi } from "@/api/category";
-import { Category } from "@/api/types";
+import type { Category } from "@/api/types";
 import Echarts from "@/components/Echarts/index.vue";
 import { useBlogStore } from "@/store";
 

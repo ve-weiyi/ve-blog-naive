@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { FileBackDTO, MultiUploadFileReq, UploadFileReq } from "./types";
+import type { FileBackDTO, MultiUploadFileReq, UploadFileReq } from "./types";
 
 /** 上传文件 */
 export function uploadFileApi(

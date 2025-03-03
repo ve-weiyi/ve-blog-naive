@@ -43,7 +43,7 @@
 import { useAppStore } from "@/store";
 import { useIntervalFn } from "@vueuse/core";
 import { registerApi, sendRegisterEmailApi } from "@/api/auth";
-import { RegisterReq } from "@/api/types";
+import type { RegisterReq } from "@/api/types";
 
 const appStore = useAppStore();
 const registerRef = ref();

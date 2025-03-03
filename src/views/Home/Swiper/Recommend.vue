@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { findArticleRecommendApi } from "@/api/article";
-import { ArticlePreview } from "@/api/types";
+import type { ArticlePreview } from "@/api/types";
 import { formatDate } from "@/utils/date";
 import { Autoplay, Mousewheel, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/vue";

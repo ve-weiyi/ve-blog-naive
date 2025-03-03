@@ -167,7 +167,7 @@
 
 <script setup lang="ts">
 import { getArticleDetailsApi, likeArticleApi } from "@/api/article";
-import { ArticleDetails } from "@/api/types";
+import type { ArticleDetails } from "@/api/types";
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
 import { formatDate } from "@/utils/date";
 import { Share } from "vue3-social-share";

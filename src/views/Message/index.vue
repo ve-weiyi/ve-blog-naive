@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import { addRemarkApi, findRemarkListApi } from "@/api/remark";
-import { Remark as Message } from "@/api/types";
+import type { Remark as Message } from "@/api/types";
 import { useBlogStore, useUserStore } from "@/store";
 import vueDanmaku from "vue3-danmaku";
 
@@ -69,7 +69,7 @@ onMounted(async () => {
 const AddMessage = () => {
   if (addMessageContent.value.trim() == "") {
     window.$message?.warning("留言内容不能为空");
-    return false;
+    return;
   }
   const userAvatar = userStore.userInfo.avatar
     ? userStore.userInfo.avatar

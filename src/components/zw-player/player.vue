@@ -510,7 +510,7 @@ function Player() {
     if (player.currentTime >= player.duration) {
       // 切换歌曲
       if (musicList.value.length !== 1) {
-        if (this.musicState === 0) {
+        if (musicState.value === 0) {
           thisMusicIndex.value =
             thisMusicIndex.value >= musicList.value.length - 1 ? 0 : thisMusicIndex.value + 1;
           _getInfo();

@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { findArticleArchivesApi } from "@/api/article";
-import { ArticleArchivesQueryReq, ArticlePreview } from "@/api/types";
+import type { ArticleArchivesQueryReq, ArticlePreview } from "@/api/types";
 import Pagination from "@/components/Pagination/index.vue";
 
 import { formatDate } from "@/utils/date";

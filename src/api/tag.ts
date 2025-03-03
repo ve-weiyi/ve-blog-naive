@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { PageResp, TagQueryReq } from "./types";
+import type { PageResp, TagQueryReq } from "./types";
 
 /** 分页获取标签列表 */
 export function findTagListApi(data?: TagQueryReq): Promise<IApiResponse<PageResp>> {

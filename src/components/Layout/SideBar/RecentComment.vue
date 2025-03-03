@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { findCommentRecentListApi } from "@/api/comment";
 import { formatDate } from "@/utils/date";
-import { Comment, CommentQueryReq } from "@/api/types";
+import type { Comment, CommentQueryReq } from "@/api/types";
 
 const commentList = ref<Comment[]>([]);
 onMounted(() => {

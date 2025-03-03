@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import {
+import type {
   BindUserEmailReq,
   EmptyReq,
   EmptyResp,

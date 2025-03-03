@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { findTagListApi } from "@/api/tag";
-import { Tag } from "@/api/types";
+import type { Tag } from "@/api/types";
 import { useBlogStore } from "@/store";
 
 const blogStore = useBlogStore();

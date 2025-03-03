@@ -22,7 +22,7 @@
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { findTalkListApi } from "@/api/talk";
-import { Talk } from "@/api/types";
+import type { Talk } from "@/api/types";
 // 自动播放
 const modules = [Autoplay];
 const talkList = ref<Talk[]>([]);

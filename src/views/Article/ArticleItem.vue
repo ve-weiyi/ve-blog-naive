@@ -63,7 +63,7 @@
 
 <script setup lang="ts">
 import { findArticleHomeListApi } from "@/api/article";
-import { ArticleHome, ArticleHomeQueryReq } from "@/api/types";
+import type { ArticleHome, ArticleHomeQueryReq } from "@/api/types";
 
 import { formatDate } from "@/utils/date";
 

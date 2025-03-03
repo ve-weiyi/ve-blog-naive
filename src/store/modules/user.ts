@@ -72,7 +72,7 @@ export const useUserStore = defineStore("useUserStore", {
     },
     getUserInfo(): Promise<IApiResponse<UserInfoResp>> {
       if (!this.isLogin()) {
-        return;
+        return Promise.reject("未登录");
       }
       return new Promise((resolve, reject) => {
         getUserInfoApi()
@@ -87,7 +87,7 @@ export const useUserStore = defineStore("useUserStore", {
     },
     getUserLike(): Promise<IApiResponse<UserLikeResp>> {
       if (!this.isLogin()) {
-        return;
+        return Promise.reject("未登录");
       }
       return new Promise((resolve, reject) => {
         getUserLikeApi()

@@ -64,7 +64,7 @@ import { useBlogStore, useUserStore } from "@/store";
 import { formatDateTime } from "@/utils/date";
 import { emojiList } from "@/utils/emoji";
 import { tvList } from "@/utils/tv";
-import { ChatRecordResp, ReceiveMsg, ReplyMsg, SendMessageReq } from "@/api/types";
+import type { ChatRecordResp, ReceiveMsg, ReplyMsg, SendMessageReq } from "@/api/types";
 import chatroom from "@/assets/images/chatroom.png";
 
 const userStore = useUserStore();

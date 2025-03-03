@@ -52,7 +52,7 @@
 
 <script setup lang="ts">
 import { getTalkApi, likeTalkApi } from "@/api/talk";
-import { Talk } from "@/api/types";
+import type { Talk } from "@/api/types";
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
 import { formatDateTime } from "@/utils/date";
 
@@ -82,10 +82,10 @@ const like = () => {
     //判断是否点赞
     if (userStore.isTalkLike(id)) {
       window.$message?.error("取消点赞成功");
-      talk.value.like_count --;
+      talk.value.like_count--;
     } else {
       window.$message?.success("点赞成功");
-      talk.value.like_count ++;
+      talk.value.like_count++;
     }
     userStore.talkLike(id);
   });

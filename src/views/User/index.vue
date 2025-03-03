@@ -65,9 +65,9 @@
 
 <script setup lang="ts">
 import { updateUserInfoApi } from "@/api/user";
-import { UserInfoResp } from "@/api/types";
+import type { UserInfoResp } from "@/api/types";
+import type { FormInst } from "naive-ui";
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
-import { FormInst } from "naive-ui";
 import UserAvatar from "@/components/UserAvatar/index.vue";
 
 const userStore = useUserStore();

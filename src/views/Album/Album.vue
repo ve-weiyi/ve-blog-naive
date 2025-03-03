@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { findAlbumListApi } from "@/api/album";
-import { Album } from "@/api/types";
+import type { Album } from "@/api/types";
 import { useBlogStore } from "@/store";
 
 const blogStore = useBlogStore();

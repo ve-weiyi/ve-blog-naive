@@ -68,7 +68,7 @@
 <script setup lang="ts">
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
 import { oauthAuthorizeUrlApi } from "@/api/auth";
-import { LoginReq, OauthLoginReq } from "@/api/types";
+import type { LoginReq, OauthLoginReq } from "@/api/types";
 
 const appStore = useAppStore();
 const userStore = useUserStore();

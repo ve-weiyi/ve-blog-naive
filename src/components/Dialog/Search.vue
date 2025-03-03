@@ -42,7 +42,7 @@
 import { findArticleHomeListApi } from "@/api/article";
 import { useAppStore } from "@/store";
 import { debouncedWatch } from "@vueuse/core";
-import { ArticleHome, ArticleHomeQueryReq } from "@/api/types";
+import type { ArticleHome, ArticleHomeQueryReq } from "@/api/types";
 
 const appStore = useAppStore();
 const dialogVisible = computed({

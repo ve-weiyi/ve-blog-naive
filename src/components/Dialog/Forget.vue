@@ -42,7 +42,7 @@
 import { useAppStore } from "@/store";
 import { useIntervalFn } from "@vueuse/core";
 import { resetPasswordApi, sendResetEmailApi } from "@/api/auth";
-import { ResetPasswordReq } from "@/api/types";
+import type { ResetPasswordReq } from "@/api/types";
 
 const appStore = useAppStore();
 const data = reactive({

@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import { EmptyReq, EmptyResp, UpdateUserAvatarReq, UpdateUserInfoReq, UserInfoResp, UserLikeResp } from "./types";
+import type { EmptyReq, EmptyResp, UpdateUserAvatarReq, UpdateUserInfoReq, UserInfoResp, UserLikeResp } from "./types";
 
 /** 获取用户信息 */
 export function getUserInfoApi(data?: EmptyReq): Promise<IApiResponse<UserInfoResp>> {

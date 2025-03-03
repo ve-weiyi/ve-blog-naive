@@ -59,7 +59,7 @@
 
 <script setup lang="ts">
 import { findTalkListApi } from "@/api/talk";
-import { TagQueryReq, Talk } from "@/api/types";
+import type { TagQueryReq, Talk } from "@/api/types";
 
 import { formatDateTime } from "@/utils/date";
 import { useBlogStore } from "@/store";

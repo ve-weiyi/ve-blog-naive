@@ -1,5 +1,12 @@
 import request from "@/utils/request";
-import { EmptyReq, GetAboutMeReq, GetAboutMeResp, GetBlogHomeInfoReq, GetBlogHomeInfoResp, ReportResp } from "./types";
+import type {
+  EmptyReq,
+  GetAboutMeReq,
+  GetAboutMeResp,
+  GetBlogHomeInfoReq,
+  GetBlogHomeInfoResp,
+  ReportResp,
+} from "./types";
 
 /** 获取博客前台首页信息 */
 export function getBlogHomeInfoApi(data?: GetBlogHomeInfoReq): Promise<IApiResponse<GetBlogHomeInfoResp>> {
