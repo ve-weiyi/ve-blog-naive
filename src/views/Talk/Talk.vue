@@ -12,10 +12,10 @@
         </div>
         <div class="talk-content-wrap">
           <div class="talk-info">
-            <span class="talk-user-name"
-              >{{ talk.nickname
-              }}<svg-icon icon-class="badge" style="margin-left: 0.4rem"></svg-icon
-            ></span>
+            <span class="talk-user-name">
+              {{ talk.nickname }}
+              <svg-icon icon-class="badge" style="margin-left: 0.4rem"></svg-icon>
+            </span>
             <span class="talk-time">{{ formatDateTime(talk.created_at) }}</span>
           </div>
           <div class="talk-content" v-html="talk.content"></div>

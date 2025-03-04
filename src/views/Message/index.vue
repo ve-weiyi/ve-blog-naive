@@ -160,9 +160,6 @@ const AddMessage = () => {
   right: 0;
   bottom: 0;
   width: 100%;
-  background-color: var(--color-blue);
-  background: url("https://static.ttkwsd.top/config/e3408389cb0d4ea1b5f651873dab2a19.jpg") center
-    no-repeat;
   animation: slideDownIn 1s;
 }
 

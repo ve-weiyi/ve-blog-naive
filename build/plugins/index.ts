@@ -1,7 +1,7 @@
 import type { PluginOption } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
-import unocss from "@unocss/vite";
+import unocss from "unocss/vite";
 import vitePlugin from "./viteplugin";
 import unPlugin from "./unplugin";
 import { visualizer } from "rollup-plugin-visualizer";
