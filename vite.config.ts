@@ -1,8 +1,25 @@
 import { fileURLToPath } from "node:url";
 import { defineConfig, loadEnv } from "vite";
-import banner from "vite-plugin-banner";
+import path from "node:path";
 import pkg from "./package.json";
-import { setupVitePlugins } from "./build";
+
+import vue from "@vitejs/plugin-vue";
+import vueJsx from "@vitejs/plugin-vue-jsx";
+import unocss from "unocss/vite";
+import AutoImport from "unplugin-auto-import/vite";
+import Components from "unplugin-vue-components/vite";
+import IconsResolver from "unplugin-icons/resolver";
+import Icons from "unplugin-icons/vite";
+import { NaiveUiResolver } from "unplugin-vue-components/resolvers";
+import { FileSystemIconLoader } from "unplugin-icons/loaders";
+
+import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
+import { createHtmlPlugin } from "vite-plugin-html";
+import { prismjsPlugin } from "vite-plugin-prismjs";
+import VueDevtools from "vite-plugin-vue-devtools";
+import banner from "vite-plugin-banner";
+import progress from "vite-plugin-progress";
+import compression from "vite-plugin-compression";
 
 /** 当前执行node命令时文件夹的地址（工作目录） */
 const root: string = process.cwd();
@@ -12,6 +29,12 @@ export default defineConfig((configEnv) => {
   // 根据当前工作目录中的 `mode` 加载 .env 文件
   // 设置第三个参数为 '' 来加载所有环境变量，而不管是否有 `VITE_` 前缀。
   const env = loadEnv(configEnv.mode, root) as Env.ImportMeta;
+
+  const { VITE_ICON_PREFIX, VITE_ICON_LOCAL_PREFIX } = env;
+
+  const localIconPath = path.join(process.cwd(), "src/assets/icons");
+  /** 本地svg图标集合名称 */
+  const collectionName = VITE_ICON_LOCAL_PREFIX.replace(`${VITE_ICON_PREFIX}-`, "");
 
   return {
     /**
@@ -168,9 +191,116 @@ export default defineConfig((configEnv) => {
     esbuild: false,
 
     plugins: [
-      ...setupVitePlugins(env),
       /**
-       * 版权注释
+       * 支持 `.vue` 文件的解析
+       */
+      vue(),
+      /**
+       * 如果需要支持 `.tsx` 组件，jsx、tsx语法支持
+       */
+      vueJsx(),
+      unocss(),
+      /**
+       * 自动导入 API ，不用每次都 import
+       * @tips 如果直接使用没导入的 API 依然提示报错，请重启 VS Code
+       * @see https://github.com/antfu/unplugin-auto-import#configuration
+       */
+      AutoImport({
+        imports: ["vue", "vue-router", "pinia"],
+        dts: "src/types/auto-imports.d.ts",
+      }),
+      /**
+       * 自动导入组件，不用每次都 import
+       * @see https://github.com/antfu/unplugin-vue-components#configuration
+       */
+      Components({
+        // dirs: ["src/components"],
+        // directoryAsNamespace: true,
+        // collapseSamePrefixes: true,
+        // globalNamespaces: [],
+        // extensions: ["vue", "ts", "tsx"],
+        // deep: true,
+        dts: "src/types/components.d.ts",
+        resolvers: [
+          NaiveUiResolver(),
+          IconsResolver({
+            customCollections: [collectionName],
+            prefix: VITE_ICON_PREFIX,
+          }),
+        ],
+      }),
+      Icons({
+        compiler: "vue3",
+        customCollections: {
+          [collectionName]: FileSystemIconLoader(localIconPath, (svg) =>
+            svg.replace(/^<svg\s/, '<svg width="1em" height="1em" ')
+          ),
+        },
+        scale: 1,
+        defaultClass: "inline-block",
+      }),
+      createSvgIconsPlugin({
+        // 指定需要缓存的图标文件夹
+        iconDirs: [localIconPath],
+        // 指定symbolId格式
+        symbolId: "icon-[dir]-[name]",
+      }),
+      prismjsPlugin({
+        languages: [
+          "java",
+          "python",
+          "html",
+          "css",
+          "sass",
+          "less",
+          "go",
+          "cpp",
+          "c",
+          "js",
+          "ts",
+          "sql",
+          "bash",
+          "git",
+          "nginx",
+          "php",
+        ],
+        theme: "tomorrow",
+        css: true,
+      }),
+      progress(),
+      /**
+       * Vue DevTools 允许您直接实时编辑属性并立即看到更改。此功能对于快速测试更改特别有用，无需重新启动应用程序或手动更新代码。
+       */
+      VueDevtools(),
+      /**
+       * 代码规范检查
+       */
+      // eslint({
+      //   include: ["src/**/*.js", "src/**/*.vue", "src/*.js", "src/*.vue"],
+      //   emitWarning: false,
+      // }),
+      /**
+       * 构建时压缩静态资源（如 JS、CSS、HTML、图片），生成 Gzip 或 Brotli 压缩文件，从而减少文件大小，加快网页加载速度
+       */
+      compression({
+        algorithm: "gzip", // gzip, brotliCompress, deflate, deflateRaw
+      }),
+      /**
+       * 为入口文件增加 EJS 模版能力
+       * @see https://github.com/vbenjs/vite-plugin-html/blob/main/README.zh_CN.md
+       */
+      createHtmlPlugin({
+        minify: true,
+        inject: {
+          data: {
+            appTitle: env.VITE_APP_TITLE,
+            appDesc: env.VITE_APP_DESC,
+            appKeywords: env.VITE_APP_KEYWORDS,
+          },
+        },
+      }),
+      /**
+       * 版权注释，打包时在js文件头部添加注释
        * @see https://github.com/chengpeiquan/vite-plugin-banner#advanced-usage
        */
       banner(

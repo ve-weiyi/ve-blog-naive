@@ -73,10 +73,10 @@
     "src/**/*.vue",
     "src/types/*.d.ts",
     "vite.config.ts",
-    "build/**/*.ts",
     "env.d.ts"
   ],
   "exclude": [
+    "blog",
     "dist",
     "**/*.js",
     "node_modules"
