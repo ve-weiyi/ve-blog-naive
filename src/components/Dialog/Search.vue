@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { findArticleHomeListApi } from "@/api/article";
+import { ArticleAPI } from "@/api/article";
 import { useAppStore } from "@/store";
 import { debouncedWatch } from "@vueuse/core";
 import type { ArticleHome, ArticleHomeQueryReq } from "@/api/types";
@@ -59,7 +59,7 @@ const handleSearch = () => {
     article_title: keyword.value,
   };
 
-  findArticleHomeListApi(data).then((res) => {
+  ArticleAPI.findArticleHomeListApi(data).then((res) => {
     articleList.value = res.data.list;
   });
 };

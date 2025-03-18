@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts" setup>
-import { findTalkListApi } from "@/api/talk";
+import { TalkAPI } from "@/api/talk";
 import type { TagQueryReq, Talk } from "@/api/types";
 
 import { formatDateTime } from "@/utils/date";
@@ -77,7 +77,7 @@ const data = reactive({
 });
 const { count, queryParams, talkList } = toRefs(data);
 const getList = () => {
-  findTalkListApi(queryParams.value).then((res) => {
+  TalkAPI.findTalkListApi(queryParams.value).then((res) => {
     if (queryParams.value.page == 1) {
       talkList.value = res.data.list;
     } else {

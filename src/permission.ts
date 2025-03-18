@@ -2,7 +2,6 @@ import { router } from "@/router";
 import { useUserStore } from "@/store";
 import { getToken } from "@/utils/token";
 import NProgress from "nprogress";
-import { getUserInfoApi } from "@/api/user";
 
 NProgress.configure({
   easing: "ease",
@@ -20,7 +19,8 @@ router.beforeEach((to, from, next) => {
   }
   if (getToken()) {
     if (userStore.userInfo.user_id === undefined) {
-      userStore.getUserInfo()
+      userStore
+        .getUserInfo()
         .then((res) => {
           next();
         })

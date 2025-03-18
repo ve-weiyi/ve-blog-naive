@@ -166,7 +166,7 @@
 </template>
 
 <script setup lang="ts">
-import { getArticleDetailsApi, likeArticleApi } from "@/api/article";
+import { ArticleAPI } from "@/api/article";
 import type { ArticleDetails } from "@/api/types";
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
 import { formatDate } from "@/utils/date";
@@ -209,7 +209,7 @@ const like = () => {
     return;
   }
   let id = article.value.id;
-  likeArticleApi({ id }).then((res) => {
+  ArticleAPI.likeArticleApi({ id }).then((res) => {
     //判断是否点赞
     if (userStore.isArticleLike(id)) {
       window.$message?.error("取消点赞成功");
@@ -223,7 +223,7 @@ const like = () => {
 };
 onMounted(() => {
   const id = Number(route.params.id);
-  getArticleDetailsApi({ id }).then((res) => {
+  ArticleAPI.getArticleDetailsApi({ id }).then((res) => {
     article.value = res.data;
     document.title = article.value.article_title;
     wordNum.value = deleteHTMLTag(article.value.article_content).length;

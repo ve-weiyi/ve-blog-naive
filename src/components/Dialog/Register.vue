@@ -42,7 +42,7 @@
 <script setup lang="ts">
 import { useAppStore } from "@/store";
 import { useIntervalFn } from "@vueuse/core";
-import { registerApi, sendRegisterEmailApi } from "@/api/auth";
+import { AuthAPI } from "@/api/auth";
 import type { RegisterReq } from "@/api/types";
 
 const appStore = useAppStore();
@@ -83,7 +83,7 @@ const sendCode = () => {
     return;
   }
   start(60);
-  sendRegisterEmailApi(registerForm.value).then((res) => {
+  AuthAPI.sendRegisterEmailApi(registerForm.value).then((res) => {
     window.$message?.success("发送成功");
   });
 };
@@ -97,7 +97,7 @@ const handleRegister = () => {
     return;
   }
   loading.value = true;
-  registerApi(registerForm.value).then((res) => {
+  AuthAPI.registerApi(registerForm.value).then((res) => {
     window.$message?.success("注册成功");
     appStore.setRegisterFlag(false);
     appStore.setLoginFlag(true);

@@ -18,7 +18,6 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@build/*": ["build/*"]
     },
 
     // 类型声明相关配置
@@ -76,7 +75,6 @@
     "env.d.ts"
   ],
   "exclude": [
-    "blog",
     "dist",
     "**/*.js",
     "node_modules"

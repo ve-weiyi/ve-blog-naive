@@ -1,4 +1,3 @@
-
 export interface Album {
   id: number; // 主键
   album_name: string; // 相册名
@@ -54,7 +53,7 @@ export interface ArticlePreview {
 }
 
 export interface BatchResp {
-  success_count: number; 
+  success_count: number;
 }
 
 export interface BindUserEmailReq {
@@ -63,9 +62,9 @@ export interface BindUserEmailReq {
 }
 
 export interface Category {
-  id: number; 
+  id: number;
   category_name: string; // 分类名
-  article_count: number; 
+  article_count: number;
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
 }
@@ -145,10 +144,10 @@ export interface CommentReply {
 }
 
 export interface CommentUserInfo {
-  user_id: string; 
-  nickname: string; 
-  avatar: string; 
-  website: string; 
+  user_id: string;
+  nickname: string;
+  avatar: string;
+  website: string;
 }
 
 export interface EmptyReq {
@@ -187,7 +186,7 @@ export interface GetAboutMeReq {
 }
 
 export interface GetAboutMeResp {
-  content: string; 
+  content: string;
 }
 
 export interface GetBlogHomeInfoReq {
@@ -203,21 +202,21 @@ export interface GetBlogHomeInfoResp {
 }
 
 export interface IdReq {
-  id: number; 
+  id: number;
 }
 
 export interface IdsReq {
-  ids: number[]; 
+  ids: number[];
 }
 
 export interface LoginReq {
-  username: string; 
-  password: string; 
+  username: string;
+  password: string;
   verify_code?: string; // 验证码
 }
 
 export interface LoginResp {
-  token?: Token; 
+  token?: Token;
 }
 
 export interface MultiUploadFileReq {
@@ -259,19 +258,19 @@ export interface PageDTO {
 }
 
 export interface PageQuery {
-  page?: number; 
-  page_size?: number; 
-  sorts?: string[]; 
+  page?: number;
+  page_size?: number;
+  sorts?: string[];
 }
 
 export interface PageQueryReq extends PageQuery {
 }
 
 export interface PageResp {
-  page: number; 
-  page_size: number; 
-  total: number; 
-  list: any; 
+  page: number;
+  page_size: number;
+  total: number;
+  list: any;
 }
 
 export interface Photo {
@@ -287,12 +286,12 @@ export interface PingReq {
 }
 
 export interface PingResp {
-  env: string; 
-  name: string; 
-  version: string; 
-  runtime: string; 
-  description: string; 
-  rpc_status: string[]; 
+  env: string;
+  name: string;
+  version: string;
+  runtime: string;
+  description: string;
+  rpc_status: string[];
 }
 
 export interface RecallMessageReq {
@@ -310,8 +309,8 @@ export interface ReceiveMsg {
 }
 
 export interface RegisterReq {
-  username: string; 
-  password: string; 
+  username: string;
+  password: string;
   verify_code: string; // 验证码
 }
 
@@ -343,30 +342,30 @@ export interface ReplyMsg {
 }
 
 export interface ReportResp {
-  terminal_id: string; 
+  terminal_id: string;
 }
 
 export interface ResetPasswordReq {
-  username: string; 
-  password: string; 
+  username: string;
+  password: string;
   verify_code: string; // 验证码
 }
 
 export interface Response {
-  code: number; 
-  message: string; 
-  data: any; 
-  trace_id: string; 
+  code: number;
+  message: string;
+  data: any;
+  trace_id: string;
 }
 
 export interface RestHeader {
-  header_country?: string; 
-  header_language?: string; 
-  header_timezone?: string; 
-  header_app_name?: string; 
-  header_x_user_id?: string; 
-  header_x_auth_token?: string; 
-  header_terminal_id?: string; 
+  header_country?: string;
+  header_language?: string;
+  header_timezone?: string;
+  header_app_name?: string;
+  header_x_user_id?: string;
+  header_x_auth_token?: string;
+  header_terminal_id?: string;
 }
 
 export interface SendMessageReq {
@@ -429,7 +428,7 @@ export interface UploadFileReq {
 }
 
 export interface UserEmailReq {
-  username: string; 
+  username: string;
 }
 
 export interface UserInfoExt {
@@ -447,9 +446,9 @@ export interface UserInfoResp extends UserInfoExt {
 }
 
 export interface UserLikeResp {
-  article_like_set: number[]; 
-  comment_like_set: number[]; 
-  talk_like_set: number[]; 
+  article_like_set: number[];
+  comment_like_set: number[];
+  talk_like_set: number[];
 }
 
 export interface WebsiteConfigDTO {

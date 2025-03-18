@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { findCommentRecentListApi } from "@/api/comment";
+import { CommentAPI } from "@/api/comment";
 import { formatDate } from "@/utils/date";
 import type { Comment, CommentQueryReq } from "@/api/types";
 
@@ -35,7 +35,7 @@ onMounted(() => {
     page_size: 5,
   };
 
-  findCommentRecentListApi(data).then((res) => {
+  CommentAPI.findCommentRecentListApi(data).then((res) => {
     commentList.value = res.data.list;
   });
 });

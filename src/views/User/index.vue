@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { updateUserInfoApi } from "@/api/user";
+import { UserAPI } from "@/api/user";
 import type { UserInfoResp } from "@/api/types";
 import type { FormInst } from "naive-ui";
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
@@ -92,7 +92,7 @@ const userForm = ref<UserInfoResp>(<UserInfoResp>{
 const handleUpdate = () => {
   formInstRef.value?.validate((errors) => {
     if (!errors) {
-      updateUserInfoApi(userForm.value).then((res) => {
+      UserAPI.updateUserInfoApi(userForm.value).then((res) => {
         userStore.getUserInfo();
         window.$message?.success("修改成功");
       });
@@ -103,7 +103,7 @@ const handleUpdate = () => {
 const handleAvatarUpload = (data) => {
   console.log("handleAvatarUpload", data);
   userForm.value.avatar = data.file_url;
-  updateUserInfoApi(userForm.value).then((res) => {
+  UserAPI.updateUserInfoApi(userForm.value).then((res) => {
     userStore.getUserInfo();
     window.$message?.success("修改成功");
     showCropper.value = false;

@@ -1,6 +1,6 @@
 import { clearStorage, getToken, setToken, setUid } from "@/utils/token";
-import { getUserInfoApi, getUserLikeApi } from "@/api/user";
-import { loginApi, logoutApi, oauthLoginApi } from "@/api/auth";
+import { UserAPI } from "@/api/user";
+import { AuthAPI } from "@/api/auth";
 import type { EmptyResp, LoginReq, LoginResp, OauthLoginReq, UserInfoResp, UserLikeResp } from "@/api/types";
 
 /**
@@ -31,7 +31,7 @@ export const useUserStore = defineStore("useUserStore", {
   actions: {
     oauthLogin(oauth: OauthLoginReq): Promise<IApiResponse<LoginResp>> {
       return new Promise((resolve, reject) => {
-        oauthLoginApi(oauth)
+        AuthAPI.oauthLoginApi(oauth)
           .then((res) => {
             const token = res.data.token;
             setUid(String(token.user_id));
@@ -45,7 +45,7 @@ export const useUserStore = defineStore("useUserStore", {
     },
     login(user: LoginReq): Promise<IApiResponse<LoginResp>> {
       return new Promise((resolve, reject) => {
-        loginApi(user)
+        AuthAPI.loginApi(user)
           .then((res) => {
             const token = res.data.token;
             setUid(String(token.user_id));
@@ -59,7 +59,7 @@ export const useUserStore = defineStore("useUserStore", {
     },
     logout(): Promise<IApiResponse<EmptyResp>> {
       return new Promise((resolve, reject) => {
-        logoutApi()
+        AuthAPI.logoutApi()
           .then((res) => {
             this.forceLogOut();
             clearStorage();
@@ -75,7 +75,7 @@ export const useUserStore = defineStore("useUserStore", {
         return Promise.reject("未登录");
       }
       return new Promise((resolve, reject) => {
-        getUserInfoApi()
+        UserAPI.getUserInfoApi()
           .then((res) => {
             this.userInfo = res.data;
             resolve(res);
@@ -90,7 +90,7 @@ export const useUserStore = defineStore("useUserStore", {
         return Promise.reject("未登录");
       }
       return new Promise((resolve, reject) => {
-        getUserLikeApi()
+        UserAPI.getUserLikeApi()
           .then((res) => {
             this.userLike = res.data;
             resolve(res);

@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import { useAppStore } from "@/store";
 import { useIntervalFn } from "@vueuse/core";
-import { resetPasswordApi, sendResetEmailApi } from "@/api/auth";
+import { AuthAPI } from "@/api/auth";
 import type { ResetPasswordReq } from "@/api/types";
 
 const appStore = useAppStore();
@@ -81,7 +81,7 @@ const sendCode = () => {
     return;
   }
   start(60);
-  sendResetEmailApi(forgetForm.value).then((res) => {
+  AuthAPI.sendResetEmailApi(forgetForm.value).then((res) => {
     window.$message?.success("发送成功");
   });
 };
@@ -95,7 +95,7 @@ const handleForget = () => {
     return;
   }
   loading.value = true;
-  resetPasswordApi(forgetForm.value).then((res) => {
+  AuthAPI.resetPasswordApi(forgetForm.value).then((res) => {
     window.$message?.success("修改成功");
     forgetForm.value = {
       username: "",

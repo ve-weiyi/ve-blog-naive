@@ -107,14 +107,9 @@
 </template>
 
 <script setup lang="ts">
-import {
-  addCommentApi,
-  findCommentListApi,
-  findCommentReplyListApi,
-  likeCommentApi,
-} from "@/api/comment";
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
 import { formatDateTime } from "@/utils/date";
+import { CommentAPI } from "@/api/comment";
 import type { Comment, CommentNewReq, CommentQueryReq, CommentReply } from "@/api/types";
 import { replaceEmoji } from "@/utils/emojis";
 
@@ -185,7 +180,7 @@ function insertComment() {
     type: props.commentType,
   };
 
-  addCommentApi(comment)
+  CommentAPI.addCommentApi(comment)
     .then((res) => {
       const isReview = blogStore.blogInfo.website_config.is_comment_review;
       if (isReview) {
@@ -258,7 +253,7 @@ function confirmReply(index: number, comment: Comment | CommentReply) {
       break;
   }
 
-  addCommentApi(newComment)
+  CommentAPI.addCommentApi(newComment)
     .then((res) => {
       replyCommentIndex.value = -1;
       const isReview = blogStore.blogInfo.website_config.is_comment_review;
@@ -299,7 +294,7 @@ function readMoreComment(index: number, comment: Comment) {
     sorts: ["created_at desc"],
   };
 
-  findCommentReplyListApi(data).then((res) => {
+  CommentAPI.findCommentReplyListApi(data).then((res) => {
     comment.comment_reply_list = res.data.list;
     // 回复大于5条展示分页
     if (Math.ceil(comment.reply_count / 5) > 1) {
@@ -324,7 +319,7 @@ function changeReplyCurrent(index: number, comment: Comment, page: number) {
     sorts: ["created_at desc"],
   };
 
-  findCommentReplyListApi(data).then((res) => {
+  CommentAPI.findCommentReplyListApi(data).then((res) => {
     comment.comment_reply_list = res.data.list;
   });
 }
@@ -339,7 +334,7 @@ function likeComment(comment: Comment | CommentReply) {
   const data = {
     id: comment.id,
   };
-  likeCommentApi(data).then((res) => {
+  CommentAPI.likeCommentApi(data).then((res) => {
     if (userStore.isCommentLike(comment.id)) {
       window.$message?.error("取消点赞成功");
       comment.like_count--;
@@ -364,7 +359,7 @@ const listComments = () => {
     sorts: ["created_at desc"],
   };
 
-  findCommentListApi(data).then((res) => {
+  CommentAPI.findCommentListApi(data).then((res) => {
     console.log(res);
     if (queryParams.value.current === 1) {
       commentList.value = res.data.list;

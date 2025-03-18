@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { addRemarkApi, findRemarkListApi } from "@/api/remark";
+import { RemarkAPI } from "@/api/remark";
 import type { Remark as Message } from "@/api/types";
 import { useBlogStore, useUserStore } from "@/store";
 import vueDanmaku from "vue3-danmaku";
@@ -62,7 +62,7 @@ const show = ref(false);
 const danmaku = ref();
 const messageList = ref<Message[]>([]);
 onMounted(async () => {
-  findRemarkListApi().then((res) => {
+  RemarkAPI.findRemarkListApi().then((res) => {
     messageList.value = res.data.list;
   });
 });
@@ -81,7 +81,7 @@ const AddMessage = () => {
     message_content: addMessageContent.value,
     time: Math.floor(Math.random() * (10 - 7)) + 7,
   };
-  addRemarkApi(message).then((res) => {
+  RemarkAPI.addRemarkApi(message).then((res) => {
     if (blogStore.blogInfo.website_config.is_message_review) {
       window.$message?.warning("留言成功，正在审核中");
     } else {

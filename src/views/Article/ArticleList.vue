@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 import type { ArticleHome } from "@/api/types";
-import { findArticleClassifyCategoryApi, findArticleClassifyTagApi } from "@/api/article";
+import { ArticleAPI } from "@/api/article";
 import { formatDate } from "@/utils/date";
 import { useBlogStore } from "@/store";
 
@@ -77,7 +77,7 @@ function getTagArticleList() {
     classify_name: tagId,
   };
 
-  findArticleClassifyTagApi(data).then((res) => {
+  ArticleAPI.findArticleClassifyTagApi(data).then((res) => {
     articleList.value = res.data.list;
   });
 }
@@ -89,7 +89,7 @@ function getCategoryArticleList() {
     classify_name: categoryId,
   };
 
-  findArticleClassifyCategoryApi(data).then((res) => {
+  ArticleAPI.findArticleClassifyCategoryApi(data).then((res) => {
     articleList.value = res.data.list;
   });
 }

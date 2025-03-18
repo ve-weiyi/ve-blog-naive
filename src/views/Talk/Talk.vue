@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { getTalkApi, likeTalkApi } from "@/api/talk";
+import { TalkAPI } from "@/api/talk";
 import type { Talk } from "@/api/types";
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
 import { formatDateTime } from "@/utils/date";
@@ -78,7 +78,7 @@ const like = () => {
     return;
   }
   let id = talk.value.id;
-  likeTalkApi({ id }).then((res) => {
+  TalkAPI.likeTalkApi({ id }).then((res) => {
     //判断是否点赞
     if (userStore.isTalkLike(id)) {
       window.$message?.error("取消点赞成功");
@@ -91,7 +91,7 @@ const like = () => {
   });
 };
 onMounted(() => {
-  getTalkApi({ id: Number(route.params.id) }).then((res) => {
+  TalkAPI.getTalkApi({ id: Number(route.params.id) }).then((res) => {
     talk.value = res.data;
   });
 });

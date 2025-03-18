@@ -13,13 +13,14 @@
 
 <script setup lang="ts">
 import { useBlogStore } from "@/store";
-import dayjs from "dayjs";
 
 const blogStore = useBlogStore();
 const runTime = ref("");
 setInterval(() => {
-  const days = dayjs().diff(blogStore.blogInfo.website_config.website_create_time, "days");
   const day = new Date();
+  const createTime = new Date(blogStore.blogInfo.website_config.website_create_time);
+  const diffTime = day.getTime() - createTime.getTime();
+  const days = Math.floor(diffTime / (24 * 60 * 60 * 1000));
   let str = "";
   str += days + "天";
   str += day.getHours() + "时";
