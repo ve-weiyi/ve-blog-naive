@@ -1,10 +1,12 @@
 declare namespace Env {
 
   interface ImportMeta extends ImportMetaEnv {
-    /** 后台服务地址 */
-    readonly VITE_BASE_URL: string;
-    /** 打包文件名称 */
-    readonly VITE_DIST_NAME?: string;
+    /** 项目部署目录路径 */
+    readonly VITE_APP_BASE_PATH: string;
+    /** 项目部署端口 */
+    readonly VITE_APP_PORT: number;
+    /** 构建输出目录 */
+    readonly VITE_APP_DIST_NAME?: string;
     /** iconify图标作为组件的前缀 */
     readonly VITE_ICON_PREFIX?: string;
     /**

@@ -1,7 +1,7 @@
 import { fileURLToPath } from "node:url";
+import type { UserConfig } from "vite";
 import { defineConfig, loadEnv } from "vite";
 import path from "node:path";
-import pkg from "./package.json";
 
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
@@ -17,7 +17,6 @@ import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import { createHtmlPlugin } from "vite-plugin-html";
 import { prismjsPlugin } from "vite-plugin-prismjs";
 import VueDevtools from "vite-plugin-vue-devtools";
-import banner from "vite-plugin-banner";
 import progress from "vite-plugin-progress";
 import compression from "vite-plugin-compression";
 
@@ -25,7 +24,7 @@ import compression from "vite-plugin-compression";
 const root: string = process.cwd();
 
 /** 配置项文档：https://cn.vitejs.dev/config */
-export default defineConfig((configEnv) => {
+export default defineConfig((configEnv): UserConfig => {
   // 根据当前工作目录中的 `mode` 加载 .env 文件
   // 设置第三个参数为 '' 来加载所有环境变量，而不管是否有 `VITE_` 前缀。
   const env = loadEnv(configEnv.mode, root) as Env.ImportMeta;
@@ -45,7 +44,7 @@ export default defineConfig((configEnv) => {
      * 项目部署目录路径
      * @description 见项目根目录下的 `config` 文件夹说明
      */
-    base: env.VITE_BASE_URL,
+    base: env.VITE_APP_BASE_PATH,
     resolve: {
       /**
        * 配置目录别名
@@ -122,7 +121,7 @@ export default defineConfig((configEnv) => {
       /** 禁用 gzip 压缩大小报告.启用/禁用 gzip 压缩大小报告。压缩大型输出文件可能会很慢，因此禁用该功能可能会提高大型项目的构建性能。*/
       reportCompressedSize: false,
       /** 打包文件的输出目录,默认值为 dist */
-      outDir: env.VITE_DIST_NAME,
+      outDir: env.VITE_APP_DIST_NAME,
       /** 打包后静态资源目录 */
       assetsDir: "assets",
       sourcemap: false,
@@ -303,16 +302,16 @@ export default defineConfig((configEnv) => {
        * 版权注释，打包时在js文件头部添加注释
        * @see https://github.com/chengpeiquan/vite-plugin-banner#advanced-usage
        */
-      banner(
-        [
-          `/**`,
-          ` * name: ${pkg.name}`,
-          ` * version: v${pkg.version}`,
-          ` * description: ${pkg.description}`,
-          ` * author: ${pkg.author}`,
-          ` */`,
-        ].join("\n")
-      ),
+      // banner(
+      //   [
+      //     `/**`,
+      //     ` * name: ${pkg.name}`,
+      //     ` * version: v${pkg.version}`,
+      //     ` * description: ${pkg.description}`,
+      //     ` * author: ${pkg.author}`,
+      //     ` */`,
+      //   ].join("\n")
+      // ),
     ],
     /** Vitest 单元测试配置：https://cn.vitest.dev/config */
     // test: {
@@ -324,7 +323,6 @@ export default defineConfig((configEnv) => {
       preprocessorOptions: {
         // 定义全局 SCSS 变量
         scss: {
-          javascriptEnabled: true,
           api: "modern-compiler",
         },
       },
