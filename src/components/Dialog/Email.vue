@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { useAppStore, useUserStore } from "@/store";
 import { useIntervalFn } from "@vueuse/core";
-import { bindUserEmailApi, sendBindEmailApi } from "@/api/auth";
+import { AuthAPI } from "@/api/auth";
 
 const userStore = useUserStore();
 const appStore = useAppStore();
@@ -70,7 +70,7 @@ const sendCode = () => {
     return;
   }
   start(60);
-  sendBindEmailApi({ username: emailForm.value.email }).then((res) => {
+  AuthAPI.sendBindEmailApi({ username: emailForm.value.email }).then((res) => {
     window.$message?.success("发送成功");
   });
 };
@@ -84,7 +84,7 @@ const handleUpdate = () => {
     return;
   }
   loading.value = true;
-  bindUserEmailApi(emailForm.value)
+  AuthAPI.bindUserEmailApi(emailForm.value)
     .then((res) => {
       window.$message?.success("修改成功");
       userStore.userInfo.email = emailForm.value.email;

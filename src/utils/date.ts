@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import { useDateFormat } from "@vueuse/core";
 
 export function formatDate(date: number | string | Date, format = "YYYY-MM-DD") {
   // 检查是否为字符串
@@ -7,7 +7,8 @@ export function formatDate(date: number | string | Date, format = "YYYY-MM-DD") 
     return formatDate(dateTime, format);
   }
 
-  return dayjs(date).format(format);
+  const formatted = useDateFormat(date, format);
+  return formatted.value;
 }
 
 export function formatDateTime(date: number | string | Date, format = "YYYY-MM-DD HH:mm:ss") {

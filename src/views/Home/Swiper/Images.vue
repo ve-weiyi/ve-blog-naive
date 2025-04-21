@@ -14,7 +14,6 @@
 </template>
 
 <script setup lang="ts">
-import { Page } from "@/api/types";
 import { useBlogStore } from "@/store";
 
 const blogStore = useBlogStore();

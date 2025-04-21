@@ -67,8 +67,8 @@
 
 <script setup lang="ts">
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
-import { oauthAuthorizeUrlApi } from "@/api/auth";
-import { LoginReq, OauthLoginReq } from "@/api/types";
+import { AuthAPI } from "@/api/auth";
+import type { LoginReq, OauthLoginReq } from "@/api/types";
 
 const appStore = useAppStore();
 const userStore = useUserStore();
@@ -100,7 +100,7 @@ const oauthLogin = (platform: string) => {
     platform: platform,
     state: route.path,
   };
-  oauthAuthorizeUrlApi(oauth).then((res) => {
+  AuthAPI.oauthAuthorizeUrlApi(oauth).then((res) => {
     appStore.setLoginFlag(false);
     console.log(res.data.url);
     // 新启页面跳转

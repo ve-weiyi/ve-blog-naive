@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { useUserStore } from "@/store";
-import { OauthLoginReq } from "@/api/types";
+import type { OauthLoginReq } from "@/api/types";
 
 const userStore = useUserStore();
 const router = useRouter();

@@ -20,9 +20,7 @@ import { useBlogStore } from "@/store";
 const blogStore = useBlogStore();
 const socialList = blogStore.blogInfo.website_config.social_login_list;
 const isShowSocial = computed(() => (social: string) => {
-  if (socialList) {
-    return socialList.includes(social);
-  }
+  return socialList?.includes(social);
 });
 const showSocialList = [
   {

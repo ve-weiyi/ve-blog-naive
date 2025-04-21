@@ -36,8 +36,8 @@
 </template>
 
 <script setup lang="ts">
-import { addRemarkApi, findRemarkListApi } from "@/api/remark";
-import { Remark as Message } from "@/api/types";
+import { RemarkAPI } from "@/api/remark";
+import type { Remark as Message } from "@/api/types";
 import { useBlogStore, useUserStore } from "@/store";
 import vueDanmaku from "vue3-danmaku";
 
@@ -62,14 +62,14 @@ const show = ref(false);
 const danmaku = ref();
 const messageList = ref<Message[]>([]);
 onMounted(async () => {
-  findRemarkListApi().then((res) => {
+  RemarkAPI.findRemarkListApi().then((res) => {
     messageList.value = res.data.list;
   });
 });
 const AddMessage = () => {
   if (addMessageContent.value.trim() == "") {
     window.$message?.warning("留言内容不能为空");
-    return false;
+    return;
   }
   const userAvatar = userStore.userInfo.avatar
     ? userStore.userInfo.avatar
@@ -81,7 +81,7 @@ const AddMessage = () => {
     message_content: addMessageContent.value,
     time: Math.floor(Math.random() * (10 - 7)) + 7,
   };
-  addRemarkApi(message).then((res) => {
+  RemarkAPI.addRemarkApi(message).then((res) => {
     if (blogStore.blogInfo.website_config.is_message_review) {
       window.$message?.warning("留言成功，正在审核中");
     } else {
@@ -160,9 +160,6 @@ const AddMessage = () => {
   right: 0;
   bottom: 0;
   width: 100%;
-  background-color: var(--color-blue);
-  background: url("https://static.ttkwsd.top/config/e3408389cb0d4ea1b5f651873dab2a19.jpg") center
-    no-repeat;
   animation: slideDownIn 1s;
 }
 

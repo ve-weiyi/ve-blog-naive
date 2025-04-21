@@ -1,7 +1,7 @@
 <template>
   <div class="page-header">
     <h1 class="page-title">说说</h1>
-    <img class="page-cover" :src="cover" alt="" />
+    <img :src="cover" alt="" class="page-cover" />
     <Waves></Waves>
   </div>
   <div class="bg">
@@ -15,7 +15,7 @@
       >
         <div class="talk-meta">
           <!-- 用户头像 -->
-          <img class="user-avatar" :src="talk.avatar" />
+          <img :src="talk.avatar" class="user-avatar" />
           <div class="talk-info">
             <span class="talk-user-name">
               {{ talk.nickname }}
@@ -57,9 +57,9 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { findTalkListApi } from "@/api/talk";
-import { TagQueryReq, Talk } from "@/api/types";
+<script lang="ts" setup>
+import { TalkAPI } from "@/api/talk";
+import type { TagQueryReq, Talk } from "@/api/types";
 
 import { formatDateTime } from "@/utils/date";
 import { useBlogStore } from "@/store";
@@ -77,7 +77,7 @@ const data = reactive({
 });
 const { count, queryParams, talkList } = toRefs(data);
 const getList = () => {
-  findTalkListApi(queryParams.value).then((res) => {
+  TalkAPI.findTalkListApi(queryParams.value).then((res) => {
     if (queryParams.value.page == 1) {
       talkList.value = res.data.list;
     } else {

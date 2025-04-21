@@ -1,5 +1,5 @@
 import type { GetBlogHomeInfoResp, ReportResp, WebsiteConfigDTO } from "@/api/types";
-import { getBlogHomeInfoApi, reportApi } from "@/api/website.ts";
+import { WebsiteAPI } from "@/api/website.ts";
 import { getTerminalId, setTerminalId } from "@/utils/token.ts";
 
 /**
@@ -22,7 +22,7 @@ export const useBlogStore = defineStore("useBlogStore", {
   actions: {
     report(): Promise<IApiResponse<ReportResp>> {
       return new Promise((resolve, reject) => {
-        reportApi()
+        WebsiteAPI.reportApi()
           .then((res) => {
             setTerminalId(res.data.terminal_id)
             getTerminalId()
@@ -36,7 +36,7 @@ export const useBlogStore = defineStore("useBlogStore", {
 
     getBlogInfo(): Promise<IApiResponse<GetBlogHomeInfoResp>> {
       return new Promise((resolve, reject) => {
-        getBlogHomeInfoApi()
+        WebsiteAPI.getBlogHomeInfoApi()
           .then((res) => {
             this.blogInfo = res.data;
             resolve(res);
