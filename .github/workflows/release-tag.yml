@@ -55,10 +55,16 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             echo "Deploy image: ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}"
+            
+            # 拉取最新的 Docker 镜像
             docker pull ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
+            # 停止并删除旧的容器
             docker stop ${{ env.IMAGE_NAME }} || true && docker rm -f ${{ env.IMAGE_NAME }} || true
+            
+            # 运行新的容器
             docker run -d \
             --name ${{ env.IMAGE_NAME }} \
-            -p ${{ env.EXPOSE_PORT }}:80 \
             --restart always \
+            -p ${{ env.EXPOSE_PORT }}:80 \
             ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}

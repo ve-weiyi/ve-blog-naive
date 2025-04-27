@@ -201,6 +201,10 @@ export interface GetBlogHomeInfoResp {
   page_list: PageDTO[]; // 页面列表
 }
 
+export interface GetTouristInfoResp {
+  tourist_id: string; // 游客id
+}
+
 export interface IdReq {
   id: number;
 }
@@ -212,7 +216,8 @@ export interface IdsReq {
 export interface LoginReq {
   username: string;
   password: string;
-  verify_code?: string; // 验证码
+  captcha_key?: string; // 验证码key
+  captcha_code?: string; // 验证码
 }
 
 export interface LoginResp {
@@ -339,10 +344,6 @@ export interface ReplyMsg {
   type: number; // 类型
   data: string; // 数据
   timestamp: number; //时间戳
-}
-
-export interface ReportResp {
-  terminal_id: string;
 }
 
 export interface ResetPasswordReq {
