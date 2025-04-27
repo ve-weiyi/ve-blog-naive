@@ -5,7 +5,7 @@ import type {
   GetAboutMeResp,
   GetBlogHomeInfoReq,
   GetBlogHomeInfoResp,
-  ReportResp,
+  GetTouristInfoResp,
 } from "./types";
 
 export const WebsiteAPI = {
@@ -27,11 +27,10 @@ export const WebsiteAPI = {
     });
   },
 
-
-  /** 访客上报 */
-  reportApi(data?: EmptyReq): Promise<IApiResponse<ReportResp>> {
+  /** 获取游客身份信息 */
+  getTouristInfoApi(data?: EmptyReq): Promise<IApiResponse<GetTouristInfoResp>> {
     return request({
-      url: "/api/v1/report",
+      url: "/api/v1/tourist",
       method: "GET",
       data: data,
     });
