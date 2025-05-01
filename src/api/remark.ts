@@ -11,7 +11,6 @@ export const RemarkAPI = {
     });
   },
 
-
   /** 创建留言 */
   addRemarkApi(data?: RemarkNewReq): Promise<IApiResponse<Remark>> {
     return request({
@@ -20,5 +19,4 @@ export const RemarkAPI = {
       data: data,
     });
   },
-
 };

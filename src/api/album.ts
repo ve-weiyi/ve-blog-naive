@@ -28,5 +28,4 @@ export const AlbumAPI = {
       data: data,
     });
   },
-
 };

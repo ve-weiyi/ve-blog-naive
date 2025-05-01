@@ -10,5 +10,4 @@ export const CategoryAPI = {
       data: data,
     });
   },
-
 };

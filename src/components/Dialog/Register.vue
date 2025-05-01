@@ -83,7 +83,10 @@ const sendCode = () => {
     return;
   }
   start(60);
-  AuthAPI.sendRegisterEmailApi(registerForm.value).then((res) => {
+  AuthAPI.sendEmailVerifyCodeApi({
+    email: registerForm.value.username,
+    type: "register",
+  }).then((res) => {
     window.$message?.success("发送成功");
   });
 };

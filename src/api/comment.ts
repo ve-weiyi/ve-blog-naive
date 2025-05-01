@@ -29,7 +29,6 @@ export const CommentAPI = {
     });
   },
 
-
   /** 创建评论 */
   addCommentApi(data?: CommentNewReq): Promise<IApiResponse<Comment>> {
     return request({
@@ -47,5 +46,4 @@ export const CommentAPI = {
       data: data,
     });
   },
-
 };

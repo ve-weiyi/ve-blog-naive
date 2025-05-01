@@ -19,5 +19,4 @@ export const FileAPI = {
       data: data,
     });
   },
-
 };

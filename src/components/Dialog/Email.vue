@@ -32,6 +32,7 @@
 import { useAppStore, useUserStore } from "@/store";
 import { useIntervalFn } from "@vueuse/core";
 import { AuthAPI } from "@/api/auth";
+import { UserAPI } from "@/api/user.ts";
 
 const userStore = useUserStore();
 const appStore = useAppStore();
@@ -70,7 +71,10 @@ const sendCode = () => {
     return;
   }
   start(60);
-  AuthAPI.sendBindEmailApi({ username: emailForm.value.email }).then((res) => {
+  AuthAPI.sendEmailVerifyCodeApi({
+    email: emailForm.value.email,
+    type: "bind_email",
+  }).then((res) => {
     window.$message?.success("发送成功");
   });
 };
@@ -84,7 +88,10 @@ const handleUpdate = () => {
     return;
   }
   loading.value = true;
-  AuthAPI.bindUserEmailApi(emailForm.value)
+  UserAPI.updateUserBindEmailApi({
+    email: emailForm.value.email,
+    verify_code: emailForm.value.verify_code,
+  })
     .then((res) => {
       window.$message?.success("修改成功");
       userStore.userInfo.email = emailForm.value.email;

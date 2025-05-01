@@ -40,8 +40,6 @@ import ChatRoom from "@/components/ChatRoom/index.vue";
 import Player from "./components/zw-player/player.vue";
 
 import { useBlogStore, useUserStore } from "@/store";
-import { getTerminalId, setTerminalId } from "@/utils/token.ts";
-import { WebsiteAPI } from "@/api/website.ts";
 
 const blogStore = useBlogStore();
 const userStore = useUserStore();
@@ -55,13 +53,9 @@ const isMobile = computed(() => {
 
 onBeforeMount(async () => {
   // blogStore.report();
-  if (!getTerminalId()) {
-    const res = await WebsiteAPI.getTouristInfoApi();
-    setTerminalId(res.data.tourist_id);
-  }
-
   await blogStore.getBlogInfo();
 });
+
 onMounted(() => {
   console.log(
     "%c Hello World %c By 与梦 %c",

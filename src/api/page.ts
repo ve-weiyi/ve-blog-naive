@@ -10,5 +10,4 @@ export const PageAPI = {
       data: data,
     });
   },
-
 };

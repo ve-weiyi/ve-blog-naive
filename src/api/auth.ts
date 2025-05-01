@@ -1,6 +1,5 @@
 import request from "@/utils/request";
 import type {
-  BindUserEmailReq,
   EmptyReq,
   EmptyResp,
   LoginReq,
@@ -9,7 +8,8 @@ import type {
   OauthLoginUrlResp,
   RegisterReq,
   ResetPasswordReq,
-  UserEmailReq,
+  SendEmailVerifyCodeReq,
+  SendPhoneVerifyCodeReq,
 } from "./types";
 
 export const AuthAPI = {
@@ -49,10 +49,19 @@ export const AuthAPI = {
     });
   },
 
-  /** 发送注册账号邮件 */
-  sendRegisterEmailApi(data?: UserEmailReq): Promise<IApiResponse<EmptyResp>> {
+  /** 发送邮件验证码 */
+  sendEmailVerifyCodeApi(data?: SendEmailVerifyCodeReq): Promise<IApiResponse<EmptyResp>> {
     return request({
-      url: "/api/v1/send_register_email",
+      url: "/api/v1/send_email_verify_code",
+      method: "POST",
+      data: data,
+    });
+  },
+
+  /** 发送手机验证码 */
+  sendPhoneVerifyCodeApi(data?: SendPhoneVerifyCodeReq): Promise<IApiResponse<EmptyResp>> {
+    return request({
+      url: "/api/v1/send_phone_verify_code",
       method: "POST",
       data: data,
     });
@@ -62,25 +71,6 @@ export const AuthAPI = {
   resetPasswordApi(data?: ResetPasswordReq): Promise<IApiResponse<EmptyResp>> {
     return request({
       url: "/api/v1/user/reset_password",
-      method: "POST",
-      data: data,
-    });
-  },
-
-  /** 发送重置密码邮件 */
-  sendResetEmailApi(data?: UserEmailReq): Promise<IApiResponse<EmptyResp>> {
-    return request({
-      url: "/api/v1/user/send_reset_email",
-      method: "POST",
-      data: data,
-    });
-  },
-
-
-  /** 绑定邮箱 */
-  bindUserEmailApi(data?: BindUserEmailReq): Promise<IApiResponse<EmptyResp>> {
-    return request({
-      url: "/api/v1/bind_user_email",
       method: "POST",
       data: data,
     });
@@ -103,14 +93,4 @@ export const AuthAPI = {
       data: data,
     });
   },
-
-  /** 发送绑定邮箱验证码 */
-  sendBindEmailApi(data?: UserEmailReq): Promise<IApiResponse<EmptyResp>> {
-    return request({
-      url: "/api/v1/send_bind_email",
-      method: "POST",
-      data: data,
-    });
-  },
-
 };

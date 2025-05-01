@@ -9,5 +9,4 @@ export const WebsocketAPI = {
       data: data,
     });
   },
-
 };

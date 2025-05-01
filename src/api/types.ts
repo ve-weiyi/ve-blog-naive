@@ -196,7 +196,7 @@ export interface GetBlogHomeInfoResp {
   article_count: number; // 文章数量
   category_count: number; // 分类数量
   tag_count: number; // 标签数量
-  views_count: number; // 访问量
+  total_page_view_count: number; // 总浏览量
   website_config: WebsiteConfigDTO; // 网站配置
   page_list: PageDTO[]; // 页面列表
 }
@@ -369,9 +369,19 @@ export interface RestHeader {
   header_terminal_id?: string;
 }
 
+export interface SendEmailVerifyCodeReq {
+  email: string; // 邮箱
+  type: string; // 类型 register,reset_password,bind_email,bind_phone
+}
+
 export interface SendMessageReq {
   type: string; // 消息类型 1: 文本消息 2: 图片消息 3: 文件消息 4: 语音消息 5: 视频消息
   content: string; // 消息内容
+}
+
+export interface SendPhoneVerifyCodeReq {
+  phone: string; // 手机号
+  type: string; // 类型 register,reset_password,bind_email,bind_phone
 }
 
 export interface Tag {
@@ -418,9 +428,24 @@ export interface UpdateUserAvatarReq {
   avatar: string; // 头像
 }
 
+export interface UpdateUserBindEmailReq {
+  email: string; // 邮箱
+  verify_code: string; // 验证码
+}
+
+export interface UpdateUserBindPhoneReq {
+  phone: string; // 手机号
+  verify_code: string; // 验证码
+}
+
 export interface UpdateUserInfoReq extends UserInfoExt {
-  nickname?: string; // 昵称
-  avatar?: string; // 头像
+  nickname: string; // 昵称
+}
+
+export interface UpdateUserPasswordReq {
+  old_password: string; // 旧密码
+  new_password: string; // 新密码
+  confirm_password: string; // 确认密码
 }
 
 export interface UploadFileReq {
@@ -428,11 +453,8 @@ export interface UploadFileReq {
   file_path?: string; // 文件路径
 }
 
-export interface UserEmailReq {
-  username: string;
-}
-
 export interface UserInfoExt {
+  gender: number; // 性别 0未知 1男 2女
   intro: string; // 简介
   website: string; // 网站
 }

@@ -10,5 +10,4 @@ export const FriendAPI = {
       data: data,
     });
   },
-
 };

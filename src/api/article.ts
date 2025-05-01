@@ -65,7 +65,6 @@ export const ArticleAPI = {
     });
   },
 
-
   /** 点赞文章 */
   likeArticleApi(data?: IdReq): Promise<IApiResponse<EmptyResp>> {
     return request({
@@ -74,5 +73,4 @@ export const ArticleAPI = {
       data: data,
     });
   },
-
 };

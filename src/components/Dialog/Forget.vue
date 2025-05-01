@@ -81,7 +81,10 @@ const sendCode = () => {
     return;
   }
   start(60);
-  AuthAPI.sendResetEmailApi(forgetForm.value).then((res) => {
+  AuthAPI.sendEmailVerifyCodeApi({
+    email: forgetForm.value.username,
+    type: "reset_password",
+  }).then((res) => {
     window.$message?.success("发送成功");
   });
 };

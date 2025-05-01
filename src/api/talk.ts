@@ -28,5 +28,4 @@ export const TalkAPI = {
       data: data,
     });
   },
-
 };
