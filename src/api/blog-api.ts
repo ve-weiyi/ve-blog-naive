@@ -5,7 +5,7 @@ export const BlogApiAPI = {
   /** ping */
   pingApi(data?: PingReq): Promise<IApiResponse<PingResp>> {
     return request({
-      url: "/api/v1/ping",
+      url: "/blog-api/v1/ping",
       method: "GET",
       data: data,
     });

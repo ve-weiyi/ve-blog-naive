@@ -1,20 +1,20 @@
 import request from "@/utils/request";
-import type { FileBackDTO, MultiUploadFileReq, UploadFileReq } from "./types";
+import type { FileBackVO, MultiUploadFileReq, UploadFileReq } from "./types";
 
 export const FileAPI = {
   /** 上传文件列表 */
-  multiUploadFileApi(data?: MultiUploadFileReq): Promise<IApiResponse<FileBackDTO[]>> {
+  multiUploadFileApi(data?: MultiUploadFileReq): Promise<IApiResponse<FileBackVO[]>> {
     return request({
-      url: "/api/v1/file/multi_upload_file",
+      url: "/blog-api/v1/file/multi_upload_file",
       method: "POST",
       data: data,
     });
   },
 
   /** 上传文件 */
-  uploadFileApi(data?: UploadFileReq): Promise<IApiResponse<FileBackDTO>> {
+  uploadFileApi(data?: UploadFileReq): Promise<IApiResponse<FileBackVO>> {
     return request({
-      url: "/api/v1/file/upload_file",
+      url: "/blog-api/v1/file/upload_file",
       method: "POST",
       data: data,
     });

@@ -360,7 +360,6 @@ const listComments = () => {
   };
 
   CommentAPI.findCommentListApi(data).then((res) => {
-    console.log(res);
     if (queryParams.value.current === 1) {
       commentList.value = res.data.list;
     } else {

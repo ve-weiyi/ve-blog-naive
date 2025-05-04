@@ -7,6 +7,12 @@ declare namespace Env {
     readonly VITE_APP_PORT: number;
     /** 构建输出目录 */
     readonly VITE_APP_DIST_NAME?: string;
+    /** API 地址 */
+    readonly VITE_APP_API_URL: string;
+    /** WebSocket 地址 */
+    readonly VITE_APP_WS_ENDPOINT: string;
+    /** Mock 服务地址 */
+    readonly VITE_APP_MOCK_SERVER?: string;
     /** iconify图标作为组件的前缀 */
     readonly VITE_ICON_PREFIX?: string;
     /**

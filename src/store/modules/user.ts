@@ -1,7 +1,16 @@
 import { clearStorage, getToken, setToken, setUid } from "@/utils/token";
 import { UserAPI } from "@/api/user";
 import { AuthAPI } from "@/api/auth";
-import type { EmptyResp, LoginReq, LoginResp, OauthLoginReq, UserInfoResp, UserLikeResp } from "@/api/types";
+import type {
+  EmailLoginReq,
+  EmptyResp,
+  LoginReq,
+  LoginResp,
+  PhoneLoginReq,
+  ThirdLoginReq,
+  UserInfoResp,
+  UserLikeResp,
+} from "@/api/types";
 
 /**
  * 用户
@@ -12,26 +21,27 @@ interface UserState {
 }
 
 export const useUserStore = defineStore("useUserStore", {
-  state: (): UserState => <UserState>({
-    userInfo: {
-      user_id: "",
-      username: "",
-      nickname: "",
-      avatar: "",
-      intro: "",
-      website: "",
-      email: "",
+  state: (): UserState =>
+    <UserState>{
+      userInfo: {
+        user_id: "",
+        username: "",
+        nickname: "",
+        avatar: "",
+        intro: "",
+        website: "",
+        email: "",
+      },
+      userLike: {
+        article_like_set: [],
+        comment_like_set: [],
+        talk_like_set: [],
+      },
     },
-    userLike: {
-      article_like_set: [],
-      comment_like_set: [],
-      talk_like_set: [],
-    },
-  }),
   actions: {
-    oauthLogin(oauth: OauthLoginReq): Promise<IApiResponse<LoginResp>> {
+    login(loginData: LoginReq): Promise<IApiResponse<LoginResp>> {
       return new Promise((resolve, reject) => {
-        AuthAPI.oauthLoginApi(oauth)
+        AuthAPI.loginApi(loginData)
           .then((res) => {
             const token = res.data.token;
             setUid(String(token.user_id));
@@ -43,9 +53,38 @@ export const useUserStore = defineStore("useUserStore", {
           });
       });
     },
-    login(user: LoginReq): Promise<IApiResponse<LoginResp>> {
+    emailLogin(loginData: EmailLoginReq): Promise<IApiResponse<LoginResp>> {
       return new Promise((resolve, reject) => {
-        AuthAPI.loginApi(user)
+        AuthAPI.emailLoginApi(loginData)
+          .then((res) => {
+            const token = res.data.token;
+            setUid(String(token.user_id));
+            setToken(token.access_token);
+            resolve(res);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    phoneLogin(loginData: PhoneLoginReq): Promise<IApiResponse<LoginResp>> {
+      return new Promise((resolve, reject) => {
+        AuthAPI.phoneLoginApi(loginData)
+          .then((res) => {
+            const token = res.data.token;
+            setUid(String(token.user_id));
+            setToken(token.access_token);
+            resolve(res);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+
+    thirdLogin(loginData: ThirdLoginReq): Promise<IApiResponse<LoginResp>> {
+      return new Promise((resolve, reject) => {
+        AuthAPI.thirdLoginApi(loginData)
           .then((res) => {
             const token = res.data.token;
             setUid(String(token.user_id));

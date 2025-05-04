@@ -1,4 +1,4 @@
-import type { GetBlogHomeInfoResp, WebsiteConfigDTO } from "@/api/types";
+import type { GetBlogHomeInfoResp, WebsiteConfigVO } from "@/api/types";
 import { WebsiteAPI } from "@/api/website.ts";
 
 /**
@@ -14,7 +14,7 @@ interface BlogState {
 export const useBlogStore = defineStore("useBlogStore", {
   state: (): BlogState => ({
     blogInfo: {
-      website_config: {} as WebsiteConfigDTO,
+      website_config: {} as WebsiteConfigVO,
       page_list: [],
     } as GetBlogHomeInfoResp,
   }),
