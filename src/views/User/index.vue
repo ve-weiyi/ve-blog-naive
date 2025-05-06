@@ -46,14 +46,78 @@
                 <n-button
                   v-if="userStore.userInfo.email"
                   color="#49b1f5"
-                  @click="appStore.emailFlag = true"
+                  @click="appStore.emailBindFlag = true"
                 >
                   修改邮箱
                 </n-button>
-                <n-button v-else color="#49b1f5" @click="appStore.emailFlag = true">
-                  绑定邮箱
+                <n-button v-else color="#49b1f5" @click="appStore.emailBindFlag = true">
+                  立即绑定
                 </n-button>
               </n-input-group>
+            </n-form-item>
+            <n-form-item label="手机号" label-style="color: var(--text-color);" path="phone">
+              <n-input-group>
+                <n-input
+                  v-model:value="userStore.userInfo.phone"
+                  placeholder="请输入手机号"
+                  disabled
+                ></n-input>
+                <n-button
+                  v-if="userStore.userInfo.phone"
+                  color="#49b1f5"
+                  @click="appStore.phoneBindFlag = true"
+                >
+                  修改手机号
+                </n-button>
+                <n-button v-else color="#49b1f5" @click="appStore.phoneBindFlag = true">
+                  立即绑定
+                </n-button>
+              </n-input-group>
+            </n-form-item>
+            <n-form-item label-style="color: var(--text-color);" path="third">
+              <template #label>
+                第三方账号 -
+                <n-a
+                  :underline="false"
+                  :focusable="false"
+                  style="color: #2080f0; --n-text-color-hover: #4098fc"
+                  @click.prevent="appStore.thirdBindFlag = true"
+                >
+                  去绑定
+                </n-a>
+              </template>
+
+              <template v-if="availablePlatforms.length === 0">
+                <n-empty size="small" description="暂无绑定账号" style="margin: 2px 0" />
+              </template>
+
+              <template v-else>
+                <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px">
+                  <n-tooltip
+                    v-for="item in availablePlatforms"
+                    :key="item.platform"
+                    trigger="hover"
+                    placement="top"
+                  >
+                    <template #trigger>
+                      <div class="platform-icon-wrapper">
+                        <svg-icon class="icon" :icon-class="item.platform" size="2rem" />
+                      </div>
+                    </template>
+                    <div style="text-align: center; padding: 8px">
+                      <n-avatar
+                        round
+                        :size="48"
+                        :src="getUserPlatformInfo(item.platform).avatar"
+                        style="margin-bottom: 4px"
+                      />
+                      <div style="font-weight: 500">
+                        {{ getUserPlatformInfo(item.platform).nickname || "未设置昵称" }}
+                      </div>
+                    </div>
+                  </n-tooltip>
+                </div>
+              </template>
             </n-form-item>
           </n-form>
           <n-button color="#3e999f" @click="handleUpdate"> 修改</n-button>
@@ -69,6 +133,7 @@ import type { UserInfoResp } from "@/api/types";
 import type { FormInst } from "naive-ui";
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
 import UserAvatar from "@/components/UserAvatar/index.vue";
+import { thirdPlatformList } from "@/utils/third.ts";
 
 const userStore = useUserStore();
 const appStore = useAppStore();
@@ -117,6 +182,16 @@ onMounted(() => {
     router.push("/");
   }
 });
+
+const availablePlatforms = computed(() => {
+  return thirdPlatformList?.filter((platform) => {
+    return userStore.userInfo.third_party?.some((item) => item.platform === platform.platform);
+  });
+});
+
+const getUserPlatformInfo = (platform: string) => {
+  return userStore.userInfo.third_party?.find((item) => item.platform === platform);
+};
 </script>
 
 <style lang="scss" scoped>

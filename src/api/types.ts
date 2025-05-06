@@ -56,11 +56,6 @@ export interface BatchResp {
   success_count: number;
 }
 
-export interface BindUserEmailReq {
-  email: string; // 邮箱
-  verify_code: string; // 验证码
-}
-
 export interface Category {
   id: number;
   category_name: string; // 分类名
@@ -107,8 +102,8 @@ export interface Comment {
   type: number; // 评论类型 1.文章 2.友链 3.说说
   created_at: number; // 评论时间
   like_count: number; // 点赞数
-  user?: CommentUserInfo; // 评论用户
-  reply_user?: CommentUserInfo; // 被回复评论用户
+  user?: UserInfoVO; // 评论用户
+  reply_user?: UserInfoVO; // 被回复评论用户
   reply_count: number; // 回复量
   comment_reply_list: CommentReply[]; // 评论回复列表
 }
@@ -118,8 +113,9 @@ export interface CommentNewReq {
   parent_id?: number; // 父评论id
   reply_msg_id?: number; // 会话id
   reply_user_id?: string; // 回复用户id
-  comment_content?: string; // 评论内容
-  type?: number; // 评论类型 1.文章 2.友链 3.说说
+  comment_content: string; // 评论内容
+  type: number; // 评论类型 1.文章 2.友链 3.说说
+  status?: number; // 状态 0.正常 1.已编辑 2.已删除
 }
 
 export interface CommentQueryReq extends PageQuery {
@@ -139,15 +135,19 @@ export interface CommentReply {
   type: number; // 评论类型 1.文章 2.友链 3.说说
   created_at: number; // 评论时间
   like_count: number; // 点赞数
-  user?: CommentUserInfo; // 评论用户
-  reply_user?: CommentUserInfo; // 被回复评论用户
+  user?: UserInfoVO; // 用户信息
+  reply_user?: UserInfoVO; // 被回复评论用户
 }
 
-export interface CommentUserInfo {
-  user_id: string;
-  nickname: string;
-  avatar: string;
-  website: string;
+export interface DeleteUserBindThirdPartyReq {
+  platform: string; // 平台
+}
+
+export interface EmailLoginReq {
+  email: string; // 邮箱
+  password: string; // 密码
+  captcha_key?: string; // 验证码key
+  captcha_code?: string; // 验证码
 }
 
 export interface EmptyReq {
@@ -156,7 +156,7 @@ export interface EmptyReq {
 export interface EmptyResp {
 }
 
-export interface FileBackDTO {
+export interface FileBackVO {
   id?: number; // 文件目录ID
   user_id: string; // 用户id
   file_path: string; // 文件路径
@@ -196,9 +196,30 @@ export interface GetBlogHomeInfoResp {
   article_count: number; // 文章数量
   category_count: number; // 分类数量
   tag_count: number; // 标签数量
-  views_count: number; // 访问量
-  website_config: WebsiteConfigDTO; // 网站配置
-  page_list: PageDTO[]; // 页面列表
+  total_user_view_count: number; // 总服务量
+  total_page_view_count: number; // 总浏览量
+  website_config: WebsiteConfigVO; // 网站配置
+  page_list: PageVO[]; // 页面列表
+}
+
+export interface GetCaptchaCodeReq {
+  width?: number; // 宽度
+  height?: number; // 高度
+}
+
+export interface GetCaptchaCodeResp {
+  captcha_key: string; // 验证码key
+  captcha_base64: string; // 验证码base64
+  captcha_code: string; // 验证码
+}
+
+export interface GetOauthAuthorizeUrlReq {
+  platform: string; // 平台
+  state?: string; // 状态
+}
+
+export interface GetOauthAuthorizeUrlResp {
+  authorize_url: string; // 授权地址
 }
 
 export interface GetTouristInfoResp {
@@ -229,16 +250,6 @@ export interface MultiUploadFileReq {
   file_path?: string; // 文件路径
 }
 
-export interface OauthLoginReq {
-  platform: string; // 平台
-  code?: string; // 授权码
-  state?: string; // 状态
-}
-
-export interface OauthLoginUrlResp {
-  url: string; // 授权地址
-}
-
 export interface OnlineCountResp {
   msg: string; // 消息
   count: number; // 在线人数
@@ -252,14 +263,6 @@ export interface Page {
   is_carousel?: number; // 是否轮播
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-}
-
-export interface PageDTO {
-  id: number; // 页面ID
-  page_name: string; // 页面名称
-  page_label: string; // 页面标签
-  page_cover: string; // 页面封面
-  is_carousel?: number; // 是否轮播
 }
 
 export interface PageQuery {
@@ -276,6 +279,19 @@ export interface PageResp {
   page_size: number;
   total: number;
   list: any;
+}
+
+export interface PageVO {
+  id: number; // 页面ID
+  page_name: string; // 页面名称
+  page_label: string; // 页面标签
+  page_cover: string; // 页面封面
+  is_carousel?: number; // 是否轮播
+}
+
+export interface PhoneLoginReq {
+  phone: string; // 手机号
+  verify_code: string; // 验证码
 }
 
 export interface Photo {
@@ -316,24 +332,25 @@ export interface ReceiveMsg {
 export interface RegisterReq {
   username: string;
   password: string;
+  confirm_password: string; // 确认密码
+  email: string; // 邮箱
   verify_code: string; // 验证码
 }
 
 export interface Remark {
   id?: number; // 主键id
-  nickname: string; // 昵称
-  avatar: string; // 头像
+  user_id: string; // 用户id
+  terminal_id: string; // 终端id
   message_content: string; // 留言内容
   ip_address: string; // 用户ip
   ip_source: string; // 用户地址
   is_review: number; // 是否审核
   created_at: number; // 发布时间
   updated_at: number; // 更新时间
+  user?: UserInfoVO; // 用户信息
 }
 
 export interface RemarkNewReq {
-  nickname: string; // 昵称
-  avatar: string; // 头像
   message_content: string; // 留言内容
 }
 
@@ -347,8 +364,9 @@ export interface ReplyMsg {
 }
 
 export interface ResetPasswordReq {
-  username: string;
   password: string;
+  confirm_password: string; // 确认密码
+  email: string;
   verify_code: string; // 验证码
 }
 
@@ -369,9 +387,19 @@ export interface RestHeader {
   header_terminal_id?: string;
 }
 
+export interface SendEmailVerifyCodeReq {
+  email: string; // 邮箱
+  type: string; // 类型 register,reset_password,bind_email,bind_phone
+}
+
 export interface SendMessageReq {
   type: string; // 消息类型 1: 文本消息 2: 图片消息 3: 文件消息 4: 语音消息 5: 视频消息
   content: string; // 消息内容
+}
+
+export interface SendPhoneVerifyCodeReq {
+  phone: string; // 手机号
+  type: string; // 类型 register,reset_password,bind_email,bind_phone
 }
 
 export interface Tag {
@@ -389,8 +417,6 @@ export interface TagQueryReq extends PageQuery {
 export interface Talk {
   id: number; // 说说ID
   user_id: string; // 用户ID
-  nickname: string; // 用户昵称
-  avatar: string; // 用户头像
   content: string; // 评论内容
   img_list: string[]; // 图片URL列表
   is_top: number; // 是否置顶
@@ -399,9 +425,15 @@ export interface Talk {
   comment_count: number; // 评论量
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
+  user?: UserInfoVO; // 用户信息
 }
 
 export interface TalkQueryReq extends PageQuery {
+}
+
+export interface ThirdLoginReq {
+  platform: string; // 平台
+  code?: string; // 授权码
 }
 
 export interface Token {
@@ -414,13 +446,41 @@ export interface Token {
   scope: string; // 作用域
 }
 
+export interface UpdateCommentReq {
+  id: number; // 主键
+  reply_user_id?: string; // 回复用户id
+  comment_content: string; // 评论内容
+  status?: number; // 状态 0.正常 1.已编辑 2.已删除
+}
+
 export interface UpdateUserAvatarReq {
   avatar: string; // 头像
 }
 
+export interface UpdateUserBindEmailReq {
+  email: string; // 邮箱
+  verify_code: string; // 验证码
+}
+
+export interface UpdateUserBindPhoneReq {
+  phone: string; // 手机号
+  verify_code: string; // 验证码
+}
+
+export interface UpdateUserBindThirdPartyReq {
+  platform: string; // 平台
+  code: string; // 授权码
+  state?: string; // 状态
+}
+
 export interface UpdateUserInfoReq extends UserInfoExt {
-  nickname?: string; // 昵称
-  avatar?: string; // 头像
+  nickname: string; // 昵称
+}
+
+export interface UpdateUserPasswordReq {
+  old_password: string; // 旧密码
+  new_password: string; // 新密码
+  confirm_password: string; // 确认密码
 }
 
 export interface UploadFileReq {
@@ -428,13 +488,10 @@ export interface UploadFileReq {
   file_path?: string; // 文件路径
 }
 
-export interface UserEmailReq {
-  username: string;
-}
-
 export interface UserInfoExt {
-  intro: string; // 简介
-  website: string; // 网站
+  gender?: number; // 性别 0未知 1男 2女
+  intro?: string; // 简介
+  website?: string; // 网站
 }
 
 export interface UserInfoResp extends UserInfoExt {
@@ -444,6 +501,15 @@ export interface UserInfoResp extends UserInfoExt {
   avatar: string; // 用户头像
   email: string; // 用户邮箱
   phone: string; // 用户手机号
+  created_at: number; // 创建时间
+  third_party: UserThirdPartyInfo[];
+}
+
+export interface UserInfoVO extends UserInfoExt {
+  user_id: string;
+  username: string;
+  avatar: string;
+  nickname: string;
 }
 
 export interface UserLikeResp {
@@ -452,7 +518,15 @@ export interface UserLikeResp {
   talk_like_set: number[];
 }
 
-export interface WebsiteConfigDTO {
+export interface UserThirdPartyInfo {
+  platform: string; // 平台
+  open_id: string; // 平台用户id
+  nickname: string; // 昵称
+  avatar: string; // 头像
+  created_at: number; // 创建时间
+}
+
+export interface WebsiteConfigVO {
   admin_url: string; // 后台地址
   alipay_qr_code: string; // 支付宝二维码
   gitee: string; // Gitee

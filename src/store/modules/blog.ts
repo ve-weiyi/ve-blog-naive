@@ -1,4 +1,4 @@
-import type { GetBlogHomeInfoResp, WebsiteConfigDTO } from "@/api/types";
+import type { GetBlogHomeInfoResp, WebsiteConfigVO } from "@/api/types";
 import { WebsiteAPI } from "@/api/website.ts";
 
 /**
@@ -14,7 +14,7 @@ interface BlogState {
 export const useBlogStore = defineStore("useBlogStore", {
   state: (): BlogState => ({
     blogInfo: {
-      website_config: {} as WebsiteConfigDTO,
+      website_config: {} as WebsiteConfigVO,
       page_list: [],
     } as GetBlogHomeInfoResp,
   }),
@@ -31,14 +31,29 @@ export const useBlogStore = defineStore("useBlogStore", {
           });
       });
     },
-    getCover(page: string) {
+    getCover(page: string): string {
       const cover = this.blogInfo.page_list.find(
         (item: any) => item.page_label === page
       )?.page_cover;
-      return cover ? cover : "https://veport.oss-cn-beijing.aliyuncs.com/background/zhuqu.jpg";
+      return cover ? cover : "https://static.veweiyi.cn/blog/cover/zhuque.jpg";
     },
-    getCarouselList() {
-      return this.blogInfo.page_list.filter((item) => item.is_carousel === 1);
+    getCarouselList(): string[] {
+      if (this.blogInfo.page_list.length == 0) {
+        return [
+          "https://static.veweiyi.cn/blog/cover/qinglong.jpg",
+          "https://static.veweiyi.cn/blog/cover/baihu.jpg",
+          "https://static.veweiyi.cn/blog/cover/zhuque.jpg",
+          "https://static.veweiyi.cn/blog/cover/xuanwu.jpg",
+          "https://static.veweiyi.cn/blog/cover/qilin.jpg",
+          "https://static.veweiyi.cn/blog/cover/wusheng.jpg",
+        ];
+      }
+
+      return this.blogInfo.page_list
+        .filter((item) => item.is_carousel === 1)
+        .map((item) => {
+          return item.page_cover;
+        });
     },
   },
   getters: {},

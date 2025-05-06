@@ -15,7 +15,9 @@
       <Login></Login>
       <Register></Register>
       <Forget></Forget>
-      <Email></Email>
+      <EmailBind></EmailBind>
+      <PhoneBind></PhoneBind>
+      <ThirdBind></ThirdBind>
       <Drawer></Drawer>
       <!--      <MusicPlayer></MusicPlayer>-->
       <!-- 音乐播放器 -->
@@ -34,14 +36,14 @@ import Search from "@/components/Dialog/Search.vue";
 import Login from "@/components/Dialog/Login.vue";
 import Register from "@/components/Dialog/Register.vue";
 import Forget from "@/components/Dialog/Forget.vue";
-import Email from "@/components/Dialog/Email.vue";
+import EmailBind from "@/components/Dialog/EmailBind.vue";
+import ThirdBind from "@/components/Dialog/ThirdBind.vue";
+import PhoneBind from "@/components/Dialog/PhoneBind.vue";
 import Tool from "@/components/Tool/index.vue";
 import ChatRoom from "@/components/ChatRoom/index.vue";
 import Player from "./components/zw-player/player.vue";
 
 import { useBlogStore, useUserStore } from "@/store";
-import { getTerminalId, setTerminalId } from "@/utils/token.ts";
-import { WebsiteAPI } from "@/api/website.ts";
 
 const blogStore = useBlogStore();
 const userStore = useUserStore();
@@ -55,13 +57,9 @@ const isMobile = computed(() => {
 
 onBeforeMount(async () => {
   // blogStore.report();
-  if (!getTerminalId()) {
-    const res = await WebsiteAPI.getTouristInfoApi();
-    setTerminalId(res.data.tourist_id);
-  }
-
   await blogStore.getBlogInfo();
 });
+
 onMounted(() => {
   console.log(
     "%c Hello World %c By 与梦 %c",

@@ -124,7 +124,7 @@ const userAvatar = computed(() =>
 const handleOpen = () => {
   if (websocket.value === undefined) {
     let url =
-      import.meta.env.VITE_WEBSOCKET_PROXY_URL || blogStore.blogInfo.website_config.websocket_url;
+      import.meta.env.VITE_APP_WS_ENDPOINT || blogStore.blogInfo.website_config.websocket_url;
     console.log(url);
     websocket.value = new WebSocket(url);
     websocket.value.onopen = () => {

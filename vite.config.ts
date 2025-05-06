@@ -2,6 +2,7 @@ import { fileURLToPath } from "node:url";
 import type { UserConfig } from "vite";
 import { defineConfig, loadEnv } from "vite";
 import path from "node:path";
+import pkg from "./package.json";
 
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
@@ -84,14 +85,14 @@ export default defineConfig((configEnv): UserConfig => {
       proxy: {
         // mock代理
         "/mock": {
-          target: env.VITE_MOCK_PROXY_URL,
+          target: env.VITE_APP_MOCK_SERVER,
           ws: false,
           changeOrigin: true,
           rewrite: (path) => path.replace("", ""),
         },
         // 本地开发环境通过代理实现跨域，生产环境使用 nginx 转发
-        "/api": {
-          target: env.VITE_API_PROXY_URL, // 代理后的地址 =target/path
+        "/blog-api": {
+          target: env.VITE_APP_API_URL, // 代理后的地址 =target/path
           ws: true,
           /** 是否允许跨域 */
           changeOrigin: true,
@@ -292,9 +293,10 @@ export default defineConfig((configEnv): UserConfig => {
         minify: true,
         inject: {
           data: {
-            appTitle: env.VITE_APP_TITLE,
-            appDesc: env.VITE_APP_DESC,
-            appKeywords: env.VITE_APP_KEYWORDS,
+            appTitle: `${pkg.name}`,
+            appVersion: `${pkg.version}`,
+            appDesc: `${pkg.description}`,
+            appKeywords: `${pkg.keywords}`,
           },
         },
       }),

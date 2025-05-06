@@ -1,6 +1,9 @@
 import { useDateFormat } from "@vueuse/core";
 
 export function formatDate(date: number | string | Date, format = "YYYY-MM-DD") {
+  if (!date) {
+    return "";
+  }
   // 检查是否为字符串
   if (typeof date === "number") {
     const dateTime = new Date(date * 1000);

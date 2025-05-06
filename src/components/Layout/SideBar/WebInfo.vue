@@ -30,9 +30,9 @@ setInterval(() => {
 }, 1000);
 const webInfo = computed(() => {
   return [
+    { name: "总访问量", count: blogStore.blogInfo.total_page_view_count },
     { name: "文章数目", count: blogStore.blogInfo.article_count },
     { name: "运行时长", count: runTime },
-    { name: "总访问量", count: blogStore.blogInfo.views_count },
   ];
 });
 </script>

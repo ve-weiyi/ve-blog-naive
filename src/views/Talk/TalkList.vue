@@ -15,10 +15,10 @@
       >
         <div class="talk-meta">
           <!-- 用户头像 -->
-          <img :src="talk.avatar" class="user-avatar" />
+          <img :src="talk.user?.avatar" class="user-avatar" />
           <div class="talk-info">
             <span class="talk-user-name">
-              {{ talk.nickname }}
+              {{ talk.user?.nickname }}
               <svg-icon icon-class="badge" style="margin-left: 0.4rem"></svg-icon>
             </span>
             <span class="talk-time">{{ formatDateTime(talk.created_at) }}</span>

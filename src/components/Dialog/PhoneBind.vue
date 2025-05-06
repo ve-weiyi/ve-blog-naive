@@ -8,10 +8,10 @@
     style="padding-bottom: 2rem"
     :block-scroll="false"
   >
-    <div class="login-title">绑定邮箱</div>
-    <n-input v-model:value="emailForm.email" class="mt-11" placeholder="邮箱号"></n-input>
+    <div class="login-title">绑定手机号</div>
+    <n-input v-model:value="phoneForm.phone" class="mt-11" placeholder="手机号"></n-input>
     <n-input-group class="mt-11">
-      <n-input v-model:value="emailForm.verify_code" placeholder="验证码" />
+      <n-input v-model:value="phoneForm.verify_code" placeholder="验证码" />
       <n-button color="#49b1f5" :disabled="flag" @click="sendCode">
         {{ timer == 0 ? "发送" : `${timer}s` }}
       </n-button>
@@ -32,6 +32,7 @@
 import { useAppStore, useUserStore } from "@/store";
 import { useIntervalFn } from "@vueuse/core";
 import { AuthAPI } from "@/api/auth";
+import { UserAPI } from "@/api/user.ts";
 
 const userStore = useUserStore();
 const appStore = useAppStore();
@@ -39,12 +40,12 @@ const data = reactive({
   timer: 0,
   flag: false,
   loading: false,
-  emailForm: {
-    email: "",
+  phoneForm: {
+    phone: "",
     verify_code: "",
   },
 });
-const { timer, flag, loading, emailForm } = toRefs(data);
+const { timer, flag, loading, phoneForm } = toRefs(data);
 const { pause, resume } = useIntervalFn(
   () => {
     timer.value--;
@@ -64,32 +65,38 @@ const start = (time: number) => {
   resume();
 };
 const sendCode = () => {
-  let reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-  if (!reg.test(emailForm.value.email)) {
-    window.$message?.warning("邮箱格式不正确");
+  let reg = /^1[3-9]\d{9}$/;
+  if (!reg.test(phoneForm.value.phone)) {
+    window.$message?.warning("手机号格式不正确");
     return;
   }
   start(60);
-  AuthAPI.sendBindEmailApi({ username: emailForm.value.email }).then((res) => {
+  AuthAPI.sendPhoneVerifyCodeApi({
+    phone: phoneForm.value.phone,
+    type: "bind_phone",
+  }).then((res) => {
     window.$message?.success("发送成功");
   });
 };
 const dialogVisible = computed({
-  get: () => appStore.emailFlag,
-  set: (value) => (appStore.emailFlag = value),
+  get: () => appStore.phoneBindFlag,
+  set: (value) => (appStore.phoneBindFlag = value),
 });
 const handleUpdate = () => {
-  if (emailForm.value.verify_code.trim().length != 6) {
+  if (phoneForm.value.verify_code.trim().length != 6) {
     window.$message?.warning("请输入6位验证码");
     return;
   }
   loading.value = true;
-  AuthAPI.bindUserEmailApi(emailForm.value)
+  UserAPI.updateUserBindPhoneApi({
+    phone: phoneForm.value.phone,
+    verify_code: phoneForm.value.verify_code,
+  })
     .then((res) => {
       window.$message?.success("修改成功");
-      userStore.userInfo.email = emailForm.value.email;
-      emailForm.value = {
-        email: "",
+      userStore.userInfo.phone = phoneForm.value.phone;
+      phoneForm.value = {
+        phone: "",
         verify_code: "",
       };
       dialogVisible.value = false;

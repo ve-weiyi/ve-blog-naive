@@ -26,8 +26,14 @@
     >
       <template v-slot:dm="{ index, danmu }">
         <span class="danmaku-item">
-          <img :src="danmu.avatar" width="30" height="30" style="border-radius: 50%" alt="" />
-          <span class="ml">{{ danmu.nickname }} :</span>
+          <img
+            :src="danmu.user?.avatar || touristAvatar"
+            width="30"
+            height="30"
+            style="border-radius: 50%"
+            alt=""
+          />
+          <span class="ml">{{ danmu.user?.nickname || getTouristName(danmu.terminal_id) }} :</span>
           <span class="ml">{{ danmu.message_content }}</span>
         </span>
       </template>
@@ -37,14 +43,14 @@
 
 <script setup lang="ts">
 import { RemarkAPI } from "@/api/remark";
-import type { Remark as Message } from "@/api/types";
+import type { Remark as Message, RemarkNewReq } from "@/api/types";
 import { useBlogStore, useUserStore } from "@/store";
 import vueDanmaku from "vue3-danmaku";
 
 const userStore = useUserStore();
 const blogStore = useBlogStore();
 
-const cover = blogStore.getCover("about");
+const cover = blogStore.getCover("message");
 const config = ref({
   channels: 7, // 轨道数量，为0则弹幕轨道数会撑满容器
   useSlot: true, // 是否开启slot
@@ -71,15 +77,10 @@ const AddMessage = () => {
     window.$message?.warning("留言内容不能为空");
     return;
   }
-  const userAvatar = userStore.userInfo.avatar
-    ? userStore.userInfo.avatar
-    : blogStore.blogInfo.website_config.tourist_avatar;
   const userNickname = userStore.userInfo.nickname ? userStore.userInfo.nickname : "游客";
-  const message = {
-    avatar: userAvatar,
-    nickname: userNickname,
+  const message: RemarkNewReq = {
     message_content: addMessageContent.value,
-    time: Math.floor(Math.random() * (10 - 7)) + 7,
+    // time: Math.floor(Math.random() * (10 - 7)) + 7,
   };
   RemarkAPI.addRemarkApi(message).then((res) => {
     if (blogStore.blogInfo.website_config.is_message_review) {
@@ -90,6 +91,12 @@ const AddMessage = () => {
     }
     addMessageContent.value = "";
   });
+};
+
+const touristAvatar = ref(blogStore.blogInfo.website_config.tourist_avatar);
+
+const getTouristName = (terminal: string) => {
+  return "游客" + btoa(terminal);
 };
 </script>
 

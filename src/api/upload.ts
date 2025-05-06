@@ -1,9 +1,9 @@
 import request from "@/utils/request";
-import type { FileBackDTO, MultiUploadFileReq, UploadFileReq } from "./types";
+import type { FileBackVO, MultiUploadFileReq, UploadFileReq } from "./types";
 
 export const UploadAPI = {
   /** 上传文件 */
-  uploadFileApi(data?: UploadFileReq): Promise<IApiResponse<FileBackDTO>> {
+  uploadFileApi(data?: UploadFileReq): Promise<IApiResponse<FileBackVO>> {
     const formData = new FormData();
     formData.append("file", data.file);
     formData.append("file_path", data.file_path);
@@ -19,7 +19,7 @@ export const UploadAPI = {
   },
 
   /** 上传文件列表 */
-  multiUploadFileApi(data?: MultiUploadFileReq): Promise<IApiResponse<FileBackDTO[]>> {
+  multiUploadFileApi(data?: MultiUploadFileReq): Promise<IApiResponse<FileBackVO[]>> {
     const formData = new FormData();
     for (let i = 0; i < data.files.length; i++) {
       formData.append("files", data.files[i]);
