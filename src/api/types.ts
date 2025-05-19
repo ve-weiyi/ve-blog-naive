@@ -68,25 +68,22 @@ export interface CategoryQueryReq extends PageQuery {
   category_name?: string; // 分类名
 }
 
-export interface ChatRecordResp {
+export interface ChatMessageEvent {
   id: number; // 主键
   user_id: string; // 用户id
-  device_id: string; // 设备id
+  terminal_id: string; // 设备id
   nickname: string; // 昵称
   avatar: string; // 头像
-  chat_content: string; // 消息内容
   ip_address: string; // ip地址
   ip_source: string; // ip来源
-  type: string; // 类型
+  type: string; // 消息类型 1: 文本消息 2: 图片消息 3: 文件消息 4: 语音消息 5: 视频消息
+  content: string; // 消息内容
+  status: number; // 消息状态 0-正常 1-已编辑 2-已撤回 3-已删除
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
 }
 
-export interface ClientInfoResp {
-  client_id: string; // 客户端id
-  user_id: string; // 用户id
-  device_id: string; // 设备id
-  nickname: string; // 昵称
+export interface ClientInfoEvent {
   ip_address: string; // ip地址
   ip_source: string; // ip来源
 }
@@ -226,6 +223,10 @@ export interface GetTouristInfoResp {
   tourist_id: string; // 游客id
 }
 
+export interface HistoryMessageEvent {
+  list: ChatMessageEvent[]; // 消息列表
+}
+
 export interface IdReq {
   id: number;
 }
@@ -245,14 +246,21 @@ export interface LoginResp {
   token?: Token;
 }
 
+export interface MessageEvent {
+  type: number; // 消息类型
+  data: string; // 消息内容
+  timestamp: number; // 消息时间戳
+}
+
 export interface MultiUploadFileReq {
   files?: any[]; // 文件列表
   file_path?: string; // 文件路径
 }
 
-export interface OnlineCountResp {
-  msg: string; // 消息
-  count: number; // 在线人数
+export interface OnlineEvent {
+  count: number;
+  is_online: boolean;
+  msg: string; // 消息内容
 }
 
 export interface Page {
@@ -315,18 +323,8 @@ export interface PingResp {
   rpc_status: string[];
 }
 
-export interface RecallMessageReq {
+export interface RecallMessageEvent {
   id: number; // 消息id
-}
-
-export interface RecallMessageResp {
-  id: number; // 消息id
-}
-
-export interface ReceiveMsg {
-  type: number; // 类型
-  data: string; // 数据
-  timestamp: number; //时间戳
 }
 
 export interface RegisterReq {
@@ -357,12 +355,6 @@ export interface RemarkNewReq {
 export interface RemarkQueryReq extends PageQuery {
 }
 
-export interface ReplyMsg {
-  type: number; // 类型
-  data: string; // 数据
-  timestamp: number; //时间戳
-}
-
 export interface ResetPasswordReq {
   password: string;
   confirm_password: string; // 确认密码
@@ -372,7 +364,7 @@ export interface ResetPasswordReq {
 
 export interface Response {
   code: number;
-  message: string;
+  msg: string;
   data: any;
   trace_id: string;
 }
@@ -390,11 +382,6 @@ export interface RestHeader {
 export interface SendEmailVerifyCodeReq {
   email: string; // 邮箱
   type: string; // 类型 register,reset_password,bind_email,bind_phone
-}
-
-export interface SendMessageReq {
-  type: string; // 消息类型 1: 文本消息 2: 图片消息 3: 文件消息 4: 语音消息 5: 视频消息
-  content: string; // 消息内容
 }
 
 export interface SendPhoneVerifyCodeReq {
@@ -501,6 +488,7 @@ export interface UserInfoResp extends UserInfoExt {
   avatar: string; // 用户头像
   email: string; // 用户邮箱
   phone: string; // 用户手机号
+  register_type: string; // 注册方式
   created_at: number; // 创建时间
   third_party: UserThirdPartyInfo[];
 }

@@ -5,8 +5,8 @@ import { getTerminalId, getToken, getUid } from "./token";
 
 const HeaderAppName = "App-Name";
 const HeaderTimestamp = "Timestamp";
-const HeaderTerminal = "Terminal";
-const HeaderXToken = "X-Token";
+const HeaderTerminalId = "Terminal-Id";
+const HeaderXTsToken = "X-Ts-Token";
 
 const HeaderUid = "Uid";
 const HeaderToken = "Token";
@@ -36,9 +36,9 @@ requests.interceptors.request.use(
 
     config.headers = Object.assign({}, config.headers, {
       [HeaderAppName]: "blog-web",
-      [HeaderTerminal]: terminalId,
+      [HeaderTerminalId]: terminalId,
       [HeaderTimestamp]: timestamp,
-      [HeaderXToken]: xtoken,
+      [HeaderXTsToken]: xtoken,
       [HeaderUid]: uid,
       [HeaderToken]: token,
     });
@@ -57,7 +57,7 @@ requests.interceptors.response.use(
       return response;
     }
 
-    const { code, data, message } = response.data;
+    const { code, data, message: msg } = response.data;
 
     // 接口错误码
     switch (code) {
@@ -65,25 +65,26 @@ requests.interceptors.response.use(
         break;
       case 401:
         window.$message?.error("用户未登录");
-        return Promise.reject(message);
+        return Promise.reject(msg);
       case 402:
         const userStore = useUserStore();
         userStore.forceLogOut();
-        window.$message?.error(message);
-        return Promise.reject(message);
+        window.$message?.error(msg);
+        return Promise.reject(msg);
       case 403:
-        window.$message?.error(message);
-        return Promise.reject(message);
+        window.$message?.error(msg);
+        return Promise.reject(msg);
       case 500:
-        window.$message?.error(message);
-        return Promise.reject(message);
+        window.$message?.error(msg);
+        return Promise.reject(msg);
       default:
-        window.$message?.error(message || "系统出错");
-        return Promise.reject(new Error(message || "Error"));
+        window.$message?.error(msg || "系统出错");
+        return Promise.reject(new Error(msg || "Error"));
     }
     return response.data;
   },
   (error: AxiosError) => {
+    console.error("request error", error); // for debug
     let { message } = error;
     if (message == "Network Error") {
       message = "后端接口连接异常";

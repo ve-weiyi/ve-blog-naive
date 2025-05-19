@@ -6,7 +6,11 @@ export function formatDate(date: number | string | Date, format = "YYYY-MM-DD") 
   }
   // 检查是否为字符串
   if (typeof date === "number") {
-    const dateTime = new Date(date * 1000);
+    if (isSecondTimestamp(date)) {
+      date = date * 1000;
+    }
+
+    const dateTime = new Date(date);
     return formatDate(dateTime, format);
   }
 
@@ -16,4 +20,12 @@ export function formatDate(date: number | string | Date, format = "YYYY-MM-DD") 
 
 export function formatDateTime(date: number | string | Date, format = "YYYY-MM-DD HH:mm:ss") {
   return formatDate(date, format);
+}
+
+function isSecondTimestamp(ts: number): boolean {
+  return ts.toString().length === 10;
+}
+
+function isMillisecondTimestamp(ts: number): boolean {
+  return ts.toString().length === 13;
 }
