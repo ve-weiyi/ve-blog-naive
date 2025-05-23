@@ -94,10 +94,6 @@ const chatTopic = "/topic/chatroom"; // 改成你服务端广播的订阅路径
 const defaultAvatar = ref(blogStore.blogInfo.website_config.tourist_avatar);
 
 const clientInfo = {
-  user_id: userStore.userInfo.user_id,
-  terminal_id: getTerminalId(),
-  nickname: userStore.userInfo.nickname,
-  avatar: userStore.userInfo.avatar || defaultAvatar.value,
   ip_address: "",
   ip_source: "",
 };
@@ -193,10 +189,10 @@ const handleSend = () => {
     id: 0,
     type: "text",
     content: chatContent.value,
-    user_id: clientInfo.user_id,
-    terminal_id: clientInfo.terminal_id,
-    nickname: clientInfo.nickname || clientInfo.ip_address,
-    avatar: clientInfo.avatar,
+    user_id: userStore.userInfo.user_id,
+    terminal_id: getTerminalId(),
+    nickname: userStore.userInfo.nickname || clientInfo.ip_address,
+    avatar: userStore.userInfo.avatar || blogStore.blogInfo.website_config.tourist_avatar,
     ip_address: clientInfo.ip_address,
     ip_source: clientInfo.ip_source,
     status: 0,
