@@ -83,7 +83,7 @@ const AddMessage = () => {
     // time: Math.floor(Math.random() * (10 - 7)) + 7,
   };
   RemarkAPI.addRemarkApi(message).then((res) => {
-    if (blogStore.blogInfo.website_config.is_message_review) {
+    if (blogStore.blogInfo.website_config.website_feature.is_message_review) {
       window.$message?.warning("留言成功，正在审核中");
     } else {
       danmaku.value.push(message);

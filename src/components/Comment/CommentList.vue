@@ -182,7 +182,7 @@ function insertComment() {
 
   CommentAPI.addCommentApi(comment)
     .then((res) => {
-      const isReview = blogStore.blogInfo.website_config.is_comment_review;
+      const isReview = blogStore.blogInfo.website_config.website_feature.is_comment_review;
       if (isReview) {
         window.$message?.success("评论成功，正在审核中");
       } else {
@@ -256,7 +256,7 @@ function confirmReply(index: number, comment: Comment | CommentReply) {
   CommentAPI.addCommentApi(newComment)
     .then((res) => {
       replyCommentIndex.value = -1;
-      const isReview = blogStore.blogInfo.website_config.is_comment_review;
+      const isReview = blogStore.blogInfo.website_config.website_feature.is_comment_review;
       if (isReview) {
         window.$message?.success("评论成功，正在审核中");
       } else {
@@ -372,7 +372,9 @@ const listComments = () => {
 };
 
 onMounted(() => {
-  userStore.getUserLike();
+  if (userStore.isLogin()) {
+    userStore.getUserLike();
+  }
   listComments();
 });
 </script>
