@@ -133,12 +133,12 @@ import type { UserInfoResp } from "@/api/types";
 import type { FormInst } from "naive-ui";
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
 import UserAvatar from "@/components/UserAvatar/index.vue";
-import { thirdPlatformList } from "@/utils/third.ts";
 
 const userStore = useUserStore();
 const appStore = useAppStore();
 const blogStore = useBlogStore();
 
+const thirdPlatformList = blogStore.blogInfo.website_config.social_login_list;
 const cover = blogStore.getCover("user");
 const formInstRef = ref<FormInst | null>(null);
 const router = useRouter();

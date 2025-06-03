@@ -40,7 +40,7 @@
       <div class="social-login-wrapper">
         <template v-for="item in thirdPlatformList" :key="item.platform">
           <svg-icon
-            v-if="showLogin(item.platform)"
+            v-if="item.enabled"
             class="icon"
             :icon-class="item.platform"
             size="2rem"
@@ -56,7 +56,6 @@
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
 import { AuthAPI } from "@/api/auth";
 import type { GetOauthAuthorizeUrlReq, LoginReq } from "@/api/types";
-import { thirdPlatformList } from "@/utils/third.ts";
 
 const appStore = useAppStore();
 const userStore = useUserStore();
@@ -71,9 +70,9 @@ const dialogVisible = computed({
   get: () => appStore.loginFlag,
   set: (value) => (appStore.loginFlag = value),
 });
-const showLogin = computed(
-  () => (type: string) => blogStore.blogInfo.website_config.social_login_list.includes(type)
-);
+
+const thirdPlatformList = blogStore.blogInfo.website_config.social_login_list;
+
 const handleRegister = () => {
   appStore.setLoginFlag(false);
   appStore.setRegisterFlag(true);

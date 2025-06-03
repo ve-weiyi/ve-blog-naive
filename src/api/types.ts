@@ -1,3 +1,4 @@
+
 export interface Album {
   id: number; // 主键
   album_name: string; // 相册名
@@ -16,6 +17,7 @@ export interface ArticleClassifyQueryReq extends PageQuery {
 }
 
 export interface ArticleDetails extends ArticleHome {
+  author?: UserInfoVO; // 作者
   last_article?: ArticlePreview; // 上一篇文章
   next_article?: ArticlePreview; // 下一篇文章
   recommend_article_list: ArticlePreview[]; // 推荐文章列表
@@ -195,8 +197,8 @@ export interface GetBlogHomeInfoResp {
   tag_count: number; // 标签数量
   total_user_view_count: number; // 总服务量
   total_page_view_count: number; // 总浏览量
-  website_config: WebsiteConfigVO; // 网站配置
   page_list: PageVO[]; // 页面列表
+  website_config: WebsiteConfigVO; // 网站配置
 }
 
 export interface GetCaptchaCodeReq {
@@ -374,9 +376,17 @@ export interface RestHeader {
   header_language?: string;
   header_timezone?: string;
   header_app_name?: string;
-  header_x_user_id?: string;
-  header_x_auth_token?: string;
+  header_timestamp?: string;
   header_terminal_id?: string;
+  header_x_ts_token?: string;
+  header_uid?: string;
+  header_token?: string;
+  header_authorization?: string;
+}
+
+export interface RewardQrCode {
+  alipay_qr_code: string; // 支付宝二维码
+  weixin_qr_code: string; // 微信二维码
 }
 
 export interface SendEmailVerifyCodeReq {
@@ -387,6 +397,13 @@ export interface SendEmailVerifyCodeReq {
 export interface SendPhoneVerifyCodeReq {
   phone: string; // 手机号
   type: string; // 类型 register,reset_password,bind_email,bind_phone
+}
+
+export interface SocialAccountInfo {
+  name: string; // 名称-微信
+  platform: string; // 平台-wechat
+  link_url: string; // 链接地址
+  enabled: boolean; // 是否启用
 }
 
 export interface Tag {
@@ -421,6 +438,13 @@ export interface TalkQueryReq extends PageQuery {
 export interface ThirdLoginReq {
   platform: string; // 平台
   code?: string; // 授权码
+}
+
+export interface ThirdPlatformInfo {
+  name: string; // 名称-微信
+  platform: string; // 平台-wechat
+  authorize_url: string; // 授权地址
+  enabled: boolean; // 是否启用
 }
 
 export interface Token {
@@ -516,20 +540,26 @@ export interface UserThirdPartyInfo {
 
 export interface WebsiteConfigVO {
   admin_url: string; // 后台地址
-  alipay_qr_code: string; // 支付宝二维码
-  gitee: string; // Gitee
-  github: string; // Github
+  websocket_url: string; // websocket地址
+  tourist_avatar: string; // 游客头像
+  user_avatar: string; // 用户头像
+  website_feature?: WebsiteFeature; // 网站功能
+  website_info?: WebsiteInfo; // 网站信息
+  reward_qr_code?: RewardQrCode; // 打赏二维码
+  social_login_list: ThirdPlatformInfo[]; // 用户第三方登录列表
+  social_url_list: SocialAccountInfo[]; // 作者社交地址列表
+}
+
+export interface WebsiteFeature {
   is_chat_room: number; // 是否开启聊天室
   is_comment_review: number; // 是否开启评论审核
   is_email_notice: number; // 是否开启邮件通知
   is_message_review: number; // 是否开启留言审核
   is_music_player: number; // 是否开启音乐播放器
   is_reward: number; // 是否开启打赏
-  qq: string; // QQ
-  social_login_list: string[]; // 社交登录列表
-  social_url_list: string[]; // 社交地址列表
-  tourist_avatar: string; // 游客头像
-  user_avatar: string; // 用户头像
+}
+
+export interface WebsiteInfo {
   website_author: string; // 网站作者
   website_avatar: string; // 网站头像
   website_create_time: string; // 网站创建时间
@@ -537,6 +567,4 @@ export interface WebsiteConfigVO {
   website_name: string; // 网站名称
   website_notice: string; // 网站公告
   website_record_no: string; // 网站备案号
-  websocket_url: string; // websocket地址
-  weixin_qr_code: string; // 微信二维码
 }

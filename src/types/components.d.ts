@@ -17,7 +17,6 @@ declare module 'vue' {
     Drawer: typeof import('./../components/Layout/Drawer/index.vue')['default']
     Echarts: typeof import('./../components/Echarts/index.vue')['default']
     EmailBind: typeof import('./../components/Dialog/EmailBind.vue')['default']
-    EmailLogin: typeof import('./../components/Dialog/EmailLogin.vue')['default']
     Emoji: typeof import('./../components/Emoji/index.vue')['default']
     Footer: typeof import('./../components/Layout/Footer/index.vue')['default']
     Forget: typeof import('./../components/Dialog/Forget.vue')['default']

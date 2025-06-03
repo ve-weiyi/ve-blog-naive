@@ -26,12 +26,14 @@
 </template>
 
 <script setup lang="ts">
-import { useAppStore, useUserStore } from "@/store";
+import { useAppStore, useBlogStore, useUserStore } from "@/store";
 import { AuthAPI } from "@/api/auth";
-import { thirdPlatformList } from "@/utils/third.ts";
 
 const userStore = useUserStore();
 const appStore = useAppStore();
+const blogStore = useBlogStore();
+
+const thirdPlatformList = blogStore.blogInfo.website_config.social_login_list;
 
 const dialogVisible = computed({
   get: () => appStore.thirdBindFlag,

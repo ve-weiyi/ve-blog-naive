@@ -295,7 +295,7 @@ export default defineConfig((configEnv): UserConfig => {
           data: {
             appTitle: `${pkg.name}`,
             appVersion: `${pkg.version}`,
-            appDesc: `${pkg.description}`,
+            appDescription: `${pkg.description}`,
             appKeywords: `${pkg.keywords}`,
           },
         },
