@@ -17,7 +17,7 @@
 
 <div align="center">
   <a target="_blank" href="https://blog.veweiyi.cn">🖥️ 在线预览</a> |
-  <a target="_blank" href="https://blog.veweiyi.cn/blog-api/v1/swagger/index.html">📑 接口文档</a> |
+  <a target="_blank" href="https://blog.veweiyi.cn/blog-api/v1/swagger/index.html">📑 接口文档</a>
 </div>
 
 ## 📚 项目简介

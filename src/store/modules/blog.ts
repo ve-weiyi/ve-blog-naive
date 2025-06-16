@@ -14,7 +14,16 @@ interface BlogState {
 export const useBlogStore = defineStore("useBlogStore", {
   state: (): BlogState => ({
     blogInfo: {
-      website_config: {} as WebsiteConfigVO,
+      website_config: {
+        website_feature: {
+          is_chat_room: 1,
+          is_comment_review: 0,
+          is_email_notice: 1,
+          is_message_review: 0,
+          is_music_player: 1,
+          is_reward: 0,
+        },
+      } as WebsiteConfigVO,
       page_list: [],
     } as GetBlogHomeInfoResp,
   }),

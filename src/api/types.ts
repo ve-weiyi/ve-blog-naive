@@ -1,4 +1,3 @@
-
 export interface Album {
   id: number; // 主键
   album_name: string; // 相册名
@@ -142,6 +141,10 @@ export interface DeleteUserBindThirdPartyReq {
   platform: string; // 平台
 }
 
+export interface DeletesUploadFileReq {
+  file_paths?: string[]; // 文件路径
+}
+
 export interface EmailLoginReq {
   email: string; // 邮箱
   password: string; // 密码
@@ -155,16 +158,12 @@ export interface EmptyReq {
 export interface EmptyResp {
 }
 
-export interface FileBackVO {
-  id?: number; // 文件目录ID
-  user_id: string; // 用户id
+export interface FileInfoVO {
   file_path: string; // 文件路径
   file_name: string; // 文件名称
   file_type: string; // 文件类型
   file_size: number; // 文件大小
-  file_md5: string; // 文件md5值
   file_url: string; // 上传路径
-  created_at: number; // 创建时间
   updated_at: number; // 更新时间
 }
 
@@ -235,6 +234,11 @@ export interface IdReq {
 
 export interface IdsReq {
   ids: number[];
+}
+
+export interface ListUploadFileReq {
+  file_path?: string; // 文件路径
+  limit?: number; // 限制
 }
 
 export interface LoginReq {
