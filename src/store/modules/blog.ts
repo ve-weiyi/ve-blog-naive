@@ -15,6 +15,9 @@ export const useBlogStore = defineStore("useBlogStore", {
   state: (): BlogState => ({
     blogInfo: {
       website_config: {
+        website_info: {
+          website_name: "Blog",
+        },
         website_feature: {
           is_chat_room: 1,
           is_comment_review: 0,
