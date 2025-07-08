@@ -12,7 +12,7 @@
 
 </div>
 
-![](https://foruda.gitee.com/images/1708618984641188532/a7cca095_716974.png "rainbow.png")
+![](https://foruda.gitee.com/1708618984641188532/a7cca095_716974.png "rainbow.png")
 
 
 <div align="center">
@@ -24,7 +24,22 @@
 
 ve-blog-naive 是一个现代化的的现代化博客系统，基于 Vue 3.5 + TypeScript + Naive UI 构建。项目采用最新的前端技术栈，提供了丰富的功能组件和优雅的用户界面。
 
-## ✨ 核心特性
+## ✨ 项目预览
+
+![](assets/img.png)
+
+![](assets/img_1.png)
+
+![](assets/img_2.png)
+
+📲 **移动端**
+
+|                |                |                |
+|----------------|----------------|----------------|
+| ![](assets/img_6.png) | ![](assets/img_7.png) | ![](assets/img_8.png) |
+
+
+## ⚡ 核心特性
 
 - 🚀 **高性能前端架构**
   - 基于 Vue 3 + TypeScript + Vite 4 构建
@@ -60,11 +75,11 @@ ve-blog-naive 是一个现代化的的现代化博客系统，基于 Vue 3.5 + T
 
 ## 📁 项目源码
 
-| 项目               | 功能     | Github                                                               |
-|------------------|--------|----------------------------------------------------------------------|
-| ve-blog-golang   | 博客后端服务 | [ve-blog-golang](https://github.com/ve-weiyi/ve-blog-golang.git)     |
-| ve-blog-naive    | 博客前台展示 | [ve-blog-naive](https://github.com/ve-weiyi/ve-blog-naive.git)       |
-| ve-admin-element | 博客后台管理 | [ve-admin-element](https://github.com/ve-weiyi/ve-admin-element.git) |
+| 项目               | 功能     | Github                                                               |                                                                     |
+|------------------|--------|----------------------------------------------------------------------|---------------------------------------------------------------------|
+| ve-blog-golang   | 博客后端服务 | [ve-blog-golang](https://github.com/ve-weiyi/ve-blog-golang.git)     | [ve-blog-golang](https://gitee.com/ve-weiyi/ve-blog-golang.git)     |
+| ve-blog-naive    | 博客前台展示 | [ve-blog-naive](https://github.com/ve-weiyi/ve-blog-naive.git)       | [ve-blog-naive](https://gitee.com/ve-weiyi/ve-blog-naive.git)       |
+| ve-admin-element | 博客后台管理 | [ve-admin-element](https://github.com/ve-weiyi/ve-admin-element.git) | [ve-admin-element](https://gitee.com/ve-weiyi/ve-admin-element.git) |
 
 ## 🏗️ 项目结构
 
