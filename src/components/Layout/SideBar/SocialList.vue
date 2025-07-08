@@ -12,7 +12,9 @@
 import { useBlogStore } from "@/store";
 
 const blogStore = useBlogStore();
-const socialList = blogStore.blogInfo.website_config.social_url_list;
+const socialList = computed(() => {
+  return blogStore.blogInfo.website_config.social_url_list;
+});
 </script>
 
 <style scoped></style>

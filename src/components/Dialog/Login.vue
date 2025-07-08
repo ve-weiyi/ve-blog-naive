@@ -71,7 +71,9 @@ const dialogVisible = computed({
   set: (value) => (appStore.loginFlag = value),
 });
 
-const thirdPlatformList = blogStore.blogInfo.website_config.social_login_list;
+const thirdPlatformList = computed(() => {
+  return blogStore.blogInfo.website_config.social_login_list;
+});
 
 const handleRegister = () => {
   appStore.setLoginFlag(false);

@@ -138,7 +138,6 @@ const userStore = useUserStore();
 const appStore = useAppStore();
 const blogStore = useBlogStore();
 
-const thirdPlatformList = blogStore.blogInfo.website_config.social_login_list;
 const cover = blogStore.getCover("user");
 const formInstRef = ref<FormInst | null>(null);
 const router = useRouter();
@@ -184,8 +183,8 @@ onMounted(() => {
 });
 
 const availablePlatforms = computed(() => {
-  return thirdPlatformList?.filter((platform) => {
-    return userStore.userInfo.third_party?.some((item) => item.platform === platform.platform);
+  return blogStore.blogInfo.website_config.social_login_list.filter((platform) => {
+    return !userStore.userInfo.third_party?.some((item) => item.platform === platform.platform);
   });
 });
 
