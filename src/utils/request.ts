@@ -5,8 +5,8 @@ import { getTerminalId, getToken, getUid } from "./token";
 
 const HeaderAppName = "App-Name";
 const HeaderTimestamp = "Timestamp";
-const HeaderTerminalId = "Terminal-Id";
-const HeaderXTsToken = "X-Ts-Token";
+const HeaderXTerminalId = "X-Terminal-Id";
+const HeaderXTerminalTsToken = "X-Terminal-Token";
 
 const HeaderUid = "Uid";
 const HeaderToken = "Token";
@@ -36,9 +36,9 @@ requests.interceptors.request.use(
 
     config.headers = Object.assign({}, config.headers, {
       [HeaderAppName]: "blog-web",
-      [HeaderTerminalId]: terminalId,
       [HeaderTimestamp]: timestamp,
-      [HeaderXTsToken]: xtoken,
+      [HeaderXTerminalId]: terminalId,
+      [HeaderXTerminalTsToken]: xtoken,
       [HeaderUid]: uid,
       [HeaderToken]: token,
     });
