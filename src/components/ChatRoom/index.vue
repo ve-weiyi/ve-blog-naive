@@ -60,9 +60,9 @@ import { useBlogStore, useUserStore } from "@/store";
 import { formatDateTime } from "@/utils/date";
 import { emojiList } from "@/utils/emoji";
 import { tvList } from "@/utils/tv";
-import type { ChatMessageEvent, MessageEvent } from "@/api/types";
+import type { ChatMessageEvent } from "@/api/types";
 import chatroom from "@/assets/images/chatroom.png";
-import { Client, type IMessage } from "@stomp/stompjs";
+import { Client } from "@stomp/stompjs";
 import { getTerminalId, getToken, getUid } from "@/utils/token.ts";
 
 const userStore = useUserStore();
@@ -76,13 +76,42 @@ const data = reactive({
   onlineCount: 0,
 });
 
-enum Type {
-  ONLINE_COUNT = 1, // 在线人数
-  HISTORY_RECORD = 2, // 历史记录
-  SEND_MESSAGE = 3, // 发送消息
-  RECALL_MESSAGE = 4, // 撤回消息
-  HEART_BEAT = 5, // 心跳
-  CLIENT_INFO = 6, // 客户端信息
+interface MessageEvent {
+  type: string;
+  data: string;
+  timestamp: number;
+}
+
+interface SendMessageEvent {
+  type: string;
+  content: string;
+}
+
+interface EditMessageEvent {
+  id: number;
+  type: string;
+  content: string;
+  status: number;
+  updated_at: number;
+}
+
+interface OnlineMessageEvent {
+  online: boolean;
+  count: number;
+  tips: string;
+}
+
+interface GreetingMessageEvent {
+  content: string;
+  ip_address: string;
+  ip_source: string;
+}
+
+interface HistoryMessageEvent {
+  list: ChatMessageEvent[];
+  page: number;
+  size: number;
+  total: number;
 }
 
 const { show, recordList, chatContent, emojiType, unreadCount, onlineCount } = toRefs(data);
@@ -93,10 +122,10 @@ const chatTopic = "/topic/chatroom"; // 改成你服务端广播的订阅路径
 
 const defaultAvatar = ref(blogStore.blogInfo.website_config.tourist_avatar);
 
-const clientInfo = {
+const clientInfo = reactive({
   ip_address: "",
   ip_source: "",
-};
+});
 
 const isMy = computed(
   () => (chat: ChatMessageEvent) =>
@@ -119,8 +148,9 @@ const initStomp = () => {
     import.meta.env.VITE_APP_WS_ENDPOINT || blogStore.blogInfo.website_config.websocket_url;
   stompClient.value = new Client({
     connectHeaders: {
-      login: getUid(),
-      passcode: getToken(),
+      login: getUid() || "",
+      passcode: getToken() || "",
+      "client-id": getTerminalId(),
     },
     brokerURL: url,
     reconnectDelay: 5000,
@@ -141,30 +171,41 @@ const initStomp = () => {
 };
 
 // 接收消息
-const handleMessage = (message: IMessage) => {
+const handleMessage = (message: any) => {
   if (!message.body) return;
   const res: MessageEvent = JSON.parse(message.body);
+  const data = JSON.parse(res.data);
+
   switch (res.type) {
-    case 1: // ONLINE_COUNT
-      onlineCount.value = JSON.parse(res.data).count;
+    case "online":
+      const onlineData = data as OnlineMessageEvent;
+      onlineCount.value = onlineData.count;
       break;
-    case 2: // HISTORY_RECORD
-      recordList.value = JSON.parse(res.data).list;
+    case "greeting":
+      // 处理问候消息
+      const greetingData = data as GreetingMessageEvent;
+      clientInfo.ip_address = greetingData.ip_address;
+      clientInfo.ip_source = greetingData.ip_source;
       break;
-    case 3: // SEND_MESSAGE
-      const record = JSON.parse(res.data);
-      recordList.value.push(record);
+    case "history":
+      const historyData = data as HistoryMessageEvent;
+      recordList.value = historyData.list;
+      break;
+    case "message":
+      const messageData = data as ChatMessageEvent;
+      recordList.value.push(messageData);
       if (!show.value) {
         unreadCount.value++;
       }
       break;
-    case 4: // RECALL_MESSAGE
-      const recall = JSON.parse(res.data);
-      recordList.value = recordList.value.filter((item) => item.id !== recall.id);
-      break;
-    case 6: // CLIENT_INFO
-      clientInfo.ip_address = JSON.parse(res.data).ip_address;
-      clientInfo.ip_source = JSON.parse(res.data).ip_source;
+    case "edit":
+      const editData = data as EditMessageEvent;
+      const editIndex = recordList.value.findIndex((item) => item.id === editData.id);
+      if (editIndex !== -1) {
+        recordList.value[editIndex].content = editData.content;
+        recordList.value[editIndex].status = editData.status;
+        recordList.value[editIndex].updated_at = editData.updated_at;
+      }
       break;
   }
 };
@@ -185,25 +226,15 @@ const handleSend = () => {
     return str;
   });
 
-  let chat: ChatMessageEvent = {
-    id: 0,
+  const sendEvent: SendMessageEvent = {
     type: "text",
     content: chatContent.value,
-    user_id: userStore.userInfo.user_id,
-    terminal_id: getTerminalId(),
-    nickname: userStore.userInfo.nickname || clientInfo.ip_address,
-    avatar: userStore.userInfo.avatar || blogStore.blogInfo.website_config.tourist_avatar,
-    ip_address: clientInfo.ip_address,
-    ip_source: clientInfo.ip_source,
-    status: 0,
-    created_at: Date.now(),
-    updated_at: Date.now(),
   };
 
-  let msg: MessageEvent = {
-    type: Type.SEND_MESSAGE,
+  const msg: MessageEvent = {
+    type: "send",
+    data: JSON.stringify(sendEvent),
     timestamp: Date.now(),
-    data: JSON.stringify(chat),
   };
 
   stompClient.value?.publish({
@@ -218,13 +249,22 @@ const handleSend = () => {
   chatContent.value = "";
 };
 
-// 撤回消息
+// 撤回消息 - 使用编辑功能来标记为已删除
 const back = (item: ChatMessageEvent, index: number) => {
-  const msg: MessageEvent = {
-    type: 4,
-    timestamp: Date.now(),
-    data: JSON.stringify({ id: item.id }),
+  const editEvent: EditMessageEvent = {
+    id: item.id,
+    type: item.type,
+    content: "[消息已撤回]",
+    status: 2,
+    updated_at: Date.now(),
   };
+
+  const msg: MessageEvent = {
+    type: "edit",
+    data: JSON.stringify(editEvent),
+    timestamp: Date.now(),
+  };
+
   stompClient.value?.publish({
     destination: chatTopic,
     body: JSON.stringify(msg),
