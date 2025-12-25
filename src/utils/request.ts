@@ -57,7 +57,7 @@ requests.interceptors.response.use(
       return response;
     }
 
-    const { code, data, message: msg } = response.data;
+    const { code, data, msg } = response.data;
 
     // 接口错误码
     switch (code) {

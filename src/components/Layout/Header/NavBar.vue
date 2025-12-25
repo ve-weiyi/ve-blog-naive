@@ -230,6 +230,7 @@ const logout = () => {
     padding: 0.3rem 0.7rem;
     width: 100%;
     text-shadow: none;
+    text-align: left;
   }
 
   &:hover .link {

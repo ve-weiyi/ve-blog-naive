@@ -8,12 +8,16 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AiAssistant: typeof import('./../components/AiAssistant/index.vue')['default']
     Aplayer: typeof import('./../components/MusicPlayer/aplayer.vue')['default']
     Author: typeof import('./../components/Layout/SideBar/Author.vue')['default']
     BlogInfo: typeof import('./../components/Layout/SideBar/BlogInfo.vue')['default']
     Catalog: typeof import('./../components/Catalog/index.vue')['default']
     ChatRoom: typeof import('./../components/ChatRoom/index.vue')['default']
+    CommentBox: typeof import('./../components/Comment/CommentBox.vue')['default']
+    CommentItem: typeof import('./../components/Comment/CommentItem.vue')['default']
     CommentList: typeof import('./../components/Comment/CommentList.vue')['default']
+    CommentListOptimized: typeof import('./../components/Comment/CommentList-optimized.vue')['default']
     Drawer: typeof import('./../components/Layout/Drawer/index.vue')['default']
     Echarts: typeof import('./../components/Echarts/index.vue')['default']
     EmailBind: typeof import('./../components/Dialog/EmailBind.vue')['default']

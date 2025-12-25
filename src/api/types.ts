@@ -93,12 +93,14 @@ export interface Comment {
   id: number; // 评论id
   topic_id: number; // 主题id
   parent_id: number; // 父评论id
-  reply_msg_id: number; // 会话id
+  reply_id: number; // 评论回复id
   user_id: string; // 用户id
   reply_user_id: string; // 被回复用户id
   comment_content: string; // 评论内容
   type: number; // 评论类型 1.文章 2.友链 3.说说
   created_at: number; // 评论时间
+  ip_address: string; // ip地址
+  ip_source: string; // ip来源
   like_count: number; // 点赞数
   user?: UserInfoVO; // 评论用户
   reply_user?: UserInfoVO; // 被回复评论用户
@@ -109,7 +111,7 @@ export interface Comment {
 export interface CommentNewReq {
   topic_id?: number; // 主题id
   parent_id?: number; // 父评论id
-  reply_msg_id?: number; // 会话id
+  reply_id?: number; // 评论回复id
   reply_user_id?: string; // 回复用户id
   comment_content: string; // 评论内容
   type: number; // 评论类型 1.文章 2.友链 3.说说
@@ -126,13 +128,15 @@ export interface CommentReply {
   id: number; // 评论id
   topic_id: number; // 主题id
   parent_id: number; // 父评论id
-  reply_msg_id: number; // 会话id
+  reply_id: number; // 评论回复id
   user_id: string; // 用户id
   reply_user_id: string; // 被回复用户id
   comment_content: string; // 评论内容
   type: number; // 评论类型 1.文章 2.友链 3.说说
   created_at: number; // 评论时间
   like_count: number; // 点赞数
+  ip_address: string; // ip地址
+  ip_source: string; // ip来源
   user?: UserInfoVO; // 用户信息
   reply_user?: UserInfoVO; // 被回复评论用户
 }

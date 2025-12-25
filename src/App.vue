@@ -26,6 +26,8 @@
       <ChatRoom
         v-if="blogStore.blogInfo.website_config.website_feature.is_chat_room === 1"
       ></ChatRoom>
+      <!-- AI助手 -->
+      <AiAssistant></AiAssistant>
     </div>
   </Provider>
 </template>
@@ -43,7 +45,7 @@ import ThirdBind from "@/components/Dialog/ThirdBind.vue";
 import PhoneBind from "@/components/Dialog/PhoneBind.vue";
 import Tool from "@/components/Tool/index.vue";
 import ChatRoom from "@/components/ChatRoom/index.vue";
-import Player from "./components/zw-player/player.vue";
+import AiAssistant from "@/components/AiAssistant/index.vue";
 
 import { useBlogStore, useUserStore } from "@/store";
 
