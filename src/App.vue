@@ -11,23 +11,21 @@
       </main>
       <Footer></Footer>
       <Tool></Tool>
-      <Search></Search>
-      <Login></Login>
-      <Register></Register>
-      <Forget></Forget>
-      <EmailBind></EmailBind>
-      <PhoneBind></PhoneBind>
-      <ThirdBind></ThirdBind>
       <Drawer></Drawer>
+      <Search v-model="appStore.searchFlag" />
+      <Login v-model="appStore.loginFlag" />
+      <Register v-model="appStore.registerFlag" />
+      <Forget v-model="appStore.forgetFlag" />
+      <EmailBind v-model="appStore.emailBindFlag" />
+      <PhoneBind v-model="appStore.phoneBindFlag" />
+      <ThirdBind v-model="appStore.thirdBindFlag" />
       <!--      <MusicPlayer></MusicPlayer>-->
       <!-- 音乐播放器 -->
       <Player v-if="blogStore.blogInfo.website_config.website_feature.is_music_player === 1" />
       <!-- 聊天室 -->
-      <ChatRoom
-        v-if="blogStore.blogInfo.website_config.website_feature.is_chat_room === 1"
-      ></ChatRoom>
+      <ChatRoom v-if="blogStore.blogInfo.website_config.website_feature.is_chat_room === 1" />
       <!-- AI助手 -->
-      <AiAssistant></AiAssistant>
+      <AiAssistant v-if="blogStore.blogInfo.website_config.website_feature.is_ai_assistant === 1" />
     </div>
   </Provider>
 </template>
@@ -47,10 +45,11 @@ import Tool from "@/components/Tool/index.vue";
 import ChatRoom from "@/components/ChatRoom/index.vue";
 import AiAssistant from "@/components/AiAssistant/index.vue";
 
-import { useBlogStore, useUserStore } from "@/store";
+import { useAppStore, useBlogStore, useUserStore } from "@/store";
 
 const blogStore = useBlogStore();
 const userStore = useUserStore();
+const appStore = useAppStore();
 
 const isMobile = computed(() => {
   const flag = navigator.userAgent.match(

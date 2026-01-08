@@ -1,9 +1,9 @@
 import request from "@/utils/request";
-import type { PageResp, Remark, RemarkNewReq, RemarkQueryReq } from "./types";
+import type { NewRemarkReq, PageResp, QueryRemarkReq, Remark } from "./types";
 
 export const RemarkAPI = {
   /** 分页获取留言列表 */
-  findRemarkListApi(data?: RemarkQueryReq): Promise<IApiResponse<PageResp>> {
+  findRemarkListApi(data?: QueryRemarkReq): Promise<IApiResponse<PageResp>> {
     return request({
       url: "/blog-api/v1/remark/find_remark_list",
       method: "POST",
@@ -12,7 +12,7 @@ export const RemarkAPI = {
   },
 
   /** 创建留言 */
-  addRemarkApi(data?: RemarkNewReq): Promise<IApiResponse<Remark>> {
+  addRemarkApi(data?: NewRemarkReq): Promise<IApiResponse<Remark>> {
     return request({
       url: "/blog-api/v1/remark/add_remark",
       method: "POST",

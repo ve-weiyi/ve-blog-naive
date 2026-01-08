@@ -1,18 +1,9 @@
+
 export interface Album {
   id: number; // 主键
   album_name: string; // 相册名
   album_desc: string; // 相册描述
   album_cover: string; // 相册封面
-}
-
-export interface AlbumQueryReq extends PageQuery {
-}
-
-export interface ArticleArchivesQueryReq extends PageQuery {
-}
-
-export interface ArticleClassifyQueryReq extends PageQuery {
-  classify_name?: string; // 分类名
 }
 
 export interface ArticleDetails extends ArticleHome {
@@ -40,10 +31,6 @@ export interface ArticleHome {
   views_count: number; // 浏览量
 }
 
-export interface ArticleHomeQueryReq extends PageQuery {
-  article_title?: string; // 标题
-}
-
 export interface ArticlePreview {
   id: number; // 文章ID
   article_cover: string; // 文章缩略图
@@ -54,53 +41,29 @@ export interface ArticlePreview {
 }
 
 export interface BatchResp {
-  success_count: number;
+  success_count: number; 
 }
 
 export interface Category {
-  id: number;
+  id: number; 
   category_name: string; // 分类名
-  article_count: number;
+  article_count: number; 
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-}
-
-export interface CategoryQueryReq extends PageQuery {
-  category_name?: string; // 分类名
-}
-
-export interface ChatMessageEvent {
-  id: number; // 主键
-  user_id: string; // 用户id
-  terminal_id: string; // 设备id
-  nickname: string; // 昵称
-  avatar: string; // 头像
-  ip_address: string; // ip地址
-  ip_source: string; // ip来源
-  type: string; // 消息类型 1: 文本消息 2: 图片消息 3: 文件消息 4: 语音消息 5: 视频消息
-  content: string; // 消息内容
-  status: number; // 消息状态 0-正常 1-已编辑 2-已撤回 3-已删除
-  created_at: number; // 创建时间
-  updated_at: number; // 更新时间
-}
-
-export interface ClientInfoEvent {
-  ip_address: string; // ip地址
-  ip_source: string; // ip来源
 }
 
 export interface Comment {
   id: number; // 评论id
   topic_id: number; // 主题id
   parent_id: number; // 父评论id
-  reply_id: number; // 评论回复id
+  reply_id: number; // 会话id
   user_id: string; // 用户id
   reply_user_id: string; // 被回复用户id
   comment_content: string; // 评论内容
   type: number; // 评论类型 1.文章 2.友链 3.说说
   created_at: number; // 评论时间
-  ip_address: string; // ip地址
-  ip_source: string; // ip来源
+  ip_address: string; // IP地址
+  ip_source: string; // IP归属地
   like_count: number; // 点赞数
   user?: UserInfoVO; // 评论用户
   reply_user?: UserInfoVO; // 被回复评论用户
@@ -108,35 +71,19 @@ export interface Comment {
   comment_reply_list: CommentReply[]; // 评论回复列表
 }
 
-export interface CommentNewReq {
-  topic_id?: number; // 主题id
-  parent_id?: number; // 父评论id
-  reply_id?: number; // 评论回复id
-  reply_user_id?: string; // 回复用户id
-  comment_content: string; // 评论内容
-  type: number; // 评论类型 1.文章 2.友链 3.说说
-  status?: number; // 状态 0.正常 1.已编辑 2.已删除
-}
-
-export interface CommentQueryReq extends PageQuery {
-  topic_id?: number; // 主题id
-  parent_id?: number; // 父评论id
-  type?: number; // 评论类型 1.文章 2.友链 3.说说
-}
-
 export interface CommentReply {
   id: number; // 评论id
   topic_id: number; // 主题id
   parent_id: number; // 父评论id
-  reply_id: number; // 评论回复id
+  reply_id: number; // 会话id
   user_id: string; // 用户id
   reply_user_id: string; // 被回复用户id
   comment_content: string; // 评论内容
   type: number; // 评论类型 1.文章 2.友链 3.说说
   created_at: number; // 评论时间
+  ip_address: string; // IP地址
+  ip_source: string; // IP归属地
   like_count: number; // 点赞数
-  ip_address: string; // ip地址
-  ip_source: string; // ip来源
   user?: UserInfoVO; // 用户信息
   reply_user?: UserInfoVO; // 被回复评论用户
 }
@@ -181,14 +128,11 @@ export interface Friend {
   updated_at: number; // 更新时间
 }
 
-export interface FriendQueryReq extends PageQuery {
-}
-
 export interface GetAboutMeReq {
 }
 
 export interface GetAboutMeResp {
-  content: string;
+  content: string; 
 }
 
 export interface GetBlogHomeInfoReq {
@@ -215,6 +159,18 @@ export interface GetCaptchaCodeResp {
   captcha_code: string; // 验证码
 }
 
+export interface GetClientInfoReq {
+}
+
+export interface GetClientInfoResp {
+  id: number; // 访客唯一ID
+  terminal_id: string; // 终端ID
+  os: string; // 操作系统
+  browser: string; // 浏览器
+  ip_address: string; // IP地址
+  ip_source: string; // IP归属地
+}
+
 export interface GetOauthAuthorizeUrlReq {
   platform: string; // 平台
   state?: string; // 状态
@@ -224,20 +180,12 @@ export interface GetOauthAuthorizeUrlResp {
   authorize_url: string; // 授权地址
 }
 
-export interface GetTouristInfoResp {
-  tourist_id: string; // 游客id
-}
-
-export interface HistoryMessageEvent {
-  list: ChatMessageEvent[]; // 消息列表
-}
-
 export interface IdReq {
-  id: number;
+  id: number; 
 }
 
 export interface IdsReq {
-  ids: number[];
+  ids: number[]; 
 }
 
 export interface ListUploadFileReq {
@@ -246,20 +194,14 @@ export interface ListUploadFileReq {
 }
 
 export interface LoginReq {
-  username: string;
-  password: string;
+  username: string; 
+  password: string; 
   captcha_key?: string; // 验证码key
   captcha_code?: string; // 验证码
 }
 
 export interface LoginResp {
-  token?: Token;
-}
-
-export interface MessageEvent {
-  type: number; // 消息类型
-  data: string; // 消息内容
-  timestamp: number; // 消息时间戳
+  token?: Token; 
 }
 
 export interface MultiUploadFileReq {
@@ -267,10 +209,18 @@ export interface MultiUploadFileReq {
   file_path?: string; // 文件路径
 }
 
-export interface OnlineEvent {
-  count: number;
-  is_online: boolean;
-  msg: string; // 消息内容
+export interface NewCommentReq {
+  topic_id?: number; // 主题id
+  parent_id?: number; // 父评论id
+  reply_id?: number; // 会话id
+  reply_user_id?: string; // 回复用户id
+  comment_content: string; // 评论内容
+  type: number; // 评论类型 1.文章 2.友链 3.说说
+  status?: number; // 状态 0.正常 1.已编辑 2.已删除
+}
+
+export interface NewRemarkReq {
+  message_content: string; // 留言内容
 }
 
 export interface Page {
@@ -284,19 +234,16 @@ export interface Page {
 }
 
 export interface PageQuery {
-  page?: number;
-  page_size?: number;
-  sorts?: string[];
-}
-
-export interface PageQueryReq extends PageQuery {
+  page?: number; 
+  page_size?: number; 
+  sorts?: string[]; 
 }
 
 export interface PageResp {
-  page: number;
-  page_size: number;
-  total: number;
-  list: any;
+  page: number; 
+  page_size: number; 
+  total: number; 
+  list: any; 
 }
 
 export interface PageVO {
@@ -317,29 +264,65 @@ export interface Photo {
   photo_url: string; // 照片地址
 }
 
-export interface PhotoQueryReq {
-  album_id: number; // 相册ID
-}
-
 export interface PingReq {
 }
 
 export interface PingResp {
-  env: string;
-  name: string;
-  version: string;
-  runtime: string;
-  description: string;
-  rpc_status: string[];
+  env: string; 
+  name: string; 
+  version: string; 
+  runtime: string; 
+  description: string; 
+  rpc_status: string[]; 
 }
 
-export interface RecallMessageEvent {
-  id: number; // 消息id
+export interface QueryAlbumReq extends PageQuery {
+}
+
+export interface QueryArticleArchivesReq extends PageQuery {
+}
+
+export interface QueryArticleClassifyReq extends PageQuery {
+  classify_name?: string; // 分类名
+}
+
+export interface QueryArticleHomeReq extends PageQuery {
+  article_title?: string; // 标题
+}
+
+export interface QueryCategoryReq extends PageQuery {
+  category_name?: string; // 分类名
+}
+
+export interface QueryCommentReq extends PageQuery {
+  topic_id?: number; // 主题id
+  parent_id?: number; // 父评论id
+  type?: number; // 评论类型 1.文章 2.友链 3.说说
+}
+
+export interface QueryFriendReq extends PageQuery {
+}
+
+export interface QueryPageReq extends PageQuery {
+}
+
+export interface QueryPhotoReq {
+  album_id: number; // 相册ID
+}
+
+export interface QueryRemarkReq extends PageQuery {
+}
+
+export interface QueryTagReq extends PageQuery {
+  tag_name?: string; // 标签名
+}
+
+export interface QueryTalkReq extends PageQuery {
 }
 
 export interface RegisterReq {
-  username: string;
-  password: string;
+  username: string; 
+  password: string; 
   confirm_password: string; // 确认密码
   email: string; // 邮箱
   verify_code: string; // 验证码
@@ -350,46 +333,19 @@ export interface Remark {
   user_id: string; // 用户id
   terminal_id: string; // 终端id
   message_content: string; // 留言内容
-  ip_address: string; // 用户ip
-  ip_source: string; // 用户地址
+  ip_address: string; // IP地址
+  ip_source: string; // IP归属地
   is_review: number; // 是否审核
   created_at: number; // 发布时间
   updated_at: number; // 更新时间
   user?: UserInfoVO; // 用户信息
 }
 
-export interface RemarkNewReq {
-  message_content: string; // 留言内容
-}
-
-export interface RemarkQueryReq extends PageQuery {
-}
-
 export interface ResetPasswordReq {
-  password: string;
+  password: string; 
   confirm_password: string; // 确认密码
-  email: string;
+  email: string; 
   verify_code: string; // 验证码
-}
-
-export interface Response {
-  code: number;
-  msg: string;
-  data: any;
-  trace_id: string;
-}
-
-export interface RestHeader {
-  header_country?: string;
-  header_language?: string;
-  header_timezone?: string;
-  header_app_name?: string;
-  header_timestamp?: string;
-  header_terminal_id?: string;
-  header_x_ts_token?: string;
-  header_uid?: string;
-  header_token?: string;
-  header_authorization?: string;
 }
 
 export interface RewardQrCode {
@@ -422,10 +378,6 @@ export interface Tag {
   updated_at: number; // 更新时间
 }
 
-export interface TagQueryReq extends PageQuery {
-  tag_name?: string; // 标签名
-}
-
 export interface Talk {
   id: number; // 说说ID
   user_id: string; // 用户ID
@@ -438,9 +390,6 @@ export interface Talk {
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
   user?: UserInfoVO; // 用户信息
-}
-
-export interface TalkQueryReq extends PageQuery {
 }
 
 export interface ThirdLoginReq {
@@ -522,20 +471,20 @@ export interface UserInfoResp extends UserInfoExt {
   phone: string; // 用户手机号
   register_type: string; // 注册方式
   created_at: number; // 创建时间
-  third_party: UserThirdPartyInfo[];
+  third_party: UserThirdPartyInfo[]; 
 }
 
 export interface UserInfoVO extends UserInfoExt {
-  user_id: string;
-  username: string;
-  avatar: string;
-  nickname: string;
+  user_id: string; // 用户ID
+  username: string; // 用户名
+  avatar: string; // 用户头像
+  nickname: string; // 用户昵称
 }
 
 export interface UserLikeResp {
-  article_like_set: number[];
-  comment_like_set: number[];
-  talk_like_set: number[];
+  article_like_set: number[]; 
+  comment_like_set: number[]; 
+  talk_like_set: number[]; 
 }
 
 export interface UserThirdPartyInfo {
@@ -544,6 +493,14 @@ export interface UserThirdPartyInfo {
   nickname: string; // 昵称
   avatar: string; // 头像
   created_at: number; // 创建时间
+}
+
+export interface VisitorInfoVO {
+  terminal_id: string; // 终端ID
+  os: string; // 操作系统
+  browser: string; // 浏览器
+  ip_address: string; // IP地址
+  ip_source: string; // IP归属地
 }
 
 export interface WebsiteConfigVO {
@@ -560,10 +517,11 @@ export interface WebsiteConfigVO {
 
 export interface WebsiteFeature {
   is_chat_room: number; // 是否开启聊天室
+  is_ai_assistant: number; // 是否开启AI助手
+  is_music_player: number; // 是否开启音乐播放器
   is_comment_review: number; // 是否开启评论审核
   is_email_notice: number; // 是否开启邮件通知
   is_message_review: number; // 是否开启留言审核
-  is_music_player: number; // 是否开启音乐播放器
   is_reward: number; // 是否开启打赏
 }
 

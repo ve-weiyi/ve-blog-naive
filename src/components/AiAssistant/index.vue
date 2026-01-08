@@ -59,7 +59,7 @@
             <div class="action-title">快速开始：</div>
             <div class="action-buttons">
               <button
-                @click="sendQuickMessage('介绍一下这个博客项目:github.com/ve-weiyi/ve-blog-golang')"
+                @click="sendQuickMessage('请你介绍一下这个博客项目')"
                 class="quick-btn"
               >
                 📝 博客介绍
@@ -67,7 +67,7 @@
               <button @click="sendQuickMessage('有什么技术问题可以咨询？')" class="quick-btn">
                 💻 技术咨询
               </button>
-              <button @click="sendQuickMessage('推荐一些学习资源')" class="quick-btn">
+              <button @click="sendQuickMessage('推荐一些博客项目学习资源')" class="quick-btn">
                 📚 学习资源
               </button>
               <button @click="sendQuickMessage('如何联系博主？')" class="quick-btn">
@@ -285,7 +285,7 @@ const getAIResponseStream = async (
             role: "system",
             content: currentRole.value
               ? currentRole.value.prompt
-              : "你是一个智能助手，可以回答各种问题。",
+              : roles[0].prompt,
           },
           ...messages.value
             .filter((m) => !m.isLoading)

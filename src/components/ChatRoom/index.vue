@@ -97,7 +97,6 @@ import { useBlogStore, useUserStore } from "@/store";
 import { formatDateTime } from "@/utils/date";
 import { emojiList } from "@/utils/emoji";
 import { tvList } from "@/utils/tv";
-import type { ChatMessageEvent } from "@/api/types";
 import chatroom from "@/assets/icons/chatroom.svg";
 import { Client, type IFrame, type IMessage } from "@stomp/stompjs";
 import { getTerminalId, getToken, getUid } from "@/utils/token.ts";
@@ -142,6 +141,21 @@ interface MessageEvent {
   type: string;
   data: string;
   timestamp: number;
+}
+
+interface ChatMessageEvent {
+  id: number; // 主键
+  user_id: string; // 用户id
+  terminal_id: string; // 设备id
+  nickname: string; // 昵称
+  avatar: string; // 头像
+  ip_address: string; // ip地址
+  ip_source: string; // ip来源
+  type: string; // 消息类型 1: 文本消息 2: 图片消息 3: 文件消息 4: 语音消息 5: 视频消息
+  content: string; // 消息内容
+  status: number; // 消息状态 0-正常 1-已编辑 2-已撤回 3-已删除
+  created_at: number; // 创建时间
+  updated_at: number; // 更新时间
 }
 
 interface SendMessageEvent {
@@ -234,7 +248,7 @@ const initStomp = () => {
       connectHeaders: {
         login: getUid() || "",
         passcode: getToken() || "",
-        "client-id": getTerminalId(),
+        client: getTerminalId(),
       },
       brokerURL: url,
       reconnectDelay: WS_CONFIG.RECONNECT_DELAY,

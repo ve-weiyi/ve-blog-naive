@@ -43,7 +43,7 @@
 
 <script setup lang="ts">
 import { RemarkAPI } from "@/api/remark";
-import type { Remark as Message, RemarkNewReq } from "@/api/types";
+import type { NewRemarkReq, Remark as Message } from "@/api/types";
 import { useBlogStore, useUserStore } from "@/store";
 import vueDanmaku from "vue3-danmaku";
 
@@ -78,7 +78,7 @@ const AddMessage = () => {
     return;
   }
   const userNickname = userStore.userInfo.nickname ? userStore.userInfo.nickname : "游客";
-  const message: RemarkNewReq = {
+  const message: NewRemarkReq = {
     message_content: addMessageContent.value,
     // time: Math.floor(Math.random() * (10 - 7)) + 7,
   };

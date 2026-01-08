@@ -15,9 +15,9 @@ NProgress.configure({
 // 获取游客ID
 router.beforeEach((to, from, next) => {
   if (!getTerminalId()) {
-    AuthAPI.getTouristInfoApi()
+    AuthAPI.getClientInfoApi()
       .then((res) => {
-        setTerminalId(res.data.tourist_id);
+        setTerminalId(res.data.terminal_id);
         next();
       })
       .catch(() => {

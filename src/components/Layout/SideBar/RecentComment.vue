@@ -26,11 +26,11 @@
 <script setup lang="ts">
 import { CommentAPI } from "@/api/comment";
 import { formatDate } from "@/utils/date";
-import type { Comment, CommentQueryReq } from "@/api/types";
+import type { Comment, QueryCommentReq } from "@/api/types";
 
 const commentList = ref<Comment[]>([]);
 onMounted(() => {
-  const data: CommentQueryReq = {
+  const data: QueryCommentReq = {
     page: 1,
     page_size: 5,
   };

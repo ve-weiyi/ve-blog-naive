@@ -45,7 +45,7 @@
 <script setup lang="ts">
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
 import { CommentAPI } from "@/api/comment";
-import type { Comment, CommentNewReq, CommentQueryReq, CommentReply } from "@/api/types";
+import type { Comment, CommentReply, NewCommentReq, QueryCommentReq } from "@/api/types";
 import { replaceEmoji } from "@/utils/emojis";
 import CommentItem from "./CommentItem.vue";
 
@@ -102,7 +102,7 @@ const count = ref(0);
 // 工具函数
 const checkLogin = () => {
   if (!userStore.isLogin()) {
-    appStore.loginFlag = true;
+    appStore.setLoginFlag(true);
     return false;
   }
   return true;
@@ -130,7 +130,7 @@ const handleInsertComment = async () => {
     return;
   }
 
-  const comment: CommentNewReq = {
+  const comment: NewCommentReq = {
     topic_id: getTopicId(),
     reply_user_id: "",
     parent_id: 0,
@@ -183,7 +183,7 @@ const handleConfirmReply = async (
     return;
   }
 
-  const newComment: CommentNewReq = {
+  const newComment: NewCommentReq = {
     topic_id: [1, 3].includes(props.commentType) ? getTopicId() : 0,
     parent_id: comment.parent_id || comment.id,
     reply_user_id: replyTarget.value?.user_id || "",
@@ -236,7 +236,7 @@ const handleLikeComment = async (comment: Comment | CommentReply) => {
 };
 
 const handleReadMoreComment = async (index: number, comment: Comment) => {
-  const queryData: CommentQueryReq = {
+  const queryData: QueryCommentReq = {
     page: 1,
     page_size: 5,
     topic_id: getTopicId(),
@@ -262,7 +262,7 @@ const handleReadMoreComment = async (index: number, comment: Comment) => {
 };
 
 const handleChangeReplyCurrent = async (index: number, comment: Comment, page: number) => {
-  const queryData: CommentQueryReq = {
+  const queryData: QueryCommentReq = {
     page,
     page_size: 5,
     topic_id: getTopicId(),
@@ -290,7 +290,7 @@ const changeReplyCurrent = (index: number, comment: Comment, current: number) =>
 
 // 加载评论
 const loadComments = async () => {
-  const queryData: CommentQueryReq = {
+  const queryData: QueryCommentReq = {
     page: queryParams.current,
     page_size: queryParams.page_size,
     topic_id: getTopicId(),
