@@ -6,7 +6,7 @@ import { getTerminalId, getToken, getUid } from "./token";
 const HeaderAppName = "App-Name";
 const HeaderTimestamp = "Timestamp";
 const HeaderXTerminalId = "X-Terminal-Id";
-const HeaderXTerminalTsToken = "X-Terminal-Token";
+const HeaderXTerminalToken = "X-Terminal-Token";
 
 const HeaderUid = "Uid";
 const HeaderToken = "Token";
@@ -26,19 +26,19 @@ const requests = axios.create({
 requests.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     // 请求携带用户token
-    const token = getToken();
     const uid = getUid();
+    const token = getToken();
 
     // 请求携带游客token
     const terminalId = getTerminalId() || "";
     const timestamp = Math.floor(Date.now() / 1000).toString();
-    const xtoken = MD5(terminalId + timestamp).toString();
+    const terminalToken = MD5(terminalId + timestamp).toString();
 
     config.headers = Object.assign({}, config.headers, {
       [HeaderAppName]: "blog-web",
       [HeaderTimestamp]: timestamp,
       [HeaderXTerminalId]: terminalId,
-      [HeaderXTerminalTsToken]: xtoken,
+      [HeaderXTerminalToken]: terminalToken,
       [HeaderUid]: uid,
       [HeaderToken]: token,
     });

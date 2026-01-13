@@ -1,9 +1,5 @@
 export function clearStorage() {
-  // localStorage.clear();
-
-  // TerminalId 不能清理，否则会使接口调用失败
-  localStorage.removeItem(TokenKey);
-  localStorage.removeItem(UidKey);
+  localStorage.clear();
 }
 
 const TokenKey: string = "Token";
@@ -12,9 +8,7 @@ export function getToken() {
   return localStorage.getItem(TokenKey);
 }
 
-// 本地运行记得删除domain
 export function setToken(token: string) {
-  // 项目线上部署可以取消注释
   return localStorage.setItem(TokenKey, token);
 }
 

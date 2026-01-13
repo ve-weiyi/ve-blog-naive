@@ -12,21 +12,21 @@ NProgress.configure({
   minimum: 0.3,
 });
 
-// 获取游客ID
-router.beforeEach((to, from, next) => {
-  if (!getTerminalId()) {
-    AuthAPI.getClientInfoApi()
-      .then((res) => {
-        setTerminalId(res.data.terminal_id);
-        next();
-      })
-      .catch(() => {
-        window.$message?.warning("获取游客ID失败");
-        next();
-      });
-  } else {
-    next();
+// 获取客户端信息
+const getClientInfo = async (): Promise<void> => {
+  try {
+    const res = await AuthAPI.getClientInfoApi();
+    setTerminalId(res.data.terminal_id);
+  } catch {
+    window.$message?.warning("获取客户端信息失败");
   }
+};
+
+router.beforeEach(async (to, from, next) => {
+  if (!getTerminalId()) {
+    await getClientInfo();
+  }
+  next();
 });
 
 router.beforeEach((to, from, next) => {

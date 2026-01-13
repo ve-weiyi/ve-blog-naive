@@ -52,40 +52,62 @@ export interface Category {
   updated_at: number; // 更新时间
 }
 
+export interface ClientInfoVO {
+  terminal_id: string; // 终端ID
+  os: string; // 操作系统
+  browser: string; // 浏览器
+  ip_address: string; // IP地址
+  ip_source: string; // IP归属地
+}
+
 export interface Comment {
   id: number; // 评论id
+  user_id: string; // 用户ID
+  terminal_id: string; // 终端id
   topic_id: number; // 主题id
   parent_id: number; // 父评论id
   reply_id: number; // 会话id
-  user_id: string; // 用户id
   reply_user_id: string; // 被回复用户id
   comment_content: string; // 评论内容
+  status: number; // 状态
   type: number; // 评论类型 1.文章 2.友链 3.说说
   created_at: number; // 评论时间
-  ip_address: string; // IP地址
-  ip_source: string; // IP归属地
   like_count: number; // 点赞数
-  user?: UserInfoVO; // 评论用户
-  reply_user?: UserInfoVO; // 被回复评论用户
+  client_info?: ClientInfoVO; // 客户端信息
+  user_info?: UserInfoVO; // 用户信息
+  reply_user_info?: UserInfoVO; // 回复用户信息
   reply_count: number; // 回复量
   comment_reply_list: CommentReply[]; // 评论回复列表
 }
 
+export interface CommentRecent {
+  id: number; // 评论id
+  user_id: string; // 用户ID
+  terminal_id: string; // 终端id
+  reply_user_id: string; // 被回复用户id
+  comment_content: string; // 评论内容
+  status: number; // 状态
+  client_info?: ClientInfoVO; // 客户端信息
+  user_info?: UserInfoVO; // 用户信息
+  reply_user_info?: UserInfoVO; // 回复用户信息
+}
+
 export interface CommentReply {
   id: number; // 评论id
+  user_id: string; // 用户ID
+  terminal_id: string; // 终端id
   topic_id: number; // 主题id
   parent_id: number; // 父评论id
   reply_id: number; // 会话id
-  user_id: string; // 用户id
   reply_user_id: string; // 被回复用户id
   comment_content: string; // 评论内容
+  status: number; // 状态
   type: number; // 评论类型 1.文章 2.友链 3.说说
   created_at: number; // 评论时间
-  ip_address: string; // IP地址
-  ip_source: string; // IP归属地
   like_count: number; // 点赞数
-  user?: UserInfoVO; // 用户信息
-  reply_user?: UserInfoVO; // 被回复评论用户
+  client_info?: ClientInfoVO; // 客户端信息
+  user_info?: UserInfoVO; // 用户信息
+  reply_user_info?: UserInfoVO; // 回复用户信息
 }
 
 export interface DeleteUserBindThirdPartyReq {
@@ -215,8 +237,8 @@ export interface NewCommentReq {
   reply_id?: number; // 会话id
   reply_user_id?: string; // 回复用户id
   comment_content: string; // 评论内容
+  status?: number; // 状态
   type: number; // 评论类型 1.文章 2.友链 3.说说
-  status?: number; // 状态 0.正常 1.已编辑 2.已删除
 }
 
 export interface NewRemarkReq {
@@ -234,9 +256,9 @@ export interface Page {
 }
 
 export interface PageQuery {
-  page?: number; 
-  page_size?: number; 
-  sorts?: string[]; 
+  page?: number; // 当前页码
+  page_size?: number; // 每页数量
+  sorts?: string[]; // 排序
 }
 
 export interface PageResp {
@@ -333,12 +355,10 @@ export interface Remark {
   user_id: string; // 用户id
   terminal_id: string; // 终端id
   message_content: string; // 留言内容
-  ip_address: string; // IP地址
-  ip_source: string; // IP归属地
-  is_review: number; // 是否审核
+  status: number; // 状态
   created_at: number; // 发布时间
   updated_at: number; // 更新时间
-  user?: UserInfoVO; // 用户信息
+  user_info?: UserInfoVO; // 用户信息
 }
 
 export interface ResetPasswordReq {
@@ -389,7 +409,7 @@ export interface Talk {
   comment_count: number; // 评论量
   created_at: number; // 创建时间
   updated_at: number; // 更新时间
-  user?: UserInfoVO; // 用户信息
+  user_info?: UserInfoVO; // 用户信息
 }
 
 export interface ThirdLoginReq {
@@ -418,7 +438,7 @@ export interface UpdateCommentReq {
   id: number; // 主键
   reply_user_id?: string; // 回复用户id
   comment_content: string; // 评论内容
-  status?: number; // 状态 0.正常 1.已编辑 2.已删除
+  status?: number; // 状态
 }
 
 export interface UpdateUserAvatarReq {
@@ -493,14 +513,6 @@ export interface UserThirdPartyInfo {
   nickname: string; // 昵称
   avatar: string; // 头像
   created_at: number; // 创建时间
-}
-
-export interface VisitorInfoVO {
-  terminal_id: string; // 终端ID
-  os: string; // 操作系统
-  browser: string; // 浏览器
-  ip_address: string; // IP地址
-  ip_source: string; // IP归属地
 }
 
 export interface WebsiteConfigVO {

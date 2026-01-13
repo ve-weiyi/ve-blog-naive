@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import type { Comment, EmptyResp, IdReq, NewCommentReq, PageResp, QueryCommentReq, UpdateCommentReq } from "./types";
+import type { EmptyResp, IdReq, NewCommentReq, PageResp, QueryCommentReq, UpdateCommentReq } from "./types";
 
 export const CommentAPI = {
   /** 查询评论列表 */
@@ -30,7 +30,7 @@ export const CommentAPI = {
   },
 
   /** 创建评论 */
-  addCommentApi(data?: NewCommentReq): Promise<IApiResponse<Comment>> {
+  addCommentApi(data?: NewCommentReq): Promise<IApiResponse<EmptyResp>> {
     return request({
       url: "/blog-api/v1/comment/add_comment",
       method: "POST",
@@ -48,7 +48,7 @@ export const CommentAPI = {
   },
 
   /** 更新评论 */
-  updateCommentApi(data?: UpdateCommentReq): Promise<IApiResponse<Comment>> {
+  updateCommentApi(data?: UpdateCommentReq): Promise<IApiResponse<EmptyResp>> {
     return request({
       url: "/blog-api/v1/comment/update_comment",
       method: "PUT",

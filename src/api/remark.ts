@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import type { NewRemarkReq, PageResp, QueryRemarkReq, Remark } from "./types";
+import type { EmptyResp, NewRemarkReq, PageResp, QueryRemarkReq } from "./types";
 
 export const RemarkAPI = {
   /** 分页获取留言列表 */
@@ -12,7 +12,7 @@ export const RemarkAPI = {
   },
 
   /** 创建留言 */
-  addRemarkApi(data?: NewRemarkReq): Promise<IApiResponse<Remark>> {
+  addRemarkApi(data?: NewRemarkReq): Promise<IApiResponse<EmptyResp>> {
     return request({
       url: "/blog-api/v1/remark/add_remark",
       method: "POST",

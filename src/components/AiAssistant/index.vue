@@ -58,10 +58,7 @@
           <div class="quick-actions">
             <div class="action-title">快速开始：</div>
             <div class="action-buttons">
-              <button
-                @click="sendQuickMessage('请你介绍一下这个博客项目')"
-                class="quick-btn"
-              >
+              <button @click="sendQuickMessage('请你介绍一下这个博客项目')" class="quick-btn">
                 📝 博客介绍
               </button>
               <button @click="sendQuickMessage('有什么技术问题可以咨询？')" class="quick-btn">
@@ -283,9 +280,7 @@ const getAIResponseStream = async (
         messages: [
           {
             role: "system",
-            content: currentRole.value
-              ? currentRole.value.prompt
-              : roles[0].prompt,
+            content: currentRole.value ? currentRole.value.prompt : roles[0].prompt,
           },
           ...messages.value
             .filter((m) => !m.isLoading)

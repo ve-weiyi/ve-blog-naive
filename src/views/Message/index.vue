@@ -27,13 +27,15 @@
       <template v-slot:dm="{ index, danmu }">
         <span class="danmaku-item">
           <img
-            :src="danmu.user?.avatar || touristAvatar"
+            :src="danmu.user_info?.avatar || touristAvatar"
             width="30"
             height="30"
             style="border-radius: 50%"
             alt=""
           />
-          <span class="ml">{{ danmu.user?.nickname || getTouristName(danmu.terminal_id) }} :</span>
+          <span class="ml"
+            >{{ danmu.user_info?.nickname || getTouristName(danmu.terminal_id) }} :</span
+          >
           <span class="ml">{{ danmu.message_content }}</span>
         </span>
       </template>
@@ -46,6 +48,7 @@ import { RemarkAPI } from "@/api/remark";
 import type { NewRemarkReq, Remark as Message } from "@/api/types";
 import { useBlogStore, useUserStore } from "@/store";
 import vueDanmaku from "vue3-danmaku";
+import { getTerminalId } from "@/utils/token.ts";
 
 const userStore = useUserStore();
 const blogStore = useBlogStore();
@@ -55,7 +58,7 @@ const config = ref({
   channels: 7, // 轨道数量，为0则弹幕轨道数会撑满容器
   useSlot: true, // 是否开启slot
   loop: false, // 是否开启弹幕循环
-  speeds: 100, // 弹幕速度
+  speeds: 120, // 弹幕速度
   fontSize: 20, // 文本模式下的字号
   top: 5, // 弹幕轨道间的垂直间距
   right: 10, // 同一轨道弹幕的水平间距
@@ -77,7 +80,6 @@ const AddMessage = () => {
     window.$message?.warning("留言内容不能为空");
     return;
   }
-  const userNickname = userStore.userInfo.nickname ? userStore.userInfo.nickname : "游客";
   const message: NewRemarkReq = {
     message_content: addMessageContent.value,
     // time: Math.floor(Math.random() * (10 - 7)) + 7,
@@ -86,7 +88,11 @@ const AddMessage = () => {
     if (blogStore.blogInfo.website_config.website_feature.is_message_review) {
       window.$message?.warning("留言成功，正在审核中");
     } else {
-      danmaku.value.push(message);
+      danmaku.value.push({
+        terminal_id: getTerminalId(),
+        user_info: userStore.userInfo,
+        ...message,
+      });
       window.$message?.success("留言成功");
     }
     addMessageContent.value = "";
@@ -96,7 +102,7 @@ const AddMessage = () => {
 const touristAvatar = ref(blogStore.blogInfo.website_config.tourist_avatar);
 
 const getTouristName = (terminal: string) => {
-  return "游客" + btoa(terminal);
+  return "游客" + terminal.substring(0, 8);
 };
 </script>
 

@@ -1,20 +1,22 @@
 <template>
   <div class="reply-comment">
     <div class="reply-box-avatar">
-      <img class="shoka-avatar" :src="comment.user?.avatar" alt="用户头像" />
+      <img class="shoka-avatar" :src="comment.user_info?.avatar" alt="用户头像" />
     </div>
 
     <div class="content-warp">
       <div class="user-info">
-        <div class="user-name">{{ comment.user?.nickname }}</div>
-        <svg-icon v-if="isAdmin(comment.user?.user_id)" icon-class="badge" />
+        <div class="user-name">{{ comment.user_info?.nickname }}</div>
+        <svg-icon v-if="isAdmin(comment.user_info?.user_id)" icon-class="badge" />
       </div>
 
       <div class="reply-content" v-html="comment.comment_content"></div>
 
       <div class="reply-info">
         <span class="reply-time">{{ formatDateTime(comment.created_at) }}</span>
-        <span v-if="comment.ip_source" class="reply-ip">{{ comment.ip_source }}</span>
+        <span v-if="comment.client_info?.ip_source" class="reply-ip">{{
+          comment.client_info?.ip_source
+        }}</span>
         <span class="reply-btn" @click="$emit('reply', index, comment)">回复</span>
         <span class="reply-like" @click="$emit('like', comment)">
           <svg-icon
@@ -31,26 +33,28 @@
       <!-- 子回复列表 -->
       <div v-for="reply in comment.comment_reply_list" :key="reply.id" class="sub-reply-comment">
         <div class="sub-user-info">
-          <img class="sub-reply-avatar" :src="reply.user?.avatar" alt="用户头像" />
-          <div class="sub-user-name">{{ reply.user?.nickname }}</div>
+          <img class="sub-reply-avatar" :src="reply.user_info?.avatar" alt="用户头像" />
+          <div class="sub-user-name">{{ reply.user_info?.nickname }}</div>
           <svg-icon
-            v-if="isAdmin(reply.user?.user_id)"
+            v-if="isAdmin(reply.user_info?.user_id)"
             icon-class="badge"
             style="margin-left: 5px"
           />
         </div>
 
         <div class="reply-content">
-          <template v-if="reply.reply_user">
+          <template v-if="reply.reply_user_info">
             回复
-            <span class="mention">@{{ reply.reply_user?.nickname }}</span> :
+            <span class="mention">@{{ reply.reply_user_info?.nickname }}</span> :
           </template>
           <span v-html="reply.comment_content"></span>
         </div>
 
         <div class="reply-info">
           <span class="reply-time">{{ formatDateTime(reply.created_at) }}</span>
-          <span v-if="reply.ip_source" class="reply-ip">{{ reply.ip_source }}</span>
+          <span v-if="reply.client_info?.ip_source" class="reply-ip">{{
+            reply.client_info?.ip_source
+          }}</span>
           <span class="reply-btn" @click="$emit('reply', index, reply)">回复</span>
           <span class="reply-like" @click="$emit('like', reply)">
             <svg-icon
@@ -158,7 +162,7 @@ const replyPlaceholder = computed(() => {
 
   // 如果有回复目标且回复目标有parent_id，说明是回复子评论
   return props.replyTarget?.parent_id
-    ? `回复@${props.replyTarget.user?.nickname}:`
+    ? `回复@${props.replyTarget.user_info?.nickname}:`
     : "编辑一条回复吧~";
 });
 </script>
