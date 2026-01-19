@@ -48,7 +48,7 @@ import { RemarkAPI } from "@/api/remark";
 import type { NewRemarkReq, Remark as Message } from "@/api/types";
 import { useBlogStore, useUserStore } from "@/store";
 import vueDanmaku from "vue3-danmaku";
-import { getTerminalId } from "@/utils/token.ts";
+import { AuthStorage } from "@/utils/auth.ts";
 
 const userStore = useUserStore();
 const blogStore = useBlogStore();
@@ -89,7 +89,7 @@ const AddMessage = () => {
       window.$message?.warning("留言成功，正在审核中");
     } else {
       danmaku.value.push({
-        terminal_id: getTerminalId(),
+        terminal_id: AuthStorage.getTerminalId(),
         user_info: userStore.userInfo,
         ...message,
       });

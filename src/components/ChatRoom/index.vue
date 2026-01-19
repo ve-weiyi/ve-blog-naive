@@ -99,7 +99,7 @@ import { emojiList } from "@/utils/emoji";
 import { tvList } from "@/utils/tv";
 import chatroom from "@/assets/icons/chatroom.svg";
 import { Client, type IFrame, type IMessage } from "@stomp/stompjs";
-import { getTerminalId, getToken, getUid } from "@/utils/token.ts";
+import { AuthStorage } from "@/utils/auth.ts";
 
 // 常量定义
 const WS_CONFIG = {
@@ -246,9 +246,9 @@ const initStomp = () => {
 
     stompClient.value = new Client({
       connectHeaders: {
-        login: getUid() || "",
-        passcode: getToken() || "",
-        client: getTerminalId(),
+        login: AuthStorage.getUid() || "",
+        passcode: AuthStorage.getToken() || "",
+        client: AuthStorage.getTerminalId(),
       },
       brokerURL: url,
       reconnectDelay: WS_CONFIG.RECONNECT_DELAY,
@@ -405,10 +405,6 @@ const createEmojiImg = (src: string): string => {
 const publishMessage = (msg: MessageEvent) => {
   stompClient.value?.publish({
     destination: WS_CONFIG.CHAT_TOPIC,
-    headers: {
-      uid: getUid(),
-      client: getTerminalId(),
-    },
     body: JSON.stringify(msg),
   });
 };

@@ -223,6 +223,8 @@ export interface LoginReq {
 }
 
 export interface LoginResp {
+  user_id: string; // 用户id
+  scope: string; // 作用域
   token?: Token; 
 }
 
@@ -425,13 +427,12 @@ export interface ThirdPlatformInfo {
 }
 
 export interface Token {
-  user_id: string; // 用户id
-  token_type: string; // token类型,Bearer
-  access_token: string; // 访问token,过期时间较短。2h
-  expires_in: number; // 访问token过期时间
-  refresh_token: string; // 刷新token,过期时间较长。30d
-  refresh_expires_in: number; // 刷新token过期时间
-  scope: string; // 作用域
+  token_type: string; // Token 类型（如 "Bearer"）
+  access_token: string; // 访问令牌：用于接口访问，有效期短
+  expires_in: number; // AccessToken 有效期（秒），如 3600（1小时）
+  refresh_token: string; // 刷新令牌：仅用于刷新 AccessToken，有效期长
+  refresh_expires_in: number; // RefreshToken 有效期（秒），如 604800（7天）
+  refresh_expires_at: number; // RefreshToken 过期时间戳（秒）
 }
 
 export interface UpdateCommentReq {
