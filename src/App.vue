@@ -64,6 +64,18 @@ onBeforeMount(async () => {
 });
 
 onMounted(() => {
+  blogStore.blogInfo.notice_list?.forEach((notice) => {
+    const level = notice.level.toLowerCase();
+    if (level === "info" || level === "success" || level === "warning" || level === "error") {
+      window.$notification[level]({
+        title: () => h("div", { innerHTML: notice.title }),
+        content: () => h("div", { innerHTML: notice.content }),
+        duration: 5000,
+        keepAliveOnHover: true,
+      });
+    }
+  });
+
   console.log(
     "%c Hello World %c By 与梦 %c",
     "background:#e9546b ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff; padding:5px 0;",

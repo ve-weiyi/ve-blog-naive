@@ -167,6 +167,7 @@ export interface GetBlogHomeInfoResp {
   total_user_view_count: number; // 总服务量
   total_page_view_count: number; // 总浏览量
   page_list: PageVO[]; // 页面列表
+  notice_list: NoticeVO[]; // 通知列表
   website_config: WebsiteConfigVO; // 网站配置
 }
 
@@ -228,6 +229,17 @@ export interface LoginResp {
   token?: Token; 
 }
 
+export interface Message {
+  id?: number; // 主键id
+  user_id: string; // 用户id
+  terminal_id: string; // 终端id
+  message_content: string; // 留言内容
+  status: number; // 状态
+  created_at: number; // 发布时间
+  updated_at: number; // 更新时间
+  user_info?: UserInfoVO; // 用户信息
+}
+
 export interface MultiUploadFileReq {
   files?: any[]; // 文件列表
   file_path?: string; // 文件路径
@@ -243,8 +255,17 @@ export interface NewCommentReq {
   type: number; // 评论类型 1.文章 2.友链 3.说说
 }
 
-export interface NewRemarkReq {
+export interface NewMessageReq {
   message_content: string; // 留言内容
+}
+
+export interface NoticeVO {
+  id?: number; // 主键ID
+  title: string; // 通知标题
+  content: string; // 通知内容
+  type: string; // 通知类型
+  level: string; // 通知等级
+  publish_time: number; // 发布时间
 }
 
 export interface Page {
@@ -327,14 +348,14 @@ export interface QueryCommentReq extends PageQuery {
 export interface QueryFriendReq extends PageQuery {
 }
 
+export interface QueryMessageReq extends PageQuery {
+}
+
 export interface QueryPageReq extends PageQuery {
 }
 
 export interface QueryPhotoReq {
   album_id: number; // 相册ID
-}
-
-export interface QueryRemarkReq extends PageQuery {
 }
 
 export interface QueryTagReq extends PageQuery {
@@ -350,17 +371,6 @@ export interface RegisterReq {
   confirm_password: string; // 确认密码
   email: string; // 邮箱
   verify_code: string; // 验证码
-}
-
-export interface Remark {
-  id?: number; // 主键id
-  user_id: string; // 用户id
-  terminal_id: string; // 终端id
-  message_content: string; // 留言内容
-  status: number; // 状态
-  created_at: number; // 发布时间
-  updated_at: number; // 更新时间
-  user_info?: UserInfoVO; // 用户信息
 }
 
 export interface ResetPasswordReq {
