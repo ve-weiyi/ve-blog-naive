@@ -1,0 +1,74 @@
+# ============================================================
+# GitHub Container Registry Secret
+# ============================================================
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ghcr-secret
+  namespace: blog
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJnaGNyLmlvIjp7InVzZXJuYW1lIjoidmUtd2VpeWkiLCJwYXNzd29yZCI6ImdocF9ZbWI5Z0dnQTNUUDlHenVXRUhsOGhjbkJRMWgwNloxS1kzUlgiLCJlbWFpbCI6InZlLXdlaXlpQGV4YW1wbGUuY29tIiwiYXV0aCI6ImRtVXRkMlZwZVdrNloyaHdYMWx0WWpsblIyZEJNMVJRT1VkNmRWZEZTR3c0YUdOdVFsRXhhREEyV2pGTFdUTlNXQT09In19fQ==
+---
+# ============================================================
+# blog-app-web
+# ============================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: blog-app-web
+  namespace: blog
+spec:
+  selector:
+    app: blog-app-web
+  ports:
+    - port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blog-app-web
+  namespace: blog
+  labels:
+    app: blog-app-web
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: blog-app-web
+  template:
+    metadata:
+      labels:
+        app: blog-app-web
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: blog-app-web
+          image: ghcr.io/ve-weiyi/ve-blog-naive:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: TZ
+              value: Asia/Shanghai
+          readinessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi

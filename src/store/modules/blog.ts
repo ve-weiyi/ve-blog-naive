@@ -1,5 +1,5 @@
-import type { GetBlogHomeInfoResp, WebsiteConfigVO } from "@/api/types";
-import { WebsiteAPI } from "@/api/website.ts";
+import type { GetBlogHomeInfoResp, WebsiteConfigVO } from "@/api";
+import { ConfigAPI } from "@/api";
 
 /**
  * 博客
@@ -31,9 +31,9 @@ export const useBlogStore = defineStore("useBlogStore", {
     } as GetBlogHomeInfoResp,
   }),
   actions: {
-    getBlogInfo(): Promise<IApiResponse<GetBlogHomeInfoResp>> {
+    getBlogInfo(): Promise<ApiResponse<GetBlogHomeInfoResp>> {
       return new Promise((resolve, reject) => {
-        WebsiteAPI.getBlogHomeInfoApi()
+        ConfigAPI.getBlogHomeInfo()
           .then((res) => {
             this.blogInfo = res.data;
             resolve(res);

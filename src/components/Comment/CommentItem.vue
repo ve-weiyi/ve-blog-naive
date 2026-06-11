@@ -14,8 +14,8 @@
 
       <div class="reply-info">
         <span class="reply-time">{{ formatDateTime(comment.created_at) }}</span>
-        <span v-if="comment.client_info?.ip_source" class="reply-ip">{{
-          comment.client_info?.ip_source
+        <span v-if="comment.guest_info?.ip_source" class="reply-ip">{{
+          comment.guest_info?.ip_source
         }}</span>
         <span class="reply-btn" @click="$emit('reply', index, comment)">回复</span>
         <span class="reply-like" @click="$emit('like', comment)">
@@ -52,8 +52,8 @@
 
         <div class="reply-info">
           <span class="reply-time">{{ formatDateTime(reply.created_at) }}</span>
-          <span v-if="reply.client_info?.ip_source" class="reply-ip">{{
-            reply.client_info?.ip_source
+          <span v-if="reply.guest_info?.ip_source" class="reply-ip">{{
+            reply.guest_info?.ip_source
           }}</span>
           <span class="reply-btn" @click="$emit('reply', index, reply)">回复</span>
           <span class="reply-like" @click="$emit('like', reply)">
@@ -110,7 +110,7 @@
 <script setup lang="ts">
 import { formatDateTime } from "@/utils/date";
 import { useUserStore } from "@/store";
-import type { Comment } from "@/api/types";
+import type { Comment } from "@/api";
 
 interface Props {
   comment: Comment;

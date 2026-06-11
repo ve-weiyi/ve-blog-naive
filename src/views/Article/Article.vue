@@ -174,8 +174,8 @@
 
 <script setup lang="ts">
 import VMdPreview from "@kangc/v-md-editor/lib/preview";
-import { ArticleAPI } from "@/api/article";
-import type { ArticleDetails } from "@/api/types";
+import { ArticleAPI } from "@/api";
+import type { ArticleDetails } from "@/api";
 import { useAppStore, useBlogStore, useUserStore } from "@/store";
 import { formatDate } from "@/utils/date";
 import { Share } from "vue3-social-share";
@@ -217,7 +217,7 @@ const like = () => {
     return;
   }
   let id = article.value.id;
-  ArticleAPI.likeArticleApi({ id }).then((res) => {
+  ArticleAPI.likeArticle({ article_id: id }).then((res) => {
     //判断是否点赞
     if (userStore.isArticleLike(id)) {
       window.$message?.error("取消点赞成功");
@@ -231,7 +231,7 @@ const like = () => {
 };
 onMounted(() => {
   const id = Number(route.params.id);
-  ArticleAPI.getArticleDetailsApi({ id }).then((res) => {
+  ArticleAPI.getArticle({ article_id: id }).then((res) => {
     article.value = res.data;
     document.title = article.value.article_title;
     wordNum.value = deleteHTMLTag(article.value.article_content).length;

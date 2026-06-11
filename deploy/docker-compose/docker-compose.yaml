@@ -1,0 +1,11 @@
+services:
+  # 前台服务
+  ve-blog-naive:
+    build:
+      context: ../../
+      dockerfile: deploy/docker/Dockerfile
+    image: ve-blog-naive:latest
+    container_name: ve-blog-naive
+    restart: always
+    ports:
+      - "9420:80"

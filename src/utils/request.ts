@@ -1,88 +1,125 @@
 import axios, { type AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from "axios";
 import qs from "qs";
-import MD5 from "crypto-js/md5";
+import { ApiCodeEnum } from "@/enums/api";
 import { APP_NAME, AuthStorage } from "./auth";
 import { useUserStore } from "@/store/modules/user";
 
 const HeaderAppName = "App-Name";
 const HeaderTimestamp = "Timestamp";
-const HeaderXTerminalId = "X-Terminal-Id";
-const HeaderXTerminalToken = "X-Terminal-Token";
+const HeaderXDeviceId = "X-Device-Id";
+const HeaderXDeviceToken = "X-Device-Token";
 
 const HeaderUid = "Uid";
 const HeaderToken = "Token";
-const HeaderAuthorization = "Authorization";
 
-const axiosInstance = axios.create({
+// 已重试的请求，防止无限循环
+const retriedConfigs = new WeakSet<InternalAxiosRequestConfig>();
+
+// HTTP 请求实例
+const http = axios.create({
   baseURL: "",
-  timeout: 10000,
-  withCredentials: false, // 禁用 Cookie
-  // 请求头
-  headers: {
-    "Content-Type": "application/json;charset=UTF-8",
-  },
-  paramsSerializer: (params) => {
-    return qs.stringify(params);
-  },
+  timeout: 30000,
+  headers: { "Content-Type": "application/json;charset=utf-8" },
+  paramsSerializer: (params) => qs.stringify(params, { arrayFormat: "repeat" }),
 });
 
 // 请求拦截器
-axiosInstance.interceptors.request.use(
+http.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    // 请求携带用户token
     const uid = AuthStorage.getUid();
     const token = AuthStorage.getToken();
-    // 签名
-    const terminalId = AuthStorage.getTerminalId() || "";
+    const deviceId = AuthStorage.getDeviceId() || "";
     const timestamp = Math.floor(Date.now() / 1000).toString();
-    const terminalToken = MD5(terminalId + timestamp).toString();
+    const hashBuffer = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(deviceId + timestamp)
+    );
+    const deviceToken = Array.from(new Uint8Array(hashBuffer))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
 
     config.headers = Object.assign({}, config.headers, {
       [HeaderAppName]: APP_NAME,
       [HeaderTimestamp]: timestamp,
-      [HeaderXTerminalId]: terminalId,
-      [HeaderXTerminalToken]: terminalToken,
+      [HeaderXDeviceId]: deviceId,
+      [HeaderXDeviceToken]: deviceToken,
       [HeaderUid]: uid,
       [HeaderToken]: token,
     });
     return config;
   },
-  (error: AxiosError) => {
-    return Promise.reject(error);
-  }
+  (error: AxiosError) => Promise.reject(error)
 );
-// 配置响应拦截器
-axiosInstance.interceptors.response.use(
-  async (response: AxiosResponse) => {
-    // 检查配置的响应类型是否为二进制类型（'blob' 或 'arraybuffer'）, 如果是，直接返回响应对象
+
+// 响应拦截器
+http.interceptors.response.use(
+  async (response: AxiosResponse<ApiResponse>) => {
+    // 二进制数据直接返回
     if (response.config.responseType === "blob" || response.config.responseType === "arraybuffer") {
       return response;
     }
 
-    const { code, data, msg } = response.data;
+    const { code, msg } = response.data;
 
-    // 接口响应成功，判断业务错误码
     switch (code) {
-      case 200:
+      case ApiCodeEnum.SUCCESS:
         break;
-      case 400:
-        return Promise.reject(new Error(msg || "请求参数错误"));
-      case 401:
+
+      case ApiCodeEnum.ACCESS_TOKEN_INVALID: {
+        // Token 过期：尝试刷新 token 后自动重试一次
+        const { config } = response;
+        if (retriedConfigs.has(config)) {
+          const userStore = useUserStore();
+          userStore.forceLogOut();
+          window.$message?.error("登录已过期，请重新登录");
+          return Promise.reject(new Error(msg || "Token Invalid"));
+        }
+        retriedConfigs.add(config);
+        try {
+          const userStore = useUserStore();
+          await userStore.refreshTokenOnce();
+          const token = AuthStorage.getToken();
+          if (token) {
+            config.headers.set(HeaderToken, token);
+          }
+          return http(config);
+        } catch {
+          const userStore = useUserStore();
+          userStore.forceLogOut();
+          window.$message?.error("登录已过期，请重新登录");
+          return Promise.reject(new Error(msg || "Token refresh failed"));
+        }
+      }
+
+      case ApiCodeEnum.UNAUTHORIZED:
         return Promise.reject(new Error(msg || "用户未登录"));
-      case 402:
-        const userStore = useUserStore();
-        userStore.forceLogOut();
-        return Promise.reject(new Error(msg || "登录已过期，请重新登录"));
-      case 403:
+
+      case ApiCodeEnum.BAD_REQUEST:
+        window.$message?.error(msg || "请求参数错误");
+        return Promise.reject(new Error(msg || "请求参数错误"));
+
+      case ApiCodeEnum.FORBIDDEN:
+        window.$message?.error(msg || "无权限访问");
         return Promise.reject(new Error(msg || "无权限访问"));
+
       default:
+        window.$message?.error(msg || "系统错误");
         return Promise.reject(new Error(msg || "系统错误"));
     }
-    return response.data;
+
+    return response.data as any;
   },
-  async (error: AxiosError) => {
+
+  (error: AxiosError) => {
     console.error("request error", error); // for debug
-    let { message } = error;
+
+    const { response } = error;
+    if (!response) {
+      window.$message?.error("网络连接失败");
+      return Promise.reject(error);
+    }
+
+    let message = error.message;
     if (message == "Network Error") {
       message = "后端接口连接异常";
     } else if (message.includes("timeout")) {
@@ -95,5 +132,4 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-// 对外暴露
-export default axiosInstance;
+export default http;

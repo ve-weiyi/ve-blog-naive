@@ -91,7 +91,7 @@ export default defineConfig((configEnv): UserConfig => {
           rewrite: (path) => path.replace("", ""),
         },
         // 本地开发环境通过代理实现跨域，生产环境使用 nginx 转发
-        "/blog-api": {
+        "/api": {
           target: env.VITE_APP_API_URL, // 代理后的地址 =target/path
           ws: true,
           /** 是否允许跨域 */

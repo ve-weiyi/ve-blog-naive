@@ -57,8 +57,8 @@
 </template>
 
 <script setup lang="ts">
-import { FriendAPI } from "@/api/friend";
-import type { Friend } from "@/api/types";
+import { FriendAPI } from "@/api";
+import type { Friend } from "@/api";
 import { useBlogStore } from "@/store";
 
 const blogStore = useBlogStore();
@@ -68,7 +68,7 @@ const cover = blogStore.getCover("friend");
 const commentType = ref(2);
 const friendList = ref<Friend[]>([]);
 onMounted(() => {
-  FriendAPI.findFriendListApi().then((res) => {
+  FriendAPI.queryFriendList().then((res) => {
     friendList.value = res.data.list;
   });
 });

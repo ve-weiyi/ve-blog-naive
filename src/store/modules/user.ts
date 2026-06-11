@@ -1,23 +1,51 @@
 import { AuthStorage } from "@/utils/auth.ts";
-import { UserAPI } from "@/api/user";
-import { AuthAPI } from "@/api/auth";
+import { MeAPI, AuthAPI } from "@/api";
 import type {
   EmailLoginReq,
   EmptyResp,
-  LoginReq,
+  OauthLoginReq,
+  PasswordLoginReq,
+  MobileLoginReq,
   LoginResp,
-  PhoneLoginReq,
-  ThirdLoginReq,
-  UserInfoResp,
-  UserLikeResp,
-} from "@/api/types";
+  GetUserProfileResp,
+  GetUserLikeResp,
+} from "@/api";
 
 /**
  * 用户
  */
 interface UserState {
-  userInfo: UserInfoResp;
-  userLike: UserLikeResp;
+  userInfo: GetUserProfileResp;
+  userLike: GetUserLikeResp;
+}
+
+// 多个并发请求遇到 token 过期时，共享同一次 refresh 请求
+let refreshPromise: Promise<void> | null = null;
+
+async function doRefreshToken(): Promise<void> {
+  const currentRefreshToken = AuthStorage.getRefreshToken();
+
+  if (!currentRefreshToken) {
+    throw new Error("没有有效的刷新令牌");
+  }
+
+  const res = await AuthAPI.refreshToken({
+    user_id: AuthStorage.getUid() ?? "",
+    grant_type: "refresh_token",
+    refresh_token: currentRefreshToken,
+  });
+
+  const token = res.data?.token;
+  if (!token || !token.access_token) {
+    throw new Error("令牌刷新失败");
+  }
+
+  AuthStorage.setTokens(
+    res.data.user_id ?? "",
+    token.access_token,
+    token.refresh_token ?? "",
+    token.refresh_expires_at ?? 0
+  );
 }
 
 export const useUserStore = defineStore("useUserStore", {
@@ -31,6 +59,13 @@ export const useUserStore = defineStore("useUserStore", {
         intro: "",
         website: "",
         email: "",
+        mobile: "",
+        status: 0,
+        plan: "",
+        balance: 0,
+        coin: 0,
+        created_at: 0,
+        third_party: [],
       },
       userLike: {
         article_like_set: [],
@@ -39,11 +74,11 @@ export const useUserStore = defineStore("useUserStore", {
       },
     },
   actions: {
-    login(loginData: LoginReq): Promise<IApiResponse<LoginResp>> {
+    login(loginData: PasswordLoginReq): Promise<ApiResponse<LoginResp>> {
       return new Promise((resolve, reject) => {
-        AuthAPI.loginApi(loginData)
+        AuthAPI.passwordLogin(loginData)
           .then((res) => {
-            AuthStorage.setTokens(res.data.user_id, res.data.token.access_token);
+            AuthStorage.setTokens(res.data.user_id, res.data.token.access_token, res.data.token.refresh_token, res.data.token.refresh_expires_at);
             resolve(res);
           })
           .catch((error) => {
@@ -51,11 +86,11 @@ export const useUserStore = defineStore("useUserStore", {
           });
       });
     },
-    emailLogin(loginData: EmailLoginReq): Promise<IApiResponse<LoginResp>> {
+    emailLogin(loginData: EmailLoginReq): Promise<ApiResponse<LoginResp>> {
       return new Promise((resolve, reject) => {
-        AuthAPI.emailLoginApi(loginData)
+        AuthAPI.emailLogin(loginData)
           .then((res) => {
-            AuthStorage.setTokens(res.data.user_id, res.data.token.access_token);
+            AuthStorage.setTokens(res.data.user_id, res.data.token.access_token, res.data.token.refresh_token, res.data.token.refresh_expires_at);
             resolve(res);
           })
           .catch((error) => {
@@ -63,11 +98,11 @@ export const useUserStore = defineStore("useUserStore", {
           });
       });
     },
-    phoneLogin(loginData: PhoneLoginReq): Promise<IApiResponse<LoginResp>> {
+    mobileLogin(loginData: MobileLoginReq): Promise<ApiResponse<LoginResp>> {
       return new Promise((resolve, reject) => {
-        AuthAPI.phoneLoginApi(loginData)
+        AuthAPI.mobileLogin(loginData)
           .then((res) => {
-            AuthStorage.setTokens(res.data.user_id, res.data.token.access_token);
+            AuthStorage.setTokens(res.data.user_id, res.data.token.access_token, res.data.token.refresh_token, res.data.token.refresh_expires_at);
             resolve(res);
           })
           .catch((error) => {
@@ -76,11 +111,11 @@ export const useUserStore = defineStore("useUserStore", {
       });
     },
 
-    thirdLogin(loginData: ThirdLoginReq): Promise<IApiResponse<LoginResp>> {
+    thirdLogin(loginData: OauthLoginReq): Promise<ApiResponse<LoginResp>> {
       return new Promise((resolve, reject) => {
-        AuthAPI.thirdLoginApi(loginData)
+        AuthAPI.oauthLogin(loginData)
           .then((res) => {
-            AuthStorage.setTokens(res.data.user_id, res.data.token.access_token);
+            AuthStorage.setTokens(res.data.user_id, res.data.token.access_token, res.data.token.refresh_token, res.data.token.refresh_expires_at);
             resolve(res);
           })
           .catch((error) => {
@@ -88,9 +123,9 @@ export const useUserStore = defineStore("useUserStore", {
           });
       });
     },
-    logout(): Promise<IApiResponse<EmptyResp>> {
+    logout(): Promise<ApiResponse<EmptyResp>> {
       return new Promise((resolve, reject) => {
-        AuthAPI.logoutApi()
+        AuthAPI.logout()
           .then((res) => {
             this.forceLogOut();
             AuthStorage.clearAuth()
@@ -101,12 +136,12 @@ export const useUserStore = defineStore("useUserStore", {
           });
       });
     },
-    getUserInfo(): Promise<IApiResponse<UserInfoResp>> {
+    getUserInfo(): Promise<ApiResponse<GetUserProfileResp>> {
       if (!this.isLogin()) {
         return Promise.reject("未登录");
       }
       return new Promise((resolve, reject) => {
-        UserAPI.getUserInfoApi()
+        MeAPI.getUserProfile()
           .then((res) => {
             this.userInfo = res.data;
             resolve(res);
@@ -116,12 +151,12 @@ export const useUserStore = defineStore("useUserStore", {
           });
       });
     },
-    getUserLike(): Promise<IApiResponse<UserLikeResp>> {
+    getUserLike(): Promise<ApiResponse<GetUserLikeResp>> {
       if (!this.isLogin()) {
         return Promise.reject("未登录");
       }
       return new Promise((resolve, reject) => {
-        UserAPI.getUserLikeApi()
+        MeAPI.getUserLike()
           .then((res) => {
             this.userLike = res.data;
             resolve(res);
@@ -130,6 +165,15 @@ export const useUserStore = defineStore("useUserStore", {
             reject(error);
           });
       });
+    },
+    refreshTokenOnce(): Promise<void> {
+      if (refreshPromise) return refreshPromise;
+
+      refreshPromise = doRefreshToken().finally(() => {
+        refreshPromise = null;
+      });
+
+      return refreshPromise;
     },
     forceLogOut() {
       return new Promise<void>((resolve) => {

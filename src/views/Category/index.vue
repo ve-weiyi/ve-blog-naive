@@ -21,8 +21,8 @@
 </template>
 
 <script setup lang="ts">
-import { CategoryAPI } from "@/api/category";
-import type { Category } from "@/api/types";
+import { CategoryAPI } from "@/api";
+import type { Category } from "@/api";
 import Echarts from "@/components/Echarts/index.vue";
 import { useBlogStore } from "@/store";
 
@@ -60,7 +60,7 @@ let categoryOption = reactive({
 });
 const categoryList = ref<Category[]>([]);
 onMounted(() => {
-  CategoryAPI.findCategoryListApi().then((res) => {
+  CategoryAPI.queryCategoryList().then((res) => {
     categoryList.value = res.data.list;
     if (categoryList.value != null) {
       categoryList.value.forEach((item) => {

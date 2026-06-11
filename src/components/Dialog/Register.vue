@@ -10,7 +10,7 @@
     <div class="login-title">注册账号</div>
     <n-input v-model:value="registerForm.email" class="mt-11" placeholder="邮箱"></n-input>
     <n-input-group class="mt-11">
-      <n-input v-model:value="registerForm.verify_code" placeholder="验证码"></n-input>
+      <n-input v-model:value="registerForm.code" placeholder="验证码"></n-input>
       <n-button color="#49b1f5" :disabled="flag" @click="sendCode">
         {{ timer == 0 ? "发送" : `${timer}s` }}
       </n-button>
@@ -42,8 +42,8 @@
 <script setup lang="ts">
 import { useAppStore } from "@/store";
 import { useIntervalFn } from "@vueuse/core";
-import { AuthAPI } from "@/api/auth";
-import type { RegisterReq } from "@/api/types";
+import { AuthAPI } from "@/api";
+import type { EmailRegisterReq } from "@/api";
 
 const appStore = useAppStore();
 const registerRef = ref();
@@ -54,8 +54,8 @@ const data = reactive({
   registerForm: {
     username: "",
     password: "",
-    verify_code: "",
-  } as RegisterReq,
+    code: "",
+  } as EmailRegisterReq,
 });
 const { timer, flag, loading, registerForm } = toRefs(data);
 const { pause, resume } = useIntervalFn(
@@ -83,7 +83,7 @@ const sendCode = () => {
     return;
   }
   start(60);
-  AuthAPI.sendEmailVerifyCodeApi({
+  AuthAPI.sendEmailCode({
     email: registerForm.value.email,
     type: "register",
   }).then((res) => {
@@ -91,7 +91,7 @@ const sendCode = () => {
   });
 };
 const handleRegister = () => {
-  if (registerForm.value.verify_code.trim().length != 6) {
+  if (registerForm.value.code.trim().length != 6) {
     window.$message?.warning("请输入6位验证码");
     return;
   }
@@ -101,12 +101,11 @@ const handleRegister = () => {
   }
 
   loading.value = true;
-  AuthAPI.registerApi({
+  AuthAPI.emailRegister({
     username: registerForm.value.email,
     password: registerForm.value.password,
-    confirm_password: registerForm.value.password,
     email: registerForm.value.email,
-    verify_code: registerForm.value.verify_code,
+    code: registerForm.value.code,
   }).then((res) => {
     window.$message?.success("注册成功");
     appStore.setRegisterFlag(false);

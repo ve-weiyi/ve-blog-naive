@@ -1,7 +1,7 @@
 import { router } from "@/router";
 import { useUserStore } from "@/store";
 import NProgress from "nprogress";
-import { AuthAPI } from "@/api/auth.ts";
+import { GuestAPI } from "@/api";
 import { AuthStorage } from "@/utils/auth.ts";
 
 NProgress.configure({
@@ -12,19 +12,19 @@ NProgress.configure({
   minimum: 0.3,
 });
 
-// 获取客户端信息
-const getClientInfo = async (): Promise<void> => {
+// 获取游客信息
+const getGuestInfo = async (): Promise<void> => {
   try {
-    const res = await AuthAPI.getClientInfoApi();
-    AuthStorage.setTerminalId(res.data.terminal_id);
+    const res = await GuestAPI.getGuest();
+    AuthStorage.setDeviceId(res.data.device_id);
   } catch {
-    window.$message?.warning("获取客户端信息失败");
+    window.$message?.warning("获取游客信息失败");
   }
 };
 
 router.beforeEach(async (to, from, next) => {
-  if (!AuthStorage.getTerminalId()) {
-    await getClientInfo();
+  if (!AuthStorage.getDeviceId()) {
+    await getGuestInfo();
   }
   next();
 });
